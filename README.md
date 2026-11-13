@@ -7,6 +7,7 @@ RPG de ação 3D original para Android, planejado como experiência single-playe
 - Build e jogo final: **não concluídos**.
 - Protótipo Android Kotlin/OpenGL: presente; conteúdo e identidade antigos.
 - Godot para a slice: projeto configurado como Anime Nexus em landscape, pacote Android próprio e save isolado. A primeira rota jogável em desenvolvimento usa Kaien, Nimbara e o Cérvido de Cristal com arte procedural provisória.
+- Linguagem principal de gameplay: C++17 via Godot GDExtension. Dano/crítico, reações elementais e XP/nível já passam pelo núcleo nativo; Godot/GDScript compõe cenas e integra nós enquanto os demais sistemas migram.
 - Arte final de personagem/cenário/áudio: ainda não presente.
 - Vertical slice: fluxo inicial Kaien + Nimbara em desenvolvimento; não é arte final, ainda não foi testado por toque em aparelho e não cobre o resto do jogo.
 
@@ -21,6 +22,7 @@ RPG de ação 3D original para Android, planejado como experiência single-playe
 - [Direção visual](docs/VISUAL_ART_DIRECTION.md)
 - [Inventário de assets](docs/ASSET_PRODUCTION.md)
 - [Arquitetura e auditoria](docs/TECHNICAL_ARCHITECTURE.md)
+- [Arquitetura C++ de gameplay](docs/CPP_GAMEPLAY_ARCHITECTURE.md)
 - [Requisitos offline](docs/OFFLINE_REQUIREMENTS.md)
 - [Plano de testes](docs/TEST_PLAN.md)
 - [Roadmap](docs/DEVELOPMENT_ROADMAP.md)

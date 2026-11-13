@@ -6,6 +6,10 @@ signal story_changed
 
 const SCHEMA := 8
 var data: Dictionary = {}
+var native_core: AnimeNexusCombatCore
+
+func _init() -> void:
+    native_core = AnimeNexusCombatCore.new()
 
 func _ready() -> void:
     reset()
@@ -64,20 +68,14 @@ func remove_item(id: String, amount: int) -> bool:
     return true
 
 func add_xp(amount: int) -> int:
-    var gained := 0
     var hunter: Dictionary = data["hunter"]
-    hunter["xp"] = int(hunter["xp"]) + amount
-    while int(hunter["xp"]) >= int(hunter["xp_to_next"]):
-        hunter["xp"] = int(hunter["xp"]) - int(hunter["xp_to_next"])
-        hunter["level"] = int(hunter["level"]) + 1
-        hunter["xp_to_next"] = 120 + (int(hunter["level"]) - 1) * 35
-        hunter["max_hp"] = int(hunter["max_hp"]) + 12
-        hunter["hp"] = hunter["max_hp"]
-        hunter["max_energy"] = float(hunter["max_energy"]) + 4.0
-        data["progression"]["skill_points"] = int(data["progression"].get("skill_points",0)) + 1
-        gained += 1
+    var progression: Dictionary = data["progression"]
+    var result: Dictionary = native_core.advance_experience(hunter, progression, amount)
+    for key in ["level", "xp", "xp_to_next", "max_hp", "hp", "max_energy"]:
+        hunter[key] = result[key]
+    progression["skill_points"] = result["skill_points"]
     state_changed.emit()
-    return gained
+    return int(result["levels_gained"])
 
 func set_story_flag(id: String, value: bool) -> void:
     data["story"]["flags"][id] = value

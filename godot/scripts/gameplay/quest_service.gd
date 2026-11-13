@@ -4,77 +4,58 @@ signal completed(quest_id:String)
 
 var game_state:Node
 var database:Node
+var native_core: AnimeNexusQuestCore
 
 func setup(state:Node,content:Node)->void:
     game_state=state
     database=content
+    native_core=AnimeNexusQuestCore.new()
 
 func start(id:String)->void:
-    if get_quest(id).is_empty():return
-    var active:Array=game_state.data["quests"]["active"]
-    if id not in active and id not in game_state.data["quests"]["completed"]:
-        active.append(id)
-        game_state.data["quests"]["progress"][id]=0
+    var result:Dictionary=native_core.start_quest(game_state.data["quests"],database.QUESTS,id)
+    if bool(result.get("started",false)):
+        game_state.data["quests"]=result["quests"]
         game_state.quest_changed.emit()
         updated.emit()
 
 func add_progress(id:String,amount:=1)->void:
-    if id not in game_state.data["quests"]["active"]:return
-    var value:=int(game_state.data["quests"]["progress"].get(id,0))+amount
-    game_state.data["quests"]["progress"][id]=value
-    var quest:=get_quest(id)
-    if value>=int(quest.get("target",1)):complete(id)
-    else:
-        game_state.quest_changed.emit()
-        updated.emit()
+    _apply_event("direct",id,amount)
 
 func add_kill(monster_id:String,amount:=1)->void:
-    for id in game_state.data["quests"]["active"].duplicate():
-        var q:=get_quest(str(id))
-        if q.get("type","")=="kill" and str(q.get("monster",""))==monster_id:add_progress(str(id),amount)
-        elif q.get("type","")=="boss" and monster_id.begins_with("boss_"):add_progress(str(id),amount)
-        elif q.get("type","")=="boss_any" and monster_id.begins_with("boss_"):add_progress(str(id),amount)
-        elif q.get("type","")=="map_kill":add_progress(str(id),amount)
-        
+    _apply_event("kill",monster_id,amount)
+
 func add_collect(item_id:String,amount:=1)->void:
-    for id in game_state.data["quests"]["active"].duplicate():
-        var q:=get_quest(str(id))
-        if q.get("type","")=="collect" and str(q.get("item",""))==item_id:add_progress(str(id),amount)
+    _apply_event("collect",item_id,amount)
 
 func add_map(map_id:String)->void:
-    for id in game_state.data["quests"]["active"].duplicate():
-        var q:=get_quest(str(id))
-        if q.get("type","")=="map" and str(q.get("map",""))==map_id:add_progress(str(id))
+    _apply_event("map",map_id,1)
 
 func add_interaction(object_id:String)->void:
-    for id in game_state.data["quests"]["active"].duplicate():
-        var q:=get_quest(str(id))
-        if q.get("type","")=="interact" and str(q.get("object",""))==object_id:add_progress(str(id))
-        
+    _apply_event("interact",object_id,1)
+
 func add_boss(boss_id:String)->void:
-    for id in game_state.data["quests"]["active"].duplicate():
-        var q:=get_quest(str(id))
-        if q.get("type","")=="boss_any":add_progress(str(id))
-        elif q.get("type","")=="boss" and str(q.get("boss",""))==boss_id:add_progress(str(id))
+    _apply_event("boss",boss_id,1)
 
 func add_rift()->void:
-    for id in game_state.data["quests"]["active"].duplicate():
-        var q:=get_quest(str(id))
-        if q.get("type","")=="rift":add_progress(str(id))
+    _apply_event("rift","",1)
 
 func complete(id:String)->void:
-    var active:Array=game_state.data["quests"]["active"]
-    var completed_ids:Array=game_state.data["quests"]["completed"]
-    active.erase(id)
-    if id in completed_ids:return
-    completed_ids.append(id)
-    var quest:=get_quest(id)
-    game_state.add_xp(int(quest.get("xp",0)))
-    var rewards:Dictionary=quest.get("rewards",{})
-    for item in rewards.keys():game_state.add_item(str(item),int(rewards[item]))
-    var next_id:=str(quest.get("next",""))
-    if not next_id.is_empty():start(next_id)
-    self.completed.emit(id)
+    _apply_event("complete",id,1)
+
+func _apply_event(event_type:String,subject_id:String,amount:int)->void:
+    if game_state==null or database==null or native_core==null:return
+    var result:Dictionary=native_core.apply_event(
+        game_state.data["quests"],database.QUESTS,event_type,subject_id,amount)
+    if not bool(result.get("changed",false)):return
+    game_state.data["quests"]=result["quests"]
+    var xp_reward:int=int(result.get("xp_reward",0))
+    if xp_reward>0:game_state.add_xp(xp_reward)
+    var item_rewards:Dictionary=result.get("items_reward",{})
+    for item_id in item_rewards.keys():
+        var quantity:int=int(item_rewards[item_id])
+        if quantity>0:game_state.add_item(str(item_id),quantity)
+    for quest_id in result.get("completed_now",[]):
+        completed.emit(str(quest_id))
     game_state.quest_changed.emit()
     updated.emit()
 

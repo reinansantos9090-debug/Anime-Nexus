@@ -3,6 +3,7 @@
 ## Regras de jogabilidade
 
 - Dano normal/crítico, estados elementais e combinações (em particular condução Trovão+Água e agrupamento por Gravidade).
+- Núcleo C++/GDExtension: fórmula de dano e crítico em entradas determinísticas; reações independentes da ordem dos elementos; limiares, carry-over de XP, pontos de habilidade e aumento de atributos; contagem, conclusão e recompensas de missões sem duplicação; sem fallback GDScript silencioso se a biblioteca estiver ausente.
 - Cooldowns, energia, esquiva invulnerável e telegraph/recuperação dos chefes.
 - IA: todos estados permitidos, retorno à região inicial, companion que recupera caminho e nunca causa dano a aliado.
 - Objetivos de missão: contagem, conclusão única, pré-requisitos, recompensa e save sem duplicação.
@@ -32,3 +33,5 @@
 - Android local: build não conseguiu resolver AGP 9.1.1 neste ambiente. No GitHub Actions, a run `43409376899` passou `:app:testDebugUnitTest` e `:app:assembleDebug`.
 - CI da revisão `c66eec5`: runner Godot 4.7.2, export Android Godot, testes unitários Kotlin, recuperação do save corrompido e APK do host Kotlin passaram; artifacts publicados na [run 43410319631](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43410319631). Nenhum APK foi instalado ou testado em aparelho.
 - Sem aparelho Android ligado a este ambiente, FPS, toque real, instalação APK e qualidade visual ainda não foram verificados.
+- Godot 4.7.2 local carregou `AnimeNexusCombatCore`; GDExtension C++ Linux release compilou e o runner imprimiu `ANIME_NEXUS_TESTS: PASS`, incluindo dano, crítico, reações invertidas e XP acumulado. Restaram apenas avisos conhecidos de recursos em uso ao encerrar.
+- O build Android arm64 do núcleo C++ e a exportação do APK com a extensão são pendentes no CI novo; a validação local do APK é bloqueada pela ausência do Android SDK/NDK.

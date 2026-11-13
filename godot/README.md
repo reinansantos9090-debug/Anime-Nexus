@@ -2,7 +2,7 @@
 
 Godot 4.7.2 stable is the target runtime for the first vertical slice. The Android export uses landscape orientation and a separate Anime Nexus application ID.
 
-The project is intentionally source/configuration based. Godot editor binaries and generated .godot data are not committed.
+The project is intentionally source/configuration based. Godot editor binaries, generated `.godot` data and compiled extension libraries are not committed. Gameplay rules are being moved to the C++17 GDExtension documented in `../docs/CPP_GAMEPLAY_ARCHITECTURE.md`; scene composition remains in GDScript.
 
 Current slice work:
 - Kaien loadout with Manoplas Fulgor and three active electrical abilities.
@@ -11,6 +11,7 @@ Current slice work:
 - Procedural blockout geometry for Kaien, forest, creatures, boss and anchor; these are not final art assets.
 - Separate local save file for Anime Nexus; it does not read the old Aetheria save.
 - Headless rules tests and Android export workflow.
+- C++ combat core for authoritative basic-attack damage, critical hits and deterministic elemental reaction data; Android/Linux binaries are built by GitHub Actions.
 
 The Kotlin/OpenGL implementation remains as an audited legacy prototype. Its current CI compile has unresolved source errors; see `../docs/IMPLEMENTATION_STATUS.md`.
 

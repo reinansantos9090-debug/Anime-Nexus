@@ -4,10 +4,12 @@ Data da auditoria: 13 nov. 2026, branch `dev/anime-nexus-vertical-slice`, base `
 
 | Sistema alvo | Categoria | Evidência / pendência |
 |---|---|---|
+| C++ como linguagem principal do jogo | Em desenvolvimento | GDExtensions `AnimeNexusCombatCore` e `AnimeNexusQuestCore` já são chamadas pelo ataque básico, progressão de XP/nível e ciclo de progresso/conclusão/recompensa de missões. A tabela de reações está testada, mas seus efeitos ainda não são disparados no combate. Linux release compilado localmente; Godot 4.7.2 headless passou testes. Android arm64 ainda aguarda CI, e IA, economia, equipamentos e save continuam em GDScript. |
+| GDScript | Implementado (camada de integração) | Atualmente conecta cenas, UI, nós, sinais e chamadas do núcleo nativo. Parte da lógica de jogo ainda reside nos serviços GDScript e deve migrar antes de declarar C++ como fonte autoritativa de todos os subsistemas. |
 | App Android nativo | Implementado (host do protótipo) | Activity Kotlin e manifest; nome/pacote/orientação atuais não são finais |
 | OpenGL ES e loop de combate Kotlin | Implementado (protótipo Aetheria) | engine/render/AI/combat/session/HUD em `app/src/main/java/.../game3d`; geometria procedural |
 | Godot Android export | Testado | workflow Godot 4.7.2 validou runner e exportou APK debug da slice (run `43409376899`); instalação/touch em aparelho pendentes |
-| Escolha de Godot para slice | Implementado (decisão documental) | comparar em `TECHNICAL_ARCHITECTURE.md`; reavaliável após APK |
+| Godot + GDExtension C++ | Em desenvolvimento | Godot mantém renderer/cenas/física; C++17 é o domínio autoritativo em migração. A arquitetura e funções iniciais estão em `CPP_GAMEPLAY_ARCHITECTURE.md`; falta CI Android/arm64 e migração dos demais domínios. |
 | Câmera isométrica | Implementado (protótipo) | câmera ortográfica diagonal com acompanhamento suave; zoom, ocultação de obstáculos e teste visual em aparelho pendentes |
 | Kaien | Em desenvolvimento | avatar procedural blockout com cores, cabelo e manoplas distintivos; sem modelo anime final, rig/skinning ou animações de produção |
 | Sete aliados | Planejado | nenhum personagem Anime Nexus produzido no runtime |
@@ -37,6 +39,10 @@ Só mover uma linha para **Testado** depois de evidência de build correspondent
 ## Execução de CI mais recente
 
 Run `43410319631`, commit `c66eec5d78ce2c89d6b589c7b224587093081748`: `android-host` passou unit tests e `assembleDebug`, e `godot-android` passou validação e export Android; os testes de fallback do save corrompido também passaram. Artifacts dos dois APKs estão na [execução 43410319631](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43410319631). APKs não foram instalados em aparelho. O APK Godot é a slice Anime Nexus em blockout; o APK Kotlin é o protótipo Aetheria legado.
+
+## Núcleo C++ em andamento
+
+`AnimeNexusCombatCore` e `AnimeNexusQuestCore` foram compilados localmente como biblioteca Linux com Godot C++ bindings `10.0.0-stable` e API 4.7. Ataque básico, ganho de XP, progresso/condições de missões, conclusão, desbloqueio seguinte e cálculo de recompensas usam o núcleo. Testes Godot 4.7.2 locais passaram para dano normal/crítico, pares elementais, XP com carry-over, contagem da missão, não duplicação e recompensas. Ainda não é possível classificar a mudança como APK C++ testado: o workflow com NDK está em preparação e precisa executar a compilação Android arm64 e exportar um APK que carregue a extensão.
 
 ## Slice em construção (13 nov. 2026)
 
