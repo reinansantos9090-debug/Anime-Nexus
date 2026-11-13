@@ -644,5 +644,3 @@ internal fun Game3DEngine.spawnBossProjectileSpread(boss: EnemyEntity, damage: F
     }
 
 
-    internal val enemyView = ArrayList<EnemyEntity>(24)
-    internal val projectileView = ArrayList<Projectile>(24)

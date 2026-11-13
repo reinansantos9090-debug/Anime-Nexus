@@ -412,10 +412,6 @@ fun Game3DEngine.recordRenderFrame(frameMs: Float, drawCalls: Int) {
     }
 fun Game3DEngine.performanceSnapshot(): PerformanceSnapshot = performanceTelemetry.snapshot()
 
-    private val enemyView = ArrayList<EnemyEntity>(24)
-    private val projectileView = ArrayList<Projectile>(24)
-    private val dropView = ArrayList<Drop>(48)
-    private val particleView = ArrayList<Particle>(360)
 fun Game3DEngine.snapshotEnemies(): List<EnemyEntity> {
         enemyView.clear()
         for (e in enemies) if (!e.dead) enemyView.add(e)
@@ -436,5 +432,4 @@ fun Game3DEngine.snapshotParticles(): List<Particle> {
         particleView.addAll(particles)
         return particleView
     }
-}
 
