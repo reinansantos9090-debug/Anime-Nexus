@@ -434,7 +434,7 @@ class GameRenderer(private val engine: Game3DEngine) : GLSurfaceView.Renderer {
             }
         }
 
-        drawCylinder(e.pos.x, 0.07f, e.pos.z, e.kind.radius * 0.9f, 0.025f, e.kind.radius * 0.7f, floatArrayOf(0.07f, 0.09f, 0.12f))
+        drawCylinder(e.pos.x, 0.07f, e.pos.z, e.kind.radius * 0.9f, 0.025f, floatArrayOf(0.07f, 0.09f, 0.12f))
         if (e.kind == EnemyKind.AETHER_SLIME) {
             drawSphere(e.pos.x, 0.58f, e.pos.z, if (e.elite) 0.9f else 0.68f, if (e.hitFlash > 0f) floatArrayOf(1f, 1f, 1f) else c)
         } else if (e.kind == EnemyKind.THORN_LING) {

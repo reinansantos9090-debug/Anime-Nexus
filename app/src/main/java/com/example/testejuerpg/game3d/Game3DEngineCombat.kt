@@ -13,13 +13,13 @@ import com.example.testejuerpg.offline.OfflineProgressionRules
 import com.example.testejuerpg.offline.OfflineSaveCodec
 import com.example.testejuerpg.offline.EngineSaveData
 import com.example.testejuerpg.offline.LootRarity
-import com.example.testejuerpg.offline.OfflineEmote
 import com.example.testejuerpg.offline.OfflineMode
 import com.example.testejuerpg.offline.systems.OfflineBossCatalog
 import com.example.testejuerpg.offline.systems.OfflineBiomeCatalog
 import com.example.testejuerpg.offline.systems.OfflineVisualCatalog
 import com.example.testejuerpg.offline.systems.OfflineSquadCatalog
 import com.example.testejuerpg.offline.systems.OfflineEmoteCatalog
+import com.example.testejuerpg.offline.systems.OfflineEmote
 import com.example.testejuerpg.offline.systems.RooftopScreen
 
 internal fun Game3DEngine.spawnEnemyAreaTelegraph(center: V3, radius: Float, damage: Float) {
@@ -199,6 +199,27 @@ fun Game3DEngine.setMove(x: Float, y: Float) {
                 fireProjectile(target.pos, damage, 0.9f + weapon.mainRange * 0.03f)
             }
         }
+    }
+}
+
+internal fun Game3DEngine.dashToward(target: EnemyEntity, distance: Float) {
+    val dx = target.pos.x - player.x
+    val dz = target.pos.z - player.z
+    val length = max(0.001f, sqrt(dx * dx + dz * dz))
+    val next = mapRuntime.resolvePlayer(
+        player.x + dx / length * distance,
+        player.z + dz / length * distance,
+        0.55f
+    )
+    player.x = next.first
+    player.z = next.second
+}
+
+internal fun Game3DEngine.useSkill(index: Int) {
+    when (index) {
+        0 -> skill1()
+        1 -> skill2()
+        else -> skill3()
     }
 }
 

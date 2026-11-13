@@ -6,8 +6,11 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
 import kotlin.math.sqrt
+import com.example.testejuerpg.offline.LootRarity
 import com.example.testejuerpg.offline.OfflineMode
+import com.example.testejuerpg.offline.systems.OfflineBossDefinition
 import com.example.testejuerpg.offline.systems.OfflineBossCatalog
+import com.example.testejuerpg.offline.systems.OfflineSquadCatalog
 
 internal fun Game3DEngine.updateEnemies(dt: Float) {
         for (e in enemies) {
@@ -642,5 +645,3 @@ internal fun Game3DEngine.spawnBossProjectileSpread(boss: EnemyEntity, damage: F
             V3(x*7.2f,0f,z*7.2f),damage,3.1f,false
         )
     }
-
-

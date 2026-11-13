@@ -4,15 +4,18 @@ import java.util.Locale
 import android.os.VibrationEffect
 import com.example.testejuerpg.offline.EngineSaveData
 import com.example.testejuerpg.offline.OfflineSaveCodec
-import com.example.testejuerpg.offline.OfflineEmote
-import com.example.testejuerpg.offline.OfflineEmoteCatalog
 import com.example.testejuerpg.offline.OfflineProgressionRules
 import com.example.testejuerpg.offline.OfflineMode
 import com.example.testejuerpg.offline.LootRarity
 import com.example.testejuerpg.offline.systems.OfflineBiomeCatalog
+import com.example.testejuerpg.offline.systems.OfflineBossCatalog
+import com.example.testejuerpg.offline.systems.OfflineEmote
+import com.example.testejuerpg.offline.systems.OfflineEmoteCatalog
+import com.example.testejuerpg.offline.systems.OfflineMapRuntime
 import com.example.testejuerpg.offline.systems.OfflineVisualCatalog
 import com.example.testejuerpg.offline.systems.OfflineSquadCatalog
 import com.example.testejuerpg.offline.systems.RooftopScreen
+import com.example.testejuerpg.offline.systems.StyleVisual
 
 fun Game3DEngine.equipWeapon(index: Int) {
         if (index in WEAPONS.indices) {
@@ -389,7 +392,7 @@ fun Game3DEngine.cycleEmote() {
 fun Game3DEngine.squadMembers() = OfflineSquadCatalog.all
 fun Game3DEngine.squadOffsets(): List<V3> = memberOffsets.map { V3(it.x, it.y, it.z) }
 fun Game3DEngine.historyEntries() = historyArchive.entries()
-fun Game3DEngine.activeStyleVisual(): OfflineVisualCatalog.StyleVisual =
+fun Game3DEngine.activeStyleVisual(): StyleVisual =
         OfflineVisualCatalog.forStyle(rooftopController.selectedStyle)
 fun Game3DEngine.activeBiome(): com.example.testejuerpg.offline.systems.OfflineBiome {
         return OfflineBiomeCatalog.forWorld(
@@ -400,7 +403,7 @@ fun Game3DEngine.activeBiome(): com.example.testejuerpg.offline.systems.OfflineB
     }
 fun Game3DEngine.allowedFireflies(): Int = performanceGovernor.allowedFireflies()
 fun Game3DEngine.mapObstacles(): List<MapObstacleView> = mapRuntime.obstacles.map {
-        OfflineMapRuntimeObstacle(it.x, it.z, it.halfX, it.halfZ)
+        MapObstacleView(it.x, it.z, it.halfX, it.halfZ)
     }
 fun Game3DEngine.renderProfile(): MobileRenderProfile = renderProfile
 fun Game3DEngine.recordRenderFrame(frameMs: Float, drawCalls: Int) {
