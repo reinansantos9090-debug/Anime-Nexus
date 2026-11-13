@@ -6,6 +6,13 @@ signal journal_added(text: String)
 var game_state: Node
 
 const CHAPTERS := [
+    {"title":"Prólogo • O Primeiro Fragmento","lines":[
+        ["Kaien","Essa luz saiu da ruína. Ela está... respondendo ao meu pulso."],
+        ["Akari","Se o fragmento escolheu você, não vamos deixar você atravessar o portal sozinho."],
+        ["Ren","A energia está se espalhando pelas raízes. Tem alguma coisa acordando na clareira."],
+        ["Iori","O Observatório de Íris registra uma ruptura em Nimbara. Recuperem a primeira Âncora antes que a fenda cresça."],
+        ["Kaien","Então vamos descobrir por que essa energia sabe meu nome."]
+    ]},
     {"title":"Ecos do Portal","lines":[
         ["Luna","Bem-vindo ao terraço. O Portal continua estável o bastante para uma primeira incursão."],
         ["Manny","Sua arma principal define seu ritmo. Escolha algo confortável antes de atravessar."],
@@ -122,6 +129,8 @@ func next_line() -> Dictionary:
     var lines: Array = chapter["lines"]
     var index := int(story["scene"])
     if index >= lines.size():
+        if int(story["chapter"])==1:
+            return {"character":"Iori","text":"A primeira etapa de Nimbara está pronta para ser explorada. As próximas partes da campanha ainda serão produzidas."}
         if int(story["chapter"]) < CHAPTERS.size():
             story["chapter"] = int(story["chapter"]) + 1
             story["scene"] = 0

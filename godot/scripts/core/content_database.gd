@@ -3,6 +3,7 @@ extends Node
 ## runtime service; there are no disposable catalog rows or numbered filler.
 
 const WEAPONS := {
+    "fulgor_gauntlets":{"name":"Manoplas Fulgor","damage":27.0,"rate":0.30,"range":4.2,"type":"melee","kit":"cone","abilities":["lightning_step","sky_chain","static_field"]},
     "volt_blades":{"name":"Lâminas Voltáicas","damage":24.0,"rate":0.24,"range":3.4,"type":"melee","kit":"cone","abilities":["volt_dash","arc_burst"]},
     "toxic_bow":{"name":"Arco Tóxico","damage":34.0,"rate":0.55,"range":16.0,"type":"ranged","kit":"poison_shot","abilities":["venom_volley","toxic_trap"]},
     "pulse_cannon":{"name":"Canhão Pulsar","damage":46.0,"rate":0.72,"range":18.0,"type":"ranged","kit":"shotgun","abilities":["pulse_beam","overcharge"]},
@@ -18,6 +19,9 @@ const WEAPONS := {
 }
 
 const ABILITIES := {
+    "lightning_step":{"name":"Passo Relâmpago","cooldown":5.0,"energy":22.0,"effect":"dash","power":1.65,"radius":4.0},
+    "sky_chain":{"name":"Corrente Celeste","cooldown":8.0,"energy":34.0,"effect":"chain","power":1.60,"radius":7.0,"count":5},
+    "static_field":{"name":"Campo Estático","cooldown":12.0,"energy":48.0,"effect":"slow_area","power":1.15,"radius":5.6,"duration":3.0},
     "volt_dash":{"name":"Avanço Voltáico","cooldown":4.0,"energy":20.0,"effect":"dash","power":1.55,"radius":3.2},
     "arc_burst":{"name":"Rajada de Arco","cooldown":7.0,"energy":32.0,"effect":"chain","power":1.25,"radius":6.0,"count":4},
     "venom_volley":{"name":"Salva Venenosa","cooldown":6.0,"energy":30.0,"effect":"multi_projectile","power":1.30,"radius":16.0,"count":3},
@@ -45,6 +49,10 @@ const ABILITIES := {
 }
 
 const MONSTERS := {
+    "moss_hopper":{"name":"Musgo Saltador","hp":92.0,"damage":13.0,"speed":3.5,"xp":42,"tier":1,"behavior":"charger","loot":["nimbara_pollen","resonance_shard"]},
+    "leaf_spark":{"name":"Faísca Foliar","hp":74.0,"damage":11.0,"speed":3.1,"xp":38,"tier":1,"behavior":"orbit","loot":["nimbara_pollen","resonance_shard"]},
+    "crystal_stagling":{"name":"Filhote Prismal","hp":155.0,"damage":19.0,"speed":2.3,"xp":74,"tier":2,"behavior":"shielded","loot":["resonance_shard","memory_bloom"]},
+    "root_guardian":{"name":"Guardião de Raízes","hp":370.0,"damage":32.0,"speed":1.25,"xp":180,"tier":4,"behavior":"guardian","loot":["memory_bloom","resonance_shard"]},
     "aether_slime":{"name":"Slime de Aether","hp":55.0,"damage":8.0,"speed":2.4,"xp":25,"tier":1,"behavior":"melee","loot":["aether_core","slime_gel"]},
     "neon_stalker":{"name":"Perseguidor Neon","hp":85.0,"damage":14.0,"speed":3.7,"xp":42,"tier":2,"behavior":"charger","loot":["plasma_fiber","aether_core"]},
     "thornling":{"name":"Broto Espinhado","hp":72.0,"damage":11.0,"speed":2.8,"xp":34,"tier":1,"behavior":"mine_layer","loot":["thorn_fiber","herb"]},
@@ -78,6 +86,7 @@ const MONSTERS := {
 }
 
 const BOSSES := {
+    "crystal_stag":{"name":"Cérvido de Cristal","hp":2150.0,"phase2_ratio":0.68,"phase3_ratio":0.34,"speed":2.05,"projectile_damage":43.0,"summon_interval":10.0,"summon_id":"moss_hopper","patterns":["roots","charge","summon","nova"],"arena":"clareira_luminar"},
     "overload_titan":{"name":"Titã de Sobrecarga","hp":1800.0,"phase2_ratio":0.68,"phase3_ratio":0.32,"speed":1.9,"projectile_damage":38.0,"summon_interval":10.0,"summon_id":"aether_slime","patterns":["burst","charge","summon","nova"],"arena":"rift_dome"},
     "thorn_warden":{"name":"Guardião dos Espinhos","hp":2100.0,"phase2_ratio":0.70,"phase3_ratio":0.35,"speed":1.65,"projectile_damage":44.0,"summon_interval":8.0,"summon_id":"thornling","patterns":["roots","burst","summon","charge"],"arena":"emerald_grove"},
     "skybreaker":{"name":"Quebra-Céus Aether","hp":2450.0,"phase2_ratio":0.66,"phase3_ratio":0.30,"speed":2.35,"projectile_damage":52.0,"summon_interval":7.0,"summon_id":"gale_moth","patterns":["beam","rain","summon","charge"],"arena":"sky_ruins"},
@@ -89,6 +98,7 @@ const BOSSES := {
 }
 
 const BIOMES := {
+    "nimbara":{"name":"Nimbara • Floresta das Memórias","ground":Color("#477b68"),"accent":Color("#71f0d1"),"fog":Color("#577f83")},
     "verdant_frontier":{"name":"Fronteira Esmeralda","ground":Color("#4ea66f"),"accent":Color("#8bd8ff"),"fog":Color("#9fe4c3")},
     "crystal_forest":{"name":"Floresta Cristalina","ground":Color("#547fc4"),"accent":Color("#a3fff4"),"fog":Color("#89aef0")},
     "sunset_desert":{"name":"Deserto do Poente","ground":Color("#d39a57"),"accent":Color("#ffcf7d"),"fog":Color("#f0bd8a")},
@@ -97,6 +107,9 @@ const BIOMES := {
 }
 
 const QUESTS := [
+    {"id":"nimbara_01","title":"A Voz das Raízes","description":"Investigue a clareira e derrote quatro Musgos Saltadores afetados pela Ressonância.","type":"kill","target":4,"monster":"moss_hopper","xp":150,"rewards":{"nimbara_pollen":3,"resonance_shard":1},"next":"nimbara_02"},
+    {"id":"nimbara_02","title":"O Despertar do Cérvido","description":"Enfrente o antigo espírito que protege o fragmento na Clareira Luminar.","type":"boss","target":1,"boss":"crystal_stag","xp":500,"rewards":{"memory_bloom":3,"resonance_shard":4},"next":"nimbara_03"},
+    {"id":"nimbara_03","title":"A Primeira Âncora","description":"Aproxime-se da Âncora de Ressonância na clareira e interaja para estabilizá-la.","type":"interact","target":1,"object":"resonance_anchor","xp":260,"rewards":{"resonance_shard":5}},
     {"id":"story_01","title":"Recruta da Aetheria","description":"Conheça o núcleo de caçadores no terraço e abra o Portal.","type":"story","target":1,"xp":80,"rewards":{"aether_core":2},"next":"hunt_01"},
     {"id":"hunt_01","title":"Infestação de Gelatina","description":"Elimine Slimes de Aether na Fronteira Esmeralda.","type":"kill","target":6,"monster":"aether_slime","xp":140,"rewards":{"slime_gel":6},"next":"hunt_02"},
     {"id":"hunt_02","title":"Perigo Veloz","description":"Cace Perseguidores Neon antes que alcancem o posto avançado.","type":"kill","target":5,"monster":"neon_stalker","xp":190,"rewards":{"plasma_fiber":3},"next":"hunt_03"},
@@ -120,6 +133,7 @@ const EVENTS := [
 ]
 
 const STYLES := [
+    {"id":"kaien_arashi","name":"Kaien Arashi • Trovão","primary":Color("#173b70"),"secondary":Color("#48d9f2"),"head":Color("#e6ad83")},
     {"id":"starter_hunter","name":"Caçador Neon","primary":Color("#ff7a74"),"secondary":Color("#4cc9f0"),"head":Color("#f4d19b")},
     {"id":"grove_guardian","name":"Guardião Verde","primary":Color("#4bbf8a"),"secondary":Color("#e9d56c"),"head":Color("#f0c89b")},
     {"id":"sky_runner","name":"Corredor Celeste","primary":Color("#6e8cff"),"secondary":Color("#eef7ff"),"head":Color("#d59f80")},
@@ -146,6 +160,7 @@ const CORES := {
 }
 
 const ITEMS := {
+    "nimbara_pollen":{"name":"Pólen de Nimbara","value":14},"resonance_shard":{"name":"Fragmento de Ressonância","value":32},"memory_bloom":{"name":"Flor da Memória","value":24},
     "aether_core":{"name":"Núcleo de Aether","value":30},"slime_gel":{"name":"Gel de Slime","value":8},
     "plasma_fiber":{"name":"Fibra de Plasma","value":16},"thorn_fiber":{"name":"Fibra Espinhada","value":14},
     "herb":{"name":"Erva Lumina","value":7},"moss_core":{"name":"Núcleo de Musgo","value":22},

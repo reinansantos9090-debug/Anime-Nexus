@@ -8,15 +8,9 @@ var panel: Panel
 var root: Control
 
 const ACTIONS := [
-    ["expedition","EXPEDIÇÕES","Entrar na próxima expedição"],
-    ["rift","RIFTS","Abrir uma Fenda"],
-    ["versus","VERSUS","Simulação de combate offline"],
-    ["daily","DIÁRIAS","Objetivos e sequência diária"],
-    ["event","EVENTOS","Ativar evento local"],
-    ["cores","NÚCLEOS","Ver/equipar núcleos"],
-    ["skills","HABILIDADES","Abrir árvore de habilidades"],
-    ["craft","OFICINA","Fabricar equipamento"],
-    ["history","HISTÓRIA","Abrir o diário de campanha"]
+    ["expedition","EXPEDIÇÃO • NIMBARA","Continuar a missão da Clareira Luminar"],
+    ["rift","CHEFE • CÉRVIDO","Enfrentar o guardião da primeira Âncora"],
+    ["history","DIÁLOGOS","Continuar o prólogo de Kaien"]
 ]
 
 func _ready() -> void:

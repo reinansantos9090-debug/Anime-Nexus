@@ -13,13 +13,13 @@ func _ready() -> void:
 func reset() -> void:
     data = {
         "schema": SCHEMA,
-        "hunter": {"name":"Aether Hunter","level":1,"xp":0,"xp_to_next":120,"hp":120,"max_hp":120,"energy":100.0,"max_energy":100.0,"gold":0,"chaos_energy":0,"rank":0},
-        "loadout": {"weapon":"volt_blades","ability_1":"volt_dash","ability_2":"arc_burst","ability_3":"prism_barrier","core_slots":["damage","cooldown","dodge"]},
+        "hunter": {"name":"Kaien Arashi","level":1,"xp":0,"xp_to_next":120,"hp":140,"max_hp":140,"energy":100.0,"max_energy":100.0,"gold":0,"chaos_energy":0,"rank":0},
+        "loadout": {"weapon":"fulgor_gauntlets","ability_1":"lightning_step","ability_2":"sky_chain","ability_3":"static_field","core_slots":["damage","cooldown","dodge"]},
         "inventory": {"aether_core":8,"slime_gel":12,"plasma_fiber":4,"scrap_plate":5,"power_cell":3,"oak_branch":8,"stone":6,"herb":10},
-        "quests": {"active":["story_01"],"progress":{},"completed":[]},
+        "quests": {"active":["nimbara_01"],"progress":{},"completed":[]},
         "story": {"chapter":1,"scene":0,"flags":{"tutorial_complete":false,"rooftop_unlocked":true},"journal":[]},
-        "world": {"map_id":"verdant_frontier","day_clock":0.0,"completed_expeditions":0,"completed_rifts":0},
-        "wardrobe": {"style":"starter_hunter","unlocked":["starter_hunter"],"rides":[],"emotes":["wave"]},
+        "world": {"map_id":"nimbara","day_clock":0.0,"completed_expeditions":0,"completed_rifts":0},
+        "wardrobe": {"style":"kaien_arashi","unlocked":["kaien_arashi"],"rides":[],"emotes":["wave"]},
         "cores": {"owned":["damage_1","cooldown_1","dodge_1"],"equipped":["damage_1","cooldown_1","dodge_1"]},
         "events": {"research_destroy":0,"transformation_unlocked":false},
         "statistics": {"kills":0,"bosses":0,"deaths":0,"damage_dealt":0.0,"distance":0.0,"play_seconds":0.0},

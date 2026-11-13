@@ -6,12 +6,14 @@
 - [x] Inventariar Kotlin/OpenGL, Godot, dependências, assets, testes e workflow.
 - [x] Comparar motores e registrar decisão provisória para slice.
 - [x] Avaliar AI Studio e registrar limites relevantes.
-- [ ] Publicar branch e validar workflow de PR sem escrita em `main`.
-- [ ] Fechar conjunto de documentos concretos desta fase.
+- [x] Publicar branch e abrir PR sem escrita em `main`; o CI mostrou bloqueio de compilação Kotlin.
+- [x] Fechar o conjunto de documentos concretos desta fase.
 
 ## Marco 1 — Vertical slice de Kaien/Nimbara
 
-Critério: APK Android Godot instalável em landscape; salvar/reabrir offline; controlar Kaien por joystick; três ações de combate; arena Nimbara curta com rota e obstáculo; um inimigo comum, uma criatura especial e chefe com duas fases/ataques telegráficos; missão narrativa com diálogos; capturas reais do jogo; sem placeholders apresentados como arte final. O joystick virtual análogo está ligado ao movimento do protótipo e tem teste de regra headless, mas aguarda toque em aparelho. Arte final requer modelos originais rigados e licenciados, animações, materiais e áudio local. Não presumir FPS antes de medir em aparelho.
+Critério: APK Android Godot instalável em landscape; salvar/reabrir offline; controlar Kaien por joystick; três ações de combate; arena Nimbara curta com rota e obstáculo; um inimigo comum, uma criatura especial e chefe com duas fases/ataques telegráficos; missão narrativa com diálogos; capturas reais do jogo; sem placeholders apresentados como arte final.
+
+Status atual: slice em implementação, ainda sem aceite. Já existe fluxo headless de missão, chefe e Âncora, controles analógicos, mapa e visuais blockout. Falta CI do commit atual, export/instalação do APK, teste de toque e tela em aparelho, feedback visual medido, telegraphs do chefe e substituição progressiva dos blockouts por modelos/animações originais. Arte final, música e FPS não foram validados.
 
 ## Marco 2 — Sistemas de produto
 

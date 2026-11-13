@@ -1,10 +1,16 @@
 extends Node
-const PATH := "user://aetheria_echoes_save_v7.json"
-const BACKUP_PATH := "user://aetheria_echoes_save_v7.bak.json"
+const PATH := "user://anime_nexus_save_v1.json"
+const BACKUP_PATH := "user://anime_nexus_save_v1.bak.json"
 const SAVE_INTERVAL := 15.0
 var elapsed := 0.0
 var dirty := false
 var game_state: Node
+var storage_path:=PATH
+var backup_storage_path:=BACKUP_PATH
+
+func configure_paths(save_path:String,backup_path:String)->void:
+    storage_path=save_path
+    backup_storage_path=backup_path
 
 func setup(state: Node) -> void:
     game_state = state
@@ -25,13 +31,13 @@ func save_now() -> bool:
         return false
     var payload: Dictionary = game_state.data.duplicate(true)
     payload["saved_at_unix"] = Time.get_unix_time_from_system()
-    if FileAccess.file_exists(PATH):
-        var old := FileAccess.open(PATH, FileAccess.READ)
+    if FileAccess.file_exists(storage_path):
+        var old := FileAccess.open(storage_path, FileAccess.READ)
         if old:
-            var backup := FileAccess.open(BACKUP_PATH, FileAccess.WRITE)
+            var backup := FileAccess.open(backup_storage_path, FileAccess.WRITE)
             if backup:
                 backup.store_string(old.get_as_text())
-    var file := FileAccess.open(PATH, FileAccess.WRITE)
+    var file := FileAccess.open(storage_path, FileAccess.WRITE)
     if file == null:
         return false
     file.store_string(JSON.stringify(payload))
@@ -42,9 +48,9 @@ func save_now() -> bool:
 func load_now() -> bool:
     if game_state == null:
         return false
-    var parsed := _read(PATH)
+    var parsed := _read(storage_path)
     if parsed.is_empty():
-        parsed = _read(BACKUP_PATH)
+        parsed = _read(backup_storage_path)
     if parsed.is_empty():
         return false
     game_state.apply_loaded(parsed)

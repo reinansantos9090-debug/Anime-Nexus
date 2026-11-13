@@ -45,6 +45,11 @@ func add_map(map_id:String)->void:
     for id in game_state.data["quests"]["active"].duplicate():
         var q:=get_quest(str(id))
         if q.get("type","")=="map" and str(q.get("map",""))==map_id:add_progress(str(id))
+
+func add_interaction(object_id:String)->void:
+    for id in game_state.data["quests"]["active"].duplicate():
+        var q:=get_quest(str(id))
+        if q.get("type","")=="interact" and str(q.get("object",""))==object_id:add_progress(str(id))
         
 func add_boss(boss_id:String)->void:
     for id in game_state.data["quests"]["active"].duplicate():

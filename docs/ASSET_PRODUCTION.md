@@ -1,10 +1,10 @@
 # Inventário de produção de assets
 
-**Estado de auditoria:** apenas ícones Android e materiais simples foram encontrados. Não há modelos/áudio finais. Todos os itens desta tabela estão **Planejados**; recursos gerados por scripts são provisórios. Origem prevista: produção original para Anime Nexus, arquivos fonte editáveis e licença cedida ao projeto; nenhum arquivo extraído de jogo comercial. Registrar autor, ferramenta, arquivo-fonte e licença antes de integrar.
+**Estado de auditoria:** não há modelos/áudio finais. O primeiro slice agora usa blockouts procedurais originais para Kaien, Nimbara, algumas criaturas, Cérvido e Âncora. Esses meshes são provisórios e não satisfazem os requisitos de arte final. Demais recursos permanecem **Planejados**. Registrar autor, ferramenta, arquivo-fonte e licença antes de integrar; nenhum arquivo extraído de jogo comercial.
 
 | ID | Finalidade e associação | Descrição visual / paleta | Especificação / materiais | Animações exigidas | Estado / origem |
 |---|---|---|---|---|---|
-| CH-KAIEN | Protagonista Kaien, slice e campanha | Jovem anime; azul-marinho/ciano/âmbar; casaco assimétrico e manoplas | glTF/GLB, rig humanoide, 12–20k tris LOD0 / 5–8k LOD1; 1K albedo/normal/ORM atlas | idle, run, combo 3, dodge, 3 skills, hit, victory, supreme | Planejado; original |
+| CH-KAIEN | Protagonista Kaien, slice e campanha | Jovem anime; azul-marinho/ciano/âmbar; casaco assimétrico e manoplas | glTF/GLB, rig humanoide, 12–20k tris LOD0 / 5–8k LOD1; 1K albedo/normal/ORM atlas | idle, run, combo 3, dodge, 3 skills, hit, victory, supreme | Blockout procedural integrado; arte final planejada; original |
 | CH-AKARI | Akari, combate de chama | cobre/vermelho/ouro, lenço distintivo | mesmo pipeline humanoide modular; peças de lenço separadas | idle/run, combo, 3 skills, esquiva, hit, suprema | Planejado; original |
 | CH-REN | Ren, vento | prata/turquesa/verde, ornamentos flutuantes | rig humanoide leve, acessórios com bones secundários | idle/run, combo, salto, vento, esquiva, suprema | Planejado; original |
 | CH-MIRA | Mira, gelo | lilás/azul-pérola, prismas geométricos | rig humanoide; adornos transparentes separados | idle/run, combo, barreira, gelo, hit, suprema | Planejado; original |
@@ -12,7 +12,7 @@
 | CH-SHIN | Shin, sombra | grafite/preto/violeta, tecido distorcido | rig humanoide; material dissolve controlável | idle/run, combo, duplicata, teleporte, hit, suprema | Planejado; original |
 | CH-HARU | Haru, natureza | verde-musgo, folhas, bolsa botânica | rig humanoide; espíritos-companion como assets separados | idle/run, combo, raízes, cura, invocação, suprema | Planejado; original |
 | CH-EIKO | Eiko, gravidade | índigo/rosa/azul, aros cósmicos | rig humanoide, rings separados e emissivo controlado | idle/run, combo, pull/push, campo, suprema | Planejado; original |
-| BOSS-CERVO | Chefe de Nimbara | espírito cervídeo de cristal verde/violeta | criatura 25–40k tris LOD0; carapaça segmentada, cristal emissivo | idle, investida, stomp, cristal, stun, fase 2, derrota | Planejado; original |
+| BOSS-CERVO | Chefe de Nimbara | espírito cervídeo de cristal verde/violeta | criatura 25–40k tris LOD0; carapaça segmentada, cristal emissivo | idle, investida, stomp, cristal, stun, fase 2, derrota | Blockout procedural com IA/fases genéricas integrado; modelo/animações finais planejados; original |
 | BOSS-ESFINGE | Chefe Aurélio | esfinge de vidro dourado/coral | 30–45k tris LOD0, material facetado não transparente caro | voo/andar, feixe refletido, miragem, fase 2, hit/death | Planejado; original |
 | BOSS-MARES | Chefe Vesper | guardiã anfíbia azul/coral/perolada | 30–45k tris, nadadeiras e material de água estilizada | onda, mergulho, mudança de maré, fase 2 | Planejado; original |
 | BOSS-COLOSSO | Chefe Ferrúmia | corpo mecânico cobre/coral/azul elétrico | 35–50k tris modular; placas e bobinas separadas | marcha, varredura, trilho, quebra de placa, fase 2 | Planejado; original |
@@ -20,15 +20,15 @@
 | BOSS-ARQUIVISTA | Chefe Umbral | entidade de espelho/prata/violeta | 30–45k tris, peças refletivas com material mobile | cópia de golpe, troca de alvo, fase 2, quebra do espelho | Planejado; original |
 | BOSS-ZERO | Chefe final | arquivo geométrico abstrato e silhueta humanoide original | 40–60k tris LOD0, shaders simples e pequenos módulos intercambiáveis | 3 fases, estase, salas/memórias, transição, resolução | Planejado; original |
 | BOSS-PRISMA | Chefe secreto | prisma primordial policromático | 40–60k tris, cores em emissive seletivo | ataques que combinam 8 tons, 2+ fases | Planejado; original |
-| EN-NIMBARA | 6 inimigos da floresta | musgo, faísca foliar, mariposa, besouro, cipó e guardião | cada rig 4–18k tris, materiais por espécie | locomoção, ataque, reação, recuo, derrota | Planejado; original |
+| EN-NIMBARA | 6 inimigos da floresta | musgo, faísca foliar, mariposa, besouro, cipó e guardião | cada rig 4–18k tris, materiais por espécie | locomoção, ataque, reação, recuo, derrota | Quatro inimigos com meshes/IA blockout integrados; faltam dois e os assets finais; original |
 | EN-AURELIO | 6 inimigos do deserto | cristal, escaravelho, miragem, vigia, ampulheta e guardião | mesma faixa modular, silhuetas distintas | movimento, ataque, telegraph, retorno | Planejado; original |
 | EN-VESPER | 6 inimigos costeiros | bolha, coral, água-viva, caranguejo, onda e sentinela | rigs pequenos, água não exige transparência em toda peça | ricochete, onda, guarda, mergulho | Planejado; original |
 | EN-FERRUMIA | 6 inimigos mecânicos | drone, engrenagem, sentinela, autômato, magnético e núcleo | peças reutilizáveis em atlas sem reutilizar silhueta completa | patrulha, tiro, montagem, stagger | Planejado; original |
 | EN-IVERN | 6 inimigos de geada | floco, raposa, cristal, nevasca, guardião e sentinela | rig de criatura e partículas limitadas | pulo, névoa, ataque vertical, retorno | Planejado; original |
 | EN-UMBRAL | 6 inimigos de reflexo | eco, borboleta, espelho, sombra, ilusão e vigia | mesh leve; dissolve/duplicata por shader | invisibilidade curta e leitura de pista | Planejado; original |
 | EN-NEXO | ecos de cada região | variações narrativas locais dos inimigos aprovados | combinações de material e comportamento; não só troca de cor | ataques combinados e reações próprias | Planejado; original |
-| ENV-OBSERVATORIO | hub principal | pedra suspensa, vidro astral, luz de portal azul | 1 cena modular, 3 setores visíveis, LOD/occlusion | bandeiras, portal, NPCs, luz narrativa | Planejado; original |
-| ENV-NIMBARA | floresta e três subáreas | folhagem verde, bioluminescência turquesa/violeta | kits de árvore, raiz, ruína, lago e trilha; atlas 2K por região | vento/folha/água em ciclos baratos | Planejado; original |
+| ENV-OBSERVATORIO | hub principal | pedra suspensa, vidro astral, luz de portal azul | 1 cena modular, 3 setores visíveis, LOD/occlusion | bandeiras, portal, NPCs, luz narrativa | Blockout do hub reutilizado; arte final e áreas funcionais planejadas; original |
+| ENV-NIMBARA | floresta e três subáreas | folhagem verde, bioluminescência turquesa/violeta | kits de árvore, raiz, ruína, lago e trilha; atlas 2K por região | vento/folha/água em ciclos baratos | Blockout da clareira com trilha, árvores, raízes, cristais e Âncora; subáreas e arte final planejadas; original |
 | ENV-AURELIO | deserto/templo/oásis | duna dourada, pedra coral, céu violeta | módulos de ruína e plataforma; terreno com rota | poeira, mecanismo, faixa de calor | Planejado; original |
 | ENV-VESPER | porto/ilhas/caverna | água cobalto, coral, pontes de luz | kit de costa, cavernas, skiff e farol | maré, água, barco e ponte | Planejado; original |
 | ENV-FERRUMIA | cidade/trilhos/torre | cobre, magenta, azul elétrico | kit modular, plataformas, elevadores e cabos | trilhos/elevadores e máquinas | Planejado; original |

@@ -1,20 +1,17 @@
-# Teste-jue — Godot runtime
+# Anime Nexus — protótipo Godot
 
-Godot 4.7.2 stable is now part of the repository as the target engine foundation.
+Godot 4.7.2 stable is the target runtime for the first vertical slice. The Android export uses landscape orientation and a separate Anime Nexus application ID.
 
 The project is intentionally source/configuration based. Godot editor binaries and generated .godot data are not committed.
 
-Current foundation:
-- Native 3D scene and camera.
-- Mobile-compatible renderer configuration.
-- Procedural arena, portal and enemy placeholders.
-- Real-time movement and combat loop.
-- Offline save/load.
-- Day/night lighting cycle.
-- Android export preset.
-- CI validation/export path.
+Current slice work:
+- Kaien loadout with Manoplas Fulgor and three active electrical abilities.
+- First Nimbara mission, three-phase Cérvido de Cristal boss flow, and a proximity interaction for the Resonance Anchor.
+- Orthographic isometric follow camera, mobile analog joystick and limited slice HUD.
+- Procedural blockout geometry for Kaien, forest, creatures, boss and anchor; these are not final art assets.
+- Separate local save file for Anime Nexus; it does not read the old Aetheria save.
+- Headless rules tests and Android export workflow.
 
-The existing native Android/OpenGL implementation remains during the migration so the current playable path is not discarded. New gameplay/visual systems can now be implemented in Godot and validated independently.
+The Kotlin/OpenGL implementation remains as an audited legacy prototype. Its current CI compile has unresolved source errors; see `../docs/IMPLEMENTATION_STATUS.md`.
 
-Planned Godot systems:
-Rooftop/HQ, Portal, Expeditions, Rifts, Versus, story campaign, weapons, abilities, bosses, monsters, wardrobe, upgrade cores, contracts, events, daily goals, crafting, inventory, audio/VFX, statistics and mobile performance budgets.
+This project remains an early prototype. The rest of the campaign, final 3D models/rigs, full maps, companion AI, expanded saves, audio, measured performance and on-device validation are not implemented.
