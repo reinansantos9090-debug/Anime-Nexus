@@ -17,7 +17,8 @@ Branch de desenvolvimento atual: `dev/anime-nexus-vertical-slice`.
 
 - Godot 4.6.3: import headless e runner `ANIME_NEXUS_TESTS: PASS`; testes cobrem joystick, loadout, dados Nimbara, cadeia da missão/boss/Âncora e lentidão do Campo Estático. Ainda há warnings de recursos em uso ao encerrar o runner.
 - Godot 4.6.3: smoke run headless por 180 frames encerrou sem erros de script. Render visual, toque real, APK atual e instalação ainda não foram verificados.
-- GitHub Actions run `43409376899`, commit `065f1fdea09ef12c1dc2235e9b750b23809b524c`: testes unitários Kotlin, build APK do host, testes Godot 4.7.2 e export Android **passaram**. Foram anexados artifacts Kotlin e Godot; a [execução 43409376899](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43409376899) tem os dois.
+- GitHub Actions run `43409864486`, commit `5975d18da41f1ca8e0293b3b5502f5b12e743a0a`: testes unitários Kotlin, build APK do host, testes Godot 4.7.2 e export Android **passaram**. Foram anexados artifacts Kotlin e Godot; a [execução 43409864486](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43409864486) tem os dois.
+- O runner local agora testa também a restauração de backup quando o arquivo de save principal está malformado. Essa atualização passou em Godot 4.6.3 local e aguarda nova run CI.
 - As falhas de compilação Kotlin da revisão anterior foram corrigidas no host legado. O APK Kotlin ainda representa o protótipo Aetheria, não a versão final Anime Nexus; o APK Godot representa a slice Anime Nexus em blockout.
 - Gradle local não conseguiu resolver AGP 9.1.1 nesta máquina, então a compilação foi observada no runner GitHub.
 - Último CI de `main` auditado: falhou no verificador de referências externas de fontes Kotlin. Logs listam tipos que têm usos no código, indicando falsos positivos no verificador atual; o Godot passou antes dessa etapa.

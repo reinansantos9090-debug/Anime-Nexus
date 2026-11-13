@@ -77,8 +77,16 @@ func _test_save()->void:
     save.configure_paths("user://anime_nexus_test_save.json","user://anime_nexus_test_save.bak.json")
     _expect(save.save_now(),"Save: could not write save")
     state.data["hunter"]["gold"]=1
+    _expect(save.save_now(),"Save: could not rotate the previous valid save to backup")
+    var damaged:=FileAccess.open("user://anime_nexus_test_save.json",FileAccess.WRITE)
+    if damaged:
+        damaged.store_string("{ incomplete json")
+        damaged.close()
+    else:
+        _expect(false,"Save: could not create the corrupt-primary recovery fixture")
+    state.data["hunter"]["gold"]=2
     _expect(save.load_now(),"Save: could not reload save")
-    _expect(int(state.data["hunter"]["gold"])==9876,"Save: persisted value mismatch")
+    _expect(int(state.data["hunter"]["gold"])==9876,"Save: corrupt primary did not recover the previous backup")
     save.free()
     state.free()
     DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.json"))

@@ -63,8 +63,10 @@ func _read(path: String) -> Dictionary:
     var file := FileAccess.open(path, FileAccess.READ)
     if file == null:
         return {}
-    var parsed = JSON.parse_string(file.get_as_text())
-    return parsed if parsed is Dictionary else {}
+    var parser := JSON.new()
+    if parser.parse(file.get_as_text()) != OK:
+        return {}
+    return parser.data if parser.data is Dictionary else {}
 
 func force_save_and_flush() -> void:
     save_now()
