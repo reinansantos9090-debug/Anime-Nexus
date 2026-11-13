@@ -19,7 +19,7 @@ Data da auditoria: 13 nov. 2026, branch `dev/anime-nexus-vertical-slice`, base `
 | Companions com máquina de estados | Planejado | nenhum squad follow/combat completo observado no runtime Godot |
 | Campanha principal e secundárias | Planejado | story/quest catalogs Aetheria menores; não há 60+45 Anime Nexus |
 | Inventário/equipamentos | Implementado (protótipo) | inventário/wardrobe/crafting Aetheria; slots e catálogo alvo não integram |
-| Save offline | Implementado (protótipo) | save Godot single JSON + backup; recuperação do backup após JSON principal corrompido agora tem teste headless; Kotlin codec; faltam 3 slots, integridade e migração |
+| Save offline | Testado (protótipo) | save Godot single JSON + backup; fallback após JSON principal corrompido passou teste headless local e CI; Kotlin codec; faltam 3 slots, integridade e migração |
 | Arte original final | Planejado | só ícones, materiais simples e meshes procedurais; inventário em `ASSET_PRODUCTION.md` |
 | Áudio local final | Planejado | bus gera/aciona sons, mas nenhum recurso de música ou SFX existe |
 | Perfiles de qualidade/perf | Implementado (protótipo) | existe perfil/telemetria Kotlin e serviço Godot; sem medições reais de FPS |
@@ -36,7 +36,7 @@ Só mover uma linha para **Testado** depois de evidência de build correspondent
 
 ## Execução de CI mais recente
 
-Run `43409864486`, commit `5975d18da41f1ca8e0293b3b5502f5b12e743a0a`: `android-host` passou unit tests e `assembleDebug`, e `godot-android` passou validação e export Android; artifacts dos dois APKs estão na [execução 43409864486](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43409864486). APKs não foram instalados em aparelho. O APK Godot é a slice Anime Nexus em blockout; o APK Kotlin é o protótipo Aetheria legado. Um teste headless local adicional confirma recuperação do backup quando o JSON principal está corrompido; a validação desse novo teste no CI ainda está pendente.
+Run `43410319631`, commit `c66eec5d78ce2c89d6b589c7b224587093081748`: `android-host` passou unit tests e `assembleDebug`, e `godot-android` passou validação e export Android; os testes de fallback do save corrompido também passaram. Artifacts dos dois APKs estão na [execução 43410319631](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43410319631). APKs não foram instalados em aparelho. O APK Godot é a slice Anime Nexus em blockout; o APK Kotlin é o protótipo Aetheria legado.
 
 ## Slice em construção (13 nov. 2026)
 

@@ -30,5 +30,5 @@
 - O runner headless também valida recuperação do backup após corromper o JSON principal. Leitura do JSON inválido retorna estado vazio para acionar fallback sem erro ruidoso; alteração local passou em 4.6.3 e aguarda CI.
 - Godot 4.6.3 headless: cena principal completou smoke run de 180 frames sem erro de script.
 - Android local: build não conseguiu resolver AGP 9.1.1 neste ambiente. No GitHub Actions, a run `43409376899` passou `:app:testDebugUnitTest` e `:app:assembleDebug`.
-- CI da revisão `5975d18`: runner Godot 4.7.2, export Android Godot, testes unitários Kotlin e APK do host Kotlin passaram; artifacts publicados na [run 43409864486](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43409864486). Nenhum APK foi instalado ou testado em aparelho.
+- CI da revisão `c66eec5`: runner Godot 4.7.2, export Android Godot, testes unitários Kotlin, recuperação do save corrompido e APK do host Kotlin passaram; artifacts publicados na [run 43410319631](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43410319631). Nenhum APK foi instalado ou testado em aparelho.
 - Sem aparelho Android ligado a este ambiente, FPS, toque real, instalação APK e qualidade visual ainda não foram verificados.
