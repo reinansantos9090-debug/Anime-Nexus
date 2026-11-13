@@ -83,9 +83,9 @@ jobs:
         run: |
           set -euo pipefail
           cd godot/extensions/anime_nexus_core
-          scons platform=linux target=template_release arch=x86_64 -j2
-          scons platform=android target=template_debug arch=arm64 -j2
-          scons platform=android target=template_release arch=arm64 -j2
+          scons platform=linux target=template_release arch=x86_64 -j"$(nproc)"
+          scons platform=android target=template_debug arch=arm64 -j"$(nproc)"
+          scons platform=android target=template_release arch=arm64 -j"$(nproc)"
 
       - name: Set up Godot 4.7.2
         shell: bash
@@ -114,6 +114,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          adb start-server
+          adb devices
           "$GODOT_BIN" --headless --editor --quit --path godot
           "$GODOT_BIN" --headless --path godot --script tests/test_runner.gd
           mkdir -p "$RUNNER_TEMP/game-artifacts"
