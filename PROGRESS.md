@@ -17,7 +17,7 @@ Branch de desenvolvimento atual: `dev/anime-nexus-vertical-slice`.
 
 - Godot 4.6.3: import headless e runner `ANIME_NEXUS_TESTS: PASS`; testes cobrem joystick, loadout, dados Nimbara, cadeia da missão/boss/Âncora e lentidão do Campo Estático. Ainda há warnings de recursos em uso ao encerrar o runner.
 - Godot 4.6.3: smoke run headless por 180 frames encerrou sem erros de script. Render visual, toque real, APK atual e instalação ainda não foram verificados.
-- GitHub Actions run `43406082827`, commit `28fe837`: testes headless Godot 4.7.2 e export Android debug **passaram**; artifact Godot anexado à [execução 43406082827](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43406082827) (28,2 MB).
+- GitHub Actions run `43406704240`, commit `036b9ad`: testes headless Godot 4.7.2 e export Android debug **passaram**; artifact Godot anexado à [execução 43406704240](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43406704240) (28,2 MB).
 - O job Android Kotlin chegou à compilação, mas falhou em `:app:compileDebugKotlin` com os mesmos 155 erros em 10 arquivos do protótipo; `:app:testDebugUnitTest` não pôde rodar e não foi produzido APK Kotlin.
 - O conflito inicial de plugin Kotlin/AGP 9 foi corrigido nesta branch; a barreira atual são erros de compilação do código-fonte já existente.
 - Gradle local não conseguiu resolver AGP 9.1.1 nesta máquina, então a compilação foi observada no runner GitHub.

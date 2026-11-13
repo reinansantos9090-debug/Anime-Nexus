@@ -13,7 +13,7 @@
 
 Critério: APK Android Godot instalável em landscape; salvar/reabrir offline; controlar Kaien por joystick; três ações de combate; arena Nimbara curta com rota e obstáculo; um inimigo comum, uma criatura especial e chefe com duas fases/ataques telegráficos; missão narrativa com diálogos; capturas reais do jogo; sem placeholders apresentados como arte final.
 
-Status atual: slice em implementação, ainda sem aceite. Já existe fluxo headless de missão, chefe e Âncora, controles analógicos, mapa e visuais blockout. CI Godot 4.7.2 e export APK do commit `28fe837` passaram na [run 43406082827](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43406082827). Ataques em área do chefe agora usam círculo de aviso com dano atrasado e regra testada. Faltam validar sua leitura visual e controles em aparelho, expandir os avisos a outros padrões e substituir os blockouts por modelos/animações originais. Arte final, música e FPS não foram validados.
+Status atual: slice em implementação, ainda sem aceite. Já existe fluxo headless de missão, chefe e Âncora, controles analógicos, mapa e visuais blockout. CI Godot 4.7.2 e export APK do commit `036b9ad` passaram na [run 43406704240](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43406704240). Ataques em área do chefe agora usam círculo de aviso com dano atrasado e regra testada. Faltam validar sua leitura visual e controles em aparelho, expandir os avisos a outros padrões e substituir os blockouts por modelos/animações originais. Arte final, música e FPS não foram validados.
 
 ## Marco 2 — Sistemas de produto
 
