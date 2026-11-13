@@ -28,6 +28,7 @@ func _init()->void:
     _test_save()
     _test_virtual_joystick()
     _test_nimbara_vertical_slice_data_and_quest()
+    _test_boss_telegraph()
     _test_static_field_slow()
     if failures.is_empty():
         print("ANIME_NEXUS_TESTS: PASS")
@@ -134,3 +135,17 @@ func _test_static_field_slow()->void:
     _expect(is_equal_approx(enemy.slow_factor,0.15),"Combat: slow factor must respect its safe lower bound")
     enemy.free()
     content.free()
+
+func _test_boss_telegraph()->void:
+    var boss=BossScript.new()
+    var warnings:Array=[]
+    var immediate_hits:Array=[]
+    boss.telegraph_requested.connect(func(center:Vector3,radius:float,damage:float,windup:float):
+        warnings.append({"center":center,"radius":radius,"windup":windup})
+    )
+    boss.area_requested.connect(func(_center:Vector3,_radius:float,_damage:float):immediate_hits.append(true))
+    boss._warn_area(Vector3(1,0,1),3.2,120.0,0.72)
+    _expect(warnings.size()==1,"Boss: area attack did not announce its warning telegraph")
+    _expect(float(warnings[0].get("windup",0.0))>=0.5,"Boss: area attack warning window is too short")
+    _expect(immediate_hits.is_empty(),"Boss: area attack dealt damage before the telegraph resolved")
+    boss.free()

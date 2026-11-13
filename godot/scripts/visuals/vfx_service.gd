@@ -46,6 +46,32 @@ func boss_phase(parent:Node3D,pos:Vector3,color:=Color("#ff5ad9"))->void:
     ring(parent,pos,1.35,color,0.35)
     ring(parent,pos,2.10,Color("#ffffff"),0.42)
 
+func telegraph_circle(parent:Node3D,pos:Vector3,radius:float,duration:float,color:=Color("#ff6b79"))->void:
+    var indicator:=MeshInstance3D.new()
+    var mesh:=CylinderMesh.new()
+    mesh.top_radius=1.0
+    mesh.bottom_radius=1.0
+    mesh.height=0.025
+    mesh.radial_segments=32
+    var material:=StandardMaterial3D.new()
+    material.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
+    material.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA
+    material.albedo_color=Color(color.r,color.g,color.b,0.23)
+    material.emission_enabled=true
+    material.emission=color
+    material.emission_energy_multiplier=1.1
+    mesh.material=material
+    indicator.mesh=mesh
+    indicator.position=Vector3(pos.x,0.045,pos.z)
+    indicator.scale=Vector3(radius,1.0,radius)
+    parent.add_child(indicator)
+    var tween:=create_tween()
+    tween.set_parallel(true)
+    tween.tween_property(material,"albedo_color:a",0.42,duration)
+    tween.tween_property(indicator,"scale",Vector3(radius*0.9,1.0,radius*0.9),duration)
+    tween.set_parallel(false)
+    tween.tween_callback(indicator.queue_free)
+
 func death(parent:Node3D,pos:Vector3,color:=Color("#9ea7b8"))->void:
     burst(parent,pos+Vector3(0,0.8,0),color,20.0)
     ring(parent,pos,0.65,color,0.28)

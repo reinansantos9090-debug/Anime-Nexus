@@ -504,6 +504,7 @@ func _spawn_boss(id:String)->void:
     )
     b.projectile_requested.connect(_shot)
     b.area_requested.connect(_boss_area)
+    b.telegraph_requested.connect(_boss_telegraph)
     b.defeated.connect(_boss_down)
     boss=b
 
@@ -520,6 +521,13 @@ func _boss_area(center:Vector3,radius:float,damage:float)->void:
     if player.position.distance_to(center)<=radius:
         take_enemy_damage(damage)
     vfx.boss_phase(self,center,Color("#ff6bd6"))
+
+func _boss_telegraph(center:Vector3,radius:float,damage:float,windup:float)->void:
+    vfx.telegraph_circle(self,center,radius,windup)
+    get_tree().create_timer(windup).timeout.connect(func():
+        if not is_instance_valid(boss) or boss.hp<=0.0:return
+        _boss_area(center,radius,damage)
+    )
 
 func _shot(origin:Vector3,target:Vector3,damage:float)->void:
     var p:=Node3D.new()
