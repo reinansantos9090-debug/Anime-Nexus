@@ -236,7 +236,7 @@ internal fun Game3DEngine.skill1() {
         "prism_spear" -> target?.let { dashToward(it, 3.4f); meleeAttack(it, 76f + level * 2.2f, 2.1f) }
         "echo_chakrams" -> target?.let { fireProjectile(it.pos, 54f + level * 1.5f, 1.35f); fireProjectile(it.pos, 42f + level, 0.95f) }
         "nova_gauntlets" -> repeat(4) { target?.let { meleeAttack(it, 26f + level * 0.8f, 1.7f) } }
-        "rift_mortar" -> repeat(4) { target?.let { fireProjectile(it.pos, 48f + level * 1.6f, 0.82f + it.radius * 0.02f) } }
+        "rift_mortar" -> repeat(4) { target?.let { fireProjectile(it.pos, 48f + level * 1.6f, 0.82f + it.kind.radius * 0.02f) } }
         "arc_whip" -> {
             areaAttack(4.8f, 70f + level * 1.6f)
             target?.let { it.hp += 0f }
