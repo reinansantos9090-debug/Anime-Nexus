@@ -44,6 +44,7 @@ func build_biome(id: String) -> void:
         for obstacle in b.get("obstacles",[]):
             _make_obstacle(obstacle,b.get("accent",Color.WHITE))
     _make_biome_decor(id,b)
+    if id=="nimbara":Factory.make_resonance_anchor(world_root,Vector3(0,0,-8.5))
     portal=Factory.make_portal(world_root,Vector3(0,0,0),b.get("accent",Color("#5bdcff")))
     _make_hazard_markers(id,b.get("accent",Color.WHITE))
 
@@ -51,6 +52,14 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
     var accent:Color=b.get("accent",Color.WHITE)
     var ground:Color=b.get("ground",Color("#4ea66f"))
     match id:
+        "nimbara":
+            for p in [Vector3(-20,0,-18),Vector3(20,0,-18),Vector3(-21,0,18),Vector3(20,0,19)]:
+                _tree(p,accent,Color("#493c3e"),4.8)
+            for i in range(7):
+                var x:float=-13.0+float(i)*4.3
+                Factory.make_crystal(world_root,Vector3(x,0.05,-16.0 if i%2==0 else 16.0),accent.lerp(Color("#c084fc"),float(i%3)*0.22))
+            for p in [Vector3(-8,0,13),Vector3(-5,0,14),Vector3(-2,0,13),Vector3(7,0,-15)]:
+                _memory_bloom(p,accent)
         "verdant_frontier":
             for p in [Vector3(-18,0,-18),Vector3(18,0,-17),Vector3(-19,0,17),Vector3(17,0,18)]:
                 _tree(p,accent,ground)
@@ -73,7 +82,7 @@ func _make_obstacle(obstacle:Dictionary,accent:Color)->void:
     var size:Vector3=obstacle.get("size",Vector3.ONE)
     match kind:
         "tree":
-            _tree(pos,accent,Color("#5a4939"),size.y)
+            _tree(pos,accent,Color("#5a4939"),maxf(2.7,size.y))
         "crystal":
             Factory.box(world_root,Vector3(size.x,0.10,size.z),pos+Vector3(0,0.05,0),Color("#465f86"))
             Factory.make_crystal(world_root,pos+Vector3(0,size.y*0.45,0),accent)
@@ -83,6 +92,10 @@ func _make_obstacle(obstacle:Dictionary,accent:Color)->void:
             _scrap_stack(pos,accent,size)
         "ruin":
             _ruin_pillar(pos,accent,size)
+        "root":
+            var root_mesh:=Factory.cylinder(world_root,0.18,0.32,size.x,pos+Vector3(0,size.y*0.35,0),Color("#765348"))
+            root_mesh.rotation.z=0.12
+            Factory.sphere(world_root,0.36,pos+Vector3(-size.x*0.32,size.y*0.7,0),accent.darkened(0.22))
         _:
             Factory.box(world_root,Vector3(size.x,0.35,size.z),pos+Vector3(0,0.17,0),Color("#4b5567"))
             var rock:=Factory.sphere(world_root,maxf(0.45,minf(size.x,size.z)*0.42),pos+Vector3(0,size.y*0.45,0),accent.darkened(0.45))
@@ -98,6 +111,17 @@ func _tree(pos:Vector3,accent:Color,ground:Color,height:float=2.8)->void:
     Factory.sphere(root_node,height*0.18,Vector3(-height*0.25,height*0.68,0.15),accent.lightened(0.08))
     Factory.sphere(root_node,height*0.18,Vector3(height*0.22,height*0.67,-0.12),accent.darkened(0.05))
     Factory.box(root_node,Vector3(0.38,0.16,0.38),Vector3(0,0.05,0),ground)
+
+func _memory_bloom(pos:Vector3,accent:Color)->void:
+    var flower:=Node3D.new()
+    flower.position=pos
+    world_root.add_child(flower)
+    Factory.cylinder(flower,0.035,0.05,0.42,Vector3(0,0.21,0),Color("#91d78d"))
+    for i in range(5):
+        var angle:=float(i)*TAU/5.0
+        var petal:=Factory.sphere(flower,0.12,Vector3(cos(angle)*0.12,0.43,sin(angle)*0.12),accent.lightened(0.14))
+        petal.scale=Vector3(0.72,1.0,0.72)
+    Factory.sphere(flower,0.08,Vector3(0,0.44,0),Color("#ffe88a"))
 
 func _cactus(pos:Vector3,accent:Color,scale_factor:float=1.0)->void:
     var root_node:=Node3D.new()

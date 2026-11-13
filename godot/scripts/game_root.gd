@@ -105,14 +105,16 @@ func _ready()->void:
     _set_player()
 
     camera=Camera3D.new()
-    camera.fov=48.0
+    camera.projection=Camera3D.PROJECTION_ORTHOGONAL
+    camera.size=24.0
     add_child(camera)
     camera.current=true
 
-    hud=HudScript.new();add_child(hud);hud.setup(state)
+    hud=HudScript.new();add_child(hud);hud.setup(state,quests)
     hud.attack_pressed.connect(_attack)
     hud.ability_pressed.connect(_ability)
     hud.portal_pressed.connect(_portal)
+    hud.interact_pressed.connect(_interact)
     hud.inventory_pressed.connect(func():hud.set_mode("INVENTÁRIO • "+inventory.summary()))
     hud.story_pressed.connect(_story)
     hud.wardrobe_pressed.connect(_wardrobe)
@@ -127,8 +129,10 @@ func _ready()->void:
 
     world.build_hq()
     _apply_quality(perf.current())
-    quests.start("story_01")
-    hud.set_mode("QG NO TERRAÇO • PORTAL CENTRAL")
+    quests.start("nimbara_01")
+    hud.set_mode("OBSERVATÓRIO DE ÍRIS • PORTAL CENTRAL")
+    if int(state.data["story"].get("chapter",1))==1 and int(state.data["story"].get("scene",0))==0:
+        _story()
 
 func _set_player()->void:
     if not is_instance_valid(player):return
@@ -150,7 +154,7 @@ func _portal()->void:
     match mode:
         "HQ":_enter_expedition()
         "EXPEDITION":_enter_rift()
-        "RIFT":_enter_versus()
+        "RIFT":_enter_expedition() if "nimbara_03" in state.data["quests"]["active"] else _enter_versus()
         "VERSUS":_enter_hq()
         _: _enter_hq()
 
@@ -163,38 +167,67 @@ func _enter_hq()->void:
     activity_progress=0
     activity_goal=0
     world.build_hq()
+    hud.set_interaction_visible(false)
     player.position=Vector3(0,0.1,6)
-    hud.set_mode("QG NO TERRAÇO • PORTAL CENTRAL")
+    hud.set_mode("PRÓLOGO DA SLICE CONCLUÍDO • NOVOS CAPÍTULOS EM PRODUÇÃO" if bool(state.data["story"]["flags"].get("nimbara_slice_complete",false)) else "OBSERVATÓRIO DE ÍRIS • PORTAL CENTRAL")
 
 func _enter_expedition()->void:
+    if bool(state.data["story"]["flags"].get("nimbara_slice_complete",false)):
+        hud.set_mode("PRÓLOGO DA SLICE CONCLUÍDO • NOVOS CAPÍTULOS EM PRODUÇÃO")
+        return
     mode="EXPEDITION"
     portal_step=(portal_step+1)%maps.maps.size()
     var ids:Array=maps.maps.keys()
     ids.sort()
     var map_id:=str(ids[portal_step%ids.size()])
+    if int(state.data["world"].get("completed_expeditions",0))==0 or "nimbara_03" in state.data["quests"]["active"]:
+        map_id="nimbara"
     portal_service.enter_expedition(map_id)
+    state.data["world"]["map_id"]=map_id
     director.start_expedition(map_id)
     world.build_biome(map_id)
-    activity_remaining=maps.duration(map_id)
-    activity_goal=maps.activity_goal(map_id)
+    var anchor_return:bool=map_id=="nimbara" and "nimbara_03" in state.data["quests"]["active"]
+    activity_remaining=0.0 if anchor_return else maps.duration(map_id)
+    activity_goal=0 if anchor_return else maps.activity_goal(map_id)
     activity_progress=0
     player.position=Vector3(0,0.1,6)
-    _spawn_wave(mini(16,perf.max_enemies()))
+    _spawn_wave(0 if anchor_return else mini(16,perf.max_enemies()))
     quests.add_map(map_id)
-    hud.set_mode("EXPEDIÇÃO • %s • 0/%d"%[maps.get_map(map_id)["name"],activity_goal])
+    hud.set_interaction_visible(map_id=="nimbara" and "nimbara_03" in state.data["quests"]["active"])
+    hud.set_mode("NIMBARA • APROXIME-SE DA ÂNCORA" if anchor_return else "EXPEDIÇÃO • %s • 0/%d"%[maps.get_map(map_id)["name"],activity_goal])
+
+func _interact()->void:
+    if mode!="EXPEDITION" or "nimbara_03" not in state.data["quests"]["active"]:return
+    var anchor_position:=Vector3(0,0,-8.5)
+    if player.position.distance_to(anchor_position)>3.2:
+        hud.set_mode("ÂNCORA • APROXIME-SE DO CRISTAL NO CENTRO DA CLAREIRA")
+        return
+    quests.add_interaction("resonance_anchor")
+    hud.set_interaction_visible(false)
+    audio.level_up()
 
 func _enter_rift()->void:
+    if "nimbara_01" in state.data["quests"]["active"]:
+        hud.set_mode("MISSÃO • CONCLUA A VOZ DAS RAÍZES ANTES DO CHEFE")
+        return
+    if "nimbara_03" in state.data["quests"]["active"]:
+        hud.set_mode("MISSÃO • INTERAJA COM A ÂNCORA DE RESSONÂNCIA")
+        return
+    if bool(state.data["story"]["flags"].get("nimbara_slice_complete",false)):
+        hud.set_mode("PRÓLOGO DA SLICE CONCLUÍDO • NOVOS CAPÍTULOS EM PRODUÇÃO")
+        return
     mode="RIFT"
-    portal_service.enter_rift("rift_dome")
+    var first_nimbara_boss:bool="nimbara_02" in state.data["quests"]["active"]
+    portal_service.enter_rift("nimbara" if first_nimbara_boss else "rift_dome")
     director.start_rift("rift_dome")
-    world.build_biome("crystal_forest")
+    world.build_biome("nimbara" if first_nimbara_boss else "crystal_forest")
     activity_remaining=0.0
     activity_progress=0
     activity_goal=1
-    _spawn_wave(perf.max_enemies())
+    _spawn_wave(mini(4,perf.max_enemies()) if first_nimbara_boss else perf.max_enemies())
     var ids:Array=content.BOSSES.keys()
     ids.sort()
-    var boss_id:=str(ids[portal_step%ids.size()])
+    var boss_id:="crystal_stag" if first_nimbara_boss else str(ids[portal_step%ids.size()])
     _spawn_boss(boss_id)
     hud.set_mode("RIFT • "+str(content.BOSSES[boss_id]["name"]))
 
@@ -269,10 +302,12 @@ func _attack()->void:
         if player.has_method("play_attack"):player.play_attack()
         var bonus:float=_core("damage")+skill_tree.bonus("damage")+damage_buff
         var crit:float=_core("crit")+skill_tree.bonus("crit")
-        var amount:float=combat.player_damage(weapon,int(state.get_hunter()["level"]),bonus,crit)
-        combat.hit(target,amount)
+        var attack:Dictionary=combat.player_attack(weapon,int(state.get_hunter()["level"]),bonus,crit)
+        var amount:float=float(attack["amount"])
+        var critical:bool=bool(attack["critical"])
+        combat.hit(target,amount,critical)
         vfx.hit_burst(self,target.position+Vector3(0,1,0),Color("#ffe16a"))
-        vfx.floating_number(self,target.position+Vector3(0,1.5,0),amount,false)
+        vfx.floating_number(self,target.position+Vector3(0,1.5,0),amount,critical)
     var speed_bonus:float=_core("attack_speed")+skill_tree.bonus("attack_speed")
     var cooldown_bonus:=clampf(_core("cooldown")+skill_tree.bonus("cooldown"),0.0,0.75)
     var wait:float=float(weapon["rate"])*(1.0-cooldown_bonus)/(1.0+speed_bonus)
@@ -296,12 +331,13 @@ func _ability(i:int)->void:
     _execute_ability(
         str(ability.get("effect","area")),
         float(ability.get("power",1.0)),
-        float(ability.get("radius",4.0))
+        float(ability.get("radius",4.0)),
+        int(ability.get("count",5))
     )
     var cooldown:=float(ability["cooldown"])*(1.0-clampf(_core("cooldown")+skill_tree.bonus("cooldown"),0.0,0.75))
     get_tree().create_timer(maxf(0.20,cooldown)).timeout.connect(func():skills[i]=true)
 
-func _execute_ability(effect:String,power:float,radius:float)->void:
+func _execute_ability(effect:String,power:float,radius:float,target_limit:=5)->void:
     var origin:=player.position
     match effect:
         "dash":
@@ -320,7 +356,36 @@ func _execute_ability(effect:String,power:float,radius:float)->void:
             if boss and is_instance_valid(boss) and boss.position.distance_to(origin)<=radius:
                 combat.hit(boss,65.0*power)
             vfx.skill_burst(self,origin,Color("#b990ff"))
-        "multi_projectile","chain","beam":
+        "slow_area":
+            for e in enemies.duplicate():
+                if is_instance_valid(e) and e.position.distance_to(origin)<=radius:
+                    combat.hit(e,35.0*power)
+                    if e.has_method("apply_slow"):e.apply_slow(3.0,0.42)
+            if boss and is_instance_valid(boss) and boss.position.distance_to(origin)<=radius:
+                combat.hit(boss,48.0*power)
+                if boss.has_method("apply_slow"):boss.apply_slow(2.2,0.58)
+            vfx.skill_burst(self,origin,Color("#68e5ee"))
+        "chain":
+            var candidates:Array[Node3D]=[]
+            for e in enemies:
+                if is_instance_valid(e):candidates.append(e)
+            if boss and is_instance_valid(boss):candidates.append(boss)
+            var cursor:=origin
+            for target_index in range(mini(target_limit,candidates.size())):
+                var nearest:Node3D=null
+                var nearest_distance:=radius if target_index==0 else 4.5
+                for candidate in candidates:
+                    var distance:=candidate.position.distance_to(cursor)
+                    if distance<nearest_distance:
+                        nearest=candidate
+                        nearest_distance=distance
+                if nearest==null:break
+                combat.hit(nearest,43.0*power if nearest!=boss else 72.0*power)
+                vfx.hit_burst(self,nearest.position+Vector3(0,1.0,0),Color("#69ebff"))
+                cursor=nearest.position
+                candidates.erase(nearest)
+            vfx.skill_burst(self,origin,Color("#7defff"))
+        "multi_projectile","beam":
             var count:=0
             for e in enemies.duplicate():
                 if is_instance_valid(e) and e.position.distance_to(origin)<=radius:
@@ -402,7 +467,15 @@ func _spawn_enemy(i:int,id:="")->void:
 func _attach_enemy_visual(e:Node3D,behavior:String,index:int)->void:
     var hue:=float(index%8)/8.0
     var base:=Color.from_hsv(hue,0.48,0.92)
-    if behavior in ["flying","orbit"]:e.attach_visual(Factory.make_moth(e,base))
+    if e.monster_id=="moss_hopper":
+        e.attach_visual(Factory.make_slime(e,Color("#75c77d")))
+    elif e.monster_id=="leaf_spark":
+        e.attach_visual(Factory.make_moth(e,Color("#63e9c6")))
+    elif e.monster_id=="crystal_stagling":
+        e.attach_visual(Factory.make_crystal_monster(e,Color("#81ded0")))
+    elif e.monster_id=="root_guardian":
+        e.attach_visual(Factory.make_golem(e,Color("#456b58"),Color("#9cf4d8")))
+    elif behavior in ["flying","orbit"]:e.attach_visual(Factory.make_moth(e,base))
     elif behavior in ["guardian","shielded","knockback"]:e.attach_visual(Factory.make_golem(e,base,Color("#e9fcff")))
     elif behavior in ["berserker","crusher"]:e.attach_visual(Factory.make_colossus(e,base,Color("#ffd86b")))
     elif behavior in ["sniper","ranged","turret"]:e.attach_visual(Factory.make_crystal_monster(e,base))
@@ -419,8 +492,10 @@ func _spawn_boss(id:String)->void:
     var b:Node3D=boss_scene.instantiate() if boss_scene else BossScript.new()
     add_child(b)
     b.position=player.position+Vector3(0,0,-10)
-    b.configure_boss(id,player,content,maps.difficulty("sky_ruins"))
-    b.attach_visual(Factory.make_colossus(b,Color("#7d5ce8"),Color("#ffd86b")))
+    var boss_map:="nimbara" if id=="crystal_stag" else "sky_ruins"
+    b.configure_boss(id,player,content,maps.difficulty(boss_map))
+    if id=="crystal_stag":b.attach_visual(Factory.make_crystal_stag(b,Color("#416a80"),Color("#70f5dc")))
+    else:b.attach_visual(Factory.make_colossus(b,Color("#7d5ce8"),Color("#ffd86b")))
     b.phase_changed.connect(func(p:int):
         hud.set_mode("CHEFE • FASE %d"%p)
         if is_instance_valid(b):b.scale=Vector3.ONE*(1.0 if p==1 else (1.12 if p==2 else 1.24))
@@ -431,6 +506,7 @@ func _spawn_boss(id:String)->void:
     )
     b.projectile_requested.connect(_shot)
     b.area_requested.connect(_boss_area)
+    b.telegraph_requested.connect(_boss_telegraph)
     b.defeated.connect(_boss_down)
     boss=b
 
@@ -447,6 +523,13 @@ func _boss_area(center:Vector3,radius:float,damage:float)->void:
     if player.position.distance_to(center)<=radius:
         take_enemy_damage(damage)
     vfx.boss_phase(self,center,Color("#ff6bd6"))
+
+func _boss_telegraph(center:Vector3,radius:float,damage:float,windup:float)->void:
+    vfx.telegraph_circle(self,center,radius,windup)
+    get_tree().create_timer(windup).timeout.connect(func():
+        if not is_instance_valid(boss) or boss.hp<=0.0:return
+        _boss_area(center,radius,damage)
+    )
 
 func _shot(origin:Vector3,target:Vector3,damage:float)->void:
     var p:=Node3D.new()
@@ -503,6 +586,11 @@ func _quest_completed(id:String)->void:
         hud.set_mode("OBJETIVO CONCLUÍDO • "+str(q.get("title",id)))
     if id.begins_with("chapter_") or id.begins_with("boss_"):
         _story()
+    if id=="nimbara_03":
+        state.data["story"]["flags"]["nimbara_slice_complete"]=true
+        save.save_now()
+        hud.set_mode("ÂNCORA ESTABILIZADA • PRÓLOGO DA SLICE CONCLUÍDO")
+        call_deferred("_enter_hq")
 
 func _nearest(radius:float)->Node3D:
     var best:Node3D=null
@@ -609,7 +697,7 @@ func _process(delta:float)->void:
 
     var v:Vector2=hud.move_vector if hud and hud.move_vector.length_squared()>0.01 else Input.get_vector("move_left","move_right","move_forward","move_back")
     if v.length_squared()>0.001 and dead_timer<=0.0:
-        v=v.normalized()
+        v=v.limit_length(1.0)
         var step:=Vector3(v.x,0,v.y)*6.2*delta
         var next:=player.position+step
         if mode=="EXPEDITION" and maps.blocked(str(portal_service.destination),next,0.62):
@@ -623,7 +711,7 @@ func _process(delta:float)->void:
     elif dead_timer<=0.0 and player.has_method("play_idle") and v.length_squared()<=0.001:
         player.play_idle()
 
-    var camera_target:=player.position+Vector3(0,14,17)
+    var camera_target:=player.position+Vector3(14,20,14)
     camera.position=camera.position.lerp(camera_target,1.0-exp(-10.0*delta))
     camera.look_at(player.position+Vector3(0,1,0),Vector3.UP)
 

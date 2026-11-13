@@ -19,6 +19,8 @@ var max_hp:=1.0
 var attack_timer:=0.0
 var special_timer:=2.0
 var stun_timer:=0.0
+var slow_timer:=0.0
+var slow_factor:=0.45
 var wander_timer:=0.0
 var difficulty:=1.0
 var visual:Node3D
@@ -48,6 +50,7 @@ func _process(delta:float)->void:
     attack_timer=maxf(0.0,attack_timer-delta)
     special_timer=maxf(0.0,special_timer-delta)
     stun_timer=maxf(0.0,stun_timer-delta)
+    slow_timer=maxf(0.0,slow_timer-delta)
     wander_timer-=delta
     if stun_timer>0.0:
         state=State.STUNNED
@@ -71,6 +74,7 @@ func _process(delta:float)->void:
 
 func _speed()->float:
     var value:=base_speed*difficulty
+    if slow_timer>0.0:value*=slow_factor
     if behavior=="berserker" and get_hp_ratio()<0.40:value*=1.65
     if behavior=="swarm":value*=1.35
     if behavior=="charger" and special_timer<=0.0:value*=2.45
@@ -198,6 +202,11 @@ func take_damage(amount:float,critical:=false)->void:
         if behavior=="splitter":summon_requested.emit("aether_slime",2)
         if behavior=="bomber":area_requested.emit(global_position,4.6,float(stats.get("damage",10.0))*1.65)
         defeated.emit(self,int(round(float(stats.get("xp",10))*difficulty)))
+
+func apply_slow(duration:float,factor:=0.45)->void:
+    if state==State.DEAD:return
+    slow_timer=maxf(slow_timer,duration)
+    slow_factor=clampf(factor,0.15,1.0)
 
 func heal_percent(percent:float)->void:
     if state==State.DEAD:return

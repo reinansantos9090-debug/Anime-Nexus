@@ -150,6 +150,52 @@ static func make_colossus(parent: Node3D, color: Color, accent: Color) -> Node3D
     box(root,Vector3(0.62,1.15,0.72),Vector3(-1.28,1.42,0),color.darkened(0.12))
     box(root,Vector3(0.62,1.15,0.72),Vector3(1.28,1.42,0),color.darkened(0.12))
     return root
+
+static func make_crystal_stag(parent: Node3D, color: Color, accent: Color) -> Node3D:
+    var root := Node3D.new()
+    root.name = "CervidoDeCristal_Blockout"
+    parent.add_child(root)
+    var body := sphere(root,0.92,Vector3(0,1.45,0.12),color)
+    body.scale=Vector3(1.30,0.78,0.78)
+    var neck := box(root,Vector3(0.56,1.20,0.62),Vector3(0,2.05,-0.50),color.lightened(0.10))
+    neck.rotation.x=-0.35
+    sphere(root,0.54,Vector3(0,2.65,-0.86),color.lightened(0.17))
+    for side in [-1.0,1.0]:
+        cylinder(root,0.12,0.16,1.03,Vector3(side*0.43,0.58,0.24),color.darkened(0.18))
+        cylinder(root,0.11,0.14,0.94,Vector3(side*0.43,0.55,-0.42),color.darkened(0.18))
+        var antler := box(root,Vector3(0.12,1.12,0.12),Vector3(side*0.31,3.32,-0.92),accent)
+        antler.rotation.z=side*-0.24
+        var branch := box(root,Vector3(0.10,0.62,0.10),Vector3(side*0.63,3.67,-0.92),accent.lightened(0.18))
+        branch.rotation.z=side*0.45
+        sphere(root,0.20,Vector3(side*0.34,2.68,-1.27),accent)
+    sphere(root,0.11,Vector3(-0.19,2.70,-1.30),Color("#fff2c1"))
+    sphere(root,0.11,Vector3(0.19,2.70,-1.30),Color("#fff2c1"))
+    sphere(root,0.09,Vector3(0,2.48,-1.38),Color("#f3a7c3"))
+    for i in range(3):
+        var shard:=make_crystal(root,Vector3(-0.42+float(i)*0.42,1.96,0.73),accent.lerp(Color("#bd8cff"),float(i)*0.18))
+        shard.scale=Vector3(0.42,0.60,0.42)
+    return root
+
+static func make_resonance_anchor(parent:Node3D,pos:Vector3)->Node3D:
+    var root:=Node3D.new()
+    root.name="AncoraDeRessonancia_Blockout"
+    root.position=pos
+    parent.add_child(root)
+    cylinder(root,1.25,1.45,0.32,Vector3(0,0.16,0),Color("#40536a"))
+    torus(root,1.38,1.53,Vector3(0,0.34,0),Color("#69e8cc"))
+    var central:=make_crystal(root,Vector3(0,1.05,0),Color("#71f0d1"))
+    central.scale=Vector3(1.0,1.45,1.0)
+    for side in [-1.0,1.0]:
+        var shard:=make_crystal(root,Vector3(side*0.84,0.60,0.14),Color("#ad91ff"))
+        shard.scale=Vector3(0.48,0.78,0.48)
+        shard.rotation.z=side*0.25
+    var light:=OmniLight3D.new()
+    light.light_color=Color("#78f1d5")
+    light.light_energy=1.25
+    light.omni_range=5.5
+    light.position=Vector3(0,1.4,0)
+    root.add_child(light)
+    return root
 static func make_portal(parent: Node3D, pos: Vector3, accent: Color) -> Node3D:
     var root := Node3D.new()
     root.position = pos

@@ -1,8 +1,16 @@
 package com.example.testejuerpg.game3d
 
+import com.example.testejuerpg.offline.systems.OfflineWeaponCatalog
+
 data class V3(var x: Float, var y: Float, var z: Float) {
     fun set(other: V3) { x = other.x; y = other.y; z = other.z }
     fun add(dx: Float, dy: Float, dz: Float) { x += dx; y += dy; z += dz }
+    fun distanceSquared(other: V3): Float {
+        val dx = x - other.x
+        val dy = y - other.y
+        val dz = z - other.z
+        return dx * dx + dy * dy + dz * dz
+    }
 }
 
 enum class SceneMode { HUB, HUNT, INVENTORY, MENU }

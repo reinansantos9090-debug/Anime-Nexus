@@ -13,13 +13,13 @@ import com.example.testejuerpg.offline.OfflineProgressionRules
 import com.example.testejuerpg.offline.OfflineSaveCodec
 import com.example.testejuerpg.offline.EngineSaveData
 import com.example.testejuerpg.offline.LootRarity
-import com.example.testejuerpg.offline.OfflineEmote
 import com.example.testejuerpg.offline.OfflineMode
 import com.example.testejuerpg.offline.systems.OfflineBossCatalog
 import com.example.testejuerpg.offline.systems.OfflineBiomeCatalog
 import com.example.testejuerpg.offline.systems.OfflineVisualCatalog
 import com.example.testejuerpg.offline.systems.OfflineSquadCatalog
 import com.example.testejuerpg.offline.systems.OfflineEmoteCatalog
+import com.example.testejuerpg.offline.systems.OfflineEmote
 import com.example.testejuerpg.offline.systems.RooftopScreen
 
 internal fun Game3DEngine.spawnEnemyAreaTelegraph(center: V3, radius: Float, damage: Float) {
@@ -202,6 +202,27 @@ fun Game3DEngine.setMove(x: Float, y: Float) {
     }
 }
 
+internal fun Game3DEngine.dashToward(target: EnemyEntity, distance: Float) {
+    val dx = target.pos.x - player.x
+    val dz = target.pos.z - player.z
+    val length = max(0.001f, sqrt(dx * dx + dz * dz))
+    val next = mapRuntime.resolvePlayer(
+        player.x + dx / length * distance,
+        player.z + dz / length * distance,
+        0.55f
+    )
+    player.x = next.first
+    player.z = next.second
+}
+
+internal fun Game3DEngine.useSkill(index: Int) {
+    when (index) {
+        0 -> skill1()
+        1 -> skill2()
+        else -> skill3()
+    }
+}
+
 internal fun Game3DEngine.skill1() {
     skillTimers[0] = WEAPONS[weaponIndex].cooldown * 7.0f *
         hunterDirector.cooldownMultiplier(WEAPONS[weaponIndex].id)
@@ -215,7 +236,7 @@ internal fun Game3DEngine.skill1() {
         "prism_spear" -> target?.let { dashToward(it, 3.4f); meleeAttack(it, 76f + level * 2.2f, 2.1f) }
         "echo_chakrams" -> target?.let { fireProjectile(it.pos, 54f + level * 1.5f, 1.35f); fireProjectile(it.pos, 42f + level, 0.95f) }
         "nova_gauntlets" -> repeat(4) { target?.let { meleeAttack(it, 26f + level * 0.8f, 1.7f) } }
-        "rift_mortar" -> repeat(4) { target?.let { fireProjectile(it.pos, 48f + level * 1.6f, 0.82f + it.radius * 0.02f) } }
+        "rift_mortar" -> repeat(4) { target?.let { fireProjectile(it.pos, 48f + level * 1.6f, 0.82f + it.kind.radius * 0.02f) } }
         "arc_whip" -> {
             areaAttack(4.8f, 70f + level * 1.6f)
             target?.let { it.hp += 0f }

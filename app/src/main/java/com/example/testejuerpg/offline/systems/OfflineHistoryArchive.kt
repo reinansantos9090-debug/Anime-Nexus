@@ -6,7 +6,7 @@ data class HistoryEntry(val id:String,val title:String,val type:String,val rewar
 
 class OfflineHistoryArchive {
     private val entries=mutableListOf<HistoryEntry>()
-    fun entries():List<HistoryEntry>=entries.toList()
+    fun entries(): List<HistoryEntry> = entries.toList()
     fun record(id:String,title:String,type:String,reward:Int,now:Long){
         entries.removeAll{it.id==id}; entries+=HistoryEntry(id,title,type,reward,now)
         if(entries.size>120) entries.removeAt(0)

@@ -6,6 +6,26 @@ var maps: Dictionary = {}
 
 func _ready() -> void:
     maps = {
+        "nimbara": {
+            "name":"Nimbara • Floresta das Memórias",
+            "difficulty":1.0,
+            "duration":180.0,
+            "goal":4,
+            "hazard":"raízes da memória",
+            "ground":Color("#376a59"),
+            "accent":Color("#63ead0"),
+            "fog":Color("#557f7c"),
+            "enemies":["moss_hopper","leaf_spark","crystal_stagling","root_guardian"],
+            "obstacles":[
+                {"shape":"tree","pos":Vector3(-10,0,-9),"size":Vector3(1.6,4.5,1.6)},
+                {"shape":"tree","pos":Vector3(10,0,-10),"size":Vector3(1.5,4.1,1.5)},
+                {"shape":"crystal","pos":Vector3(-12,0,5),"size":Vector3(1.1,2.5,1.1)},
+                {"shape":"root","pos":Vector3(-5,0,-2),"size":Vector3(3.8,0.8,1.0)},
+                {"shape":"rock","pos":Vector3(8,0,6),"size":Vector3(2.2,1.3,1.8)},
+                {"shape":"tree","pos":Vector3(13,0,12),"size":Vector3(1.4,4.0,1.4)},
+                {"shape":"crystal","pos":Vector3(3,0,-13),"size":Vector3(1.0,2.2,1.0)}
+            ]
+        },
         "verdant_frontier": {
             "name":"Fronteira Esmeralda",
             "difficulty":1.00,

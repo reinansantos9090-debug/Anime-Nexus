@@ -2,18 +2,24 @@ extends Node
 var game_state: Node
 var audio_service: Node
 var rng := RandomNumberGenerator.new()
+var native_core: AnimeNexusCombatCore
 
 func setup(state: Node, audio: Node) -> void:
     game_state = state
     audio_service = audio
     rng.seed = 9917
+    native_core = AnimeNexusCombatCore.new()
 
 func player_damage(weapon: Dictionary, level: int, bonus: float, crit_bonus: float) -> float:
-    var base := float(weapon.get("damage",10.0)) + float(level - 1) * 2.5
-    var amount := base * (1.0 + bonus)
-    if rng.randf() < clampf(0.08 + crit_bonus,0.0,0.65):
-        amount *= 1.75
-    return amount
+    return float(player_attack(weapon, level, bonus, crit_bonus).get("amount", 0.0))
+
+func player_attack(weapon: Dictionary, level: int, bonus: float, crit_bonus: float) -> Dictionary:
+    var result := native_core.calculate_damage(
+        float(weapon.get("damage",10.0)), level, bonus, 0.08 + crit_bonus, rng.randf())
+    return result
+
+func elemental_reaction(element_a: String, element_b: String) -> Dictionary:
+    return native_core.resolve_elemental_reaction(element_a, element_b)
 
 func hit(target: Node3D, amount: float, critical := false) -> void:
     if not is_instance_valid(target):

@@ -1,33 +1,33 @@
-# Teste-jue 3D — Aetheria: Echoes
+# Anime Nexus: Fragmentos do Infinito
 
-**Teste-jue** está sendo convertido de um RPG Android por turnos para uma implementação jogável **3D nativa para Android**, inspirada no loop de caça, portal, armas com kits fixos, expedições, monstros e chefes de *mo.co* em 2025, sem copiar personagens, mapas, código, sons ou assets proprietários.
+RPG de ação 3D original para Android, planejado como experiência single-player inteiramente offline. Este repositório está no começo da transição: a base ainda contém o protótipo jogável Aetheria: Echoes em Kotlin/OpenGL e Godot. Esse conteúdo não deve ser confundido com campanha/personagens finais de Anime Nexus.
 
-## O que já entrou no projeto
+## Estado real
 
-- Renderer 3D nativo com OpenGL ES 2.0, sem navegador ou Phaser.
-- Câmera em terceira pessoa alta e movimentação livre.
-- QG/rooftop 3D com portal de expedição.
-- Expedição 3D com Slime de Aether, Perseguidor Neon, Golem de Sucata e Titã de Sobrecarga.
-- Quatro armas originais com kits fixos: Lâminas Voltáicas, Arco Tóxico, Canhão Pulsar e Martelo Sucateiro.
-- Ataque principal, dash, ataques em área, cura, projéteis e perseguição inimiga.
-- Núcleos de Aether, ouro, XP, níveis, objetivos e barra de chefe.
-- Armário de armas e base de crafting para gadgets.
-- Salvamento local/offline de progresso, recursos e posição.
-- Controles touch: joystick, ataque, três habilidades e mochila.
+- Build e jogo final: **não concluídos**.
+- Protótipo Android Kotlin/OpenGL: presente; conteúdo e identidade antigos.
+- Godot para a slice: projeto configurado como Anime Nexus em landscape, pacote Android próprio e save isolado. A primeira rota jogável em desenvolvimento usa Kaien, Nimbara e o Cérvido de Cristal com arte procedural provisória.
+- Linguagem principal de gameplay: C++17 via Godot GDExtension. Dano/crítico, reações elementais e XP/nível já passam pelo núcleo nativo; Godot/GDScript compõe cenas e integra nós enquanto os demais sistemas migram.
+- Arte final de personagem/cenário/áudio: ainda não presente.
+- Vertical slice: fluxo inicial Kaien + Nimbara em desenvolvimento; não é arte final, ainda não foi testado por toque em aparelho e não cobre o resto do jogo.
 
-## Referência do PDF
+## Documentação de projeto
 
-As mecânicas do PDF de **Aetheria: Echoes** são a referência de conteúdo: combate, hitbox/hurtbox, quests, crafting, loot, XP/nível, mini-chefe/chefe, efeitos, ambiente e salvamento offline. A apresentação 2D/2.5D do PDF foi substituída deliberadamente por uma fundação 3D para Android.
+- [Game Design Document](docs/GAME_DESIGN_DOCUMENT.md)
+- [Lore e história](docs/LORE_AND_STORY.md)
+- [Personagens e habilidades](docs/CHARACTERS_AND_ABILITIES.md)
+- [Mundos e criaturas](docs/WORLDS_AND_CREATURES.md)
+- [Missões e diálogos](docs/MISSIONS_AND_DIALOGUES.md)
+- [Equipamentos e progressão](docs/EQUIPMENT_AND_PROGRESSION.md)
+- [Direção visual](docs/VISUAL_ART_DIRECTION.md)
+- [Inventário de assets](docs/ASSET_PRODUCTION.md)
+- [Arquitetura e auditoria](docs/TECHNICAL_ARCHITECTURE.md)
+- [Arquitetura C++ de gameplay](docs/CPP_GAMEPLAY_ARCHITECTURE.md)
+- [Requisitos offline](docs/OFFLINE_REQUIREMENTS.md)
+- [Plano de testes](docs/TEST_PLAN.md)
+- [Roadmap](docs/DEVELOPMENT_ROADMAP.md)
+- [Estado de implementação](docs/IMPLEMENTATION_STATUS.md)
 
-## Referência de design
+## Build atual
 
-A estrutura de *mo.co* de 2025 é usada apenas como referência de design: Portal, Rooftop/HQ, Expedições, tarefas, monstros, armas com kits predefinidos e progressão. Nomes, personagens, mapas, armas, efeitos e código do projeto são próprios.
-
-## Build
-
-O workflow `.github/workflows/android.yml` instala Gradle 9.3.1 e JDK 21, executa `:app:assembleDebug` e publica `app-debug.apk` como artifact.
-
-
-## Escala desta etapa
-
-Os packs offline compiláveis adicionados nesta conversão somam **100.769 linhas** de código-fonte Kotlin, além do núcleo 3D, sistemas de progressão e código Android. A contagem é baseada na composição dos arquivos versionados desta etapa; ela não é usada como medida de qualidade por si só.
+O workflow Android valida testes e publica artifacts de APK por commit/PR. Ele não faz push nem limpeza automática em `main`. Os APKs do host Kotlin e do projeto Godot ainda são protótipos e não representam versão final.

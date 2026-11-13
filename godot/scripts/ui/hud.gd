@@ -1,7 +1,9 @@
 extends CanvasLayer
+const JoystickScript=preload("res://scripts/ui/virtual_joystick.gd")
 signal attack_pressed
 signal ability_pressed(index: int)
 signal portal_pressed
+signal interact_pressed
 signal inventory_pressed
 signal story_pressed
 signal wardrobe_pressed
@@ -11,17 +13,21 @@ signal arsenal_pressed
 signal gadget_pressed
 
 var state: Node
+var quests: Node
 var title_label: Label
 var stats_label: Label
 var quest_label: Label
 var move_vector := Vector2.ZERO
+var move_stick: Control
 var boss_panel: Panel
 var boss_name: Label
 var boss_bar: ProgressBar
 var low_hp_overlay: ColorRect
+var interact_button:Button
 
-func setup(game_state: Node) -> void:
+func setup(game_state: Node, quest_service: Node = null) -> void:
     state = game_state
+    quests = quest_service
     _build()
     state.state_changed.connect(_refresh)
     state.quest_changed.connect(_refresh)
@@ -48,19 +54,21 @@ func _build() -> void:
     root.add_child(low_hp_overlay)
     _btn(root,"PORTAL",Vector2(760,24),Vector2(170,58)).pressed.connect(func(): portal_pressed.emit())
     _btn(root,"HISTÓRIA",Vector2(945,24),Vector2(170,58)).pressed.connect(func(): story_pressed.emit())
-    _btn(root,"ARMÁRIO",Vector2(575,24),Vector2(160,58)).pressed.connect(func(): wardrobe_pressed.emit())
-    _btn(root,"ARSENAL",Vector2(745,24),Vector2(160,58)).pressed.connect(func(): arsenal_pressed.emit())
-    _btn(root,"GADGET",Vector2(570,96),Vector2(160,54)).pressed.connect(func(): gadget_pressed.emit())
+    interact_button=_btn(root,"INTERAGIR",Vector2(770,100),Vector2(190,58))
+    interact_button.visible=false
+    interact_button.pressed.connect(func():interact_pressed.emit())
     _btn(root,"MENU",Vector2(1000,105),Vector2(215,62)).pressed.connect(func(): menu_pressed.emit())
     _btn(root,"ATAQUE",Vector2(1000,515),Vector2(220,105)).pressed.connect(func(): attack_pressed.emit())
     _btn(root,"ESQUIVA",Vector2(1000,625),Vector2(220,65)).pressed.connect(func(): dodge_pressed.emit())
-    _btn(root,"H1",Vector2(790,545),Vector2(78,78)).pressed.connect(func(): ability_pressed.emit(0))
-    _btn(root,"H2",Vector2(875,505),Vector2(78,78)).pressed.connect(func(): ability_pressed.emit(1))
-    _btn(root,"H3",Vector2(875,595),Vector2(78,78)).pressed.connect(func(): ability_pressed.emit(2))
-    _move_button(root,"▲",Vector2(42,545),Vector2(84,68),Vector2(0,-1))
-    _move_button(root,"◀",Vector2(0,612),Vector2(84,68),Vector2(-1,0))
-    _move_button(root,"●",Vector2(84,612),Vector2(84,68),Vector2(0,1))
-    _move_button(root,"▶",Vector2(168,612),Vector2(84,68),Vector2(1,0))
+    _btn(root,"PASSO",Vector2(790,545),Vector2(78,78)).pressed.connect(func(): ability_pressed.emit(0))
+    _btn(root,"CORR.",Vector2(875,505),Vector2(78,78)).pressed.connect(func(): ability_pressed.emit(1))
+    _btn(root,"CAMPO",Vector2(875,595),Vector2(78,78)).pressed.connect(func(): ability_pressed.emit(2))
+    move_stick=JoystickScript.new()
+    move_stick.name="MoveJoystick"
+    move_stick.position=Vector2(28,508)
+    move_stick.size=Vector2(184,184)
+    move_stick.vector_changed.connect(_set_move_vector)
+    root.add_child(move_stick)
     boss_panel=Panel.new()
     boss_panel.position=Vector2(330,28)
     boss_panel.size=Vector2(390,78)
@@ -76,11 +84,8 @@ func _build() -> void:
     boss_bar.show_percentage=false
     boss_panel.add_child(boss_bar)
 
-func _move_button(parent: Control, caption: String, pos: Vector2, size: Vector2, direction: Vector2) -> void:
-    var b := _btn(parent,caption,pos,size)
-    b.button_down.connect(func(): move_vector=direction)
-    b.button_up.connect(func(): move_vector=Vector2.ZERO)
-    b.mouse_entered.connect(func(): move_vector=direction if b.button_pressed else move_vector)
+func _set_move_vector(value: Vector2) -> void:
+    move_vector=value
 
 func _btn(parent: Control, text_value: String, pos: Vector2, size: Vector2) -> Button:
     var b := Button.new()
@@ -109,10 +114,9 @@ func _refresh() -> void:
     if state == null:
         return
     var h: Dictionary = state.data["hunter"]
-    title_label.text = "AETHERIA • CAÇADOR OFFLINE"
+    title_label.text = "ANIME NEXUS • KAIEN ARASHI"
     stats_label.text = "HP %d/%d  |  LV %d  |  XP %d/%d  |  EN %d/%d" % [int(h["hp"]),int(h["max_hp"]),int(h["level"]),int(h["xp"]),int(h["xp_to_next"]),int(h["energy"]),int(h["max_energy"])]
-    var active: Array = state.data["quests"]["active"]
-    quest_label.text = "Contrato: nenhum" if active.is_empty() else "Contrato: "+str(active[0])
+    quest_label.text = "Missão: nenhum" if quests == null else "Missão: "+quests.active_summary()
     if low_hp_overlay:
         var ratio:=float(h["hp"])/maxf(1.0,float(h["max_hp"]))
         low_hp_overlay.color.a=clampf((0.32-ratio)*1.6,0.0,0.34)
@@ -125,3 +129,6 @@ func set_boss(name_value:String,ratio:float,phase:int)->void:
 
 func clear_boss()->void:
     if boss_panel: boss_panel.visible=false
+
+func set_interaction_visible(value:bool)->void:
+    if interact_button:interact_button.visible=value

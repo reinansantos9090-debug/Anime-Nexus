@@ -1,6 +1,6 @@
 [application]
-config/name="Aetheria: Echoes Offline"
-config/description="Offline action RPG with original stylized 3D content."
+config/name="Anime Nexus: Fragmentos do Infinito"
+config/description="Protótipo offline de RPG de ação 3D. Vertical slice em desenvolvimento."
 run/main_scene="res://scenes/Main.tscn"
 config/features=PackedStringArray("4.7", "Mobile")
 
@@ -8,7 +8,7 @@ config/features=PackedStringArray("4.7", "Mobile")
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="canvas_items"
-window/handheld/orientation=1
+window/handheld/orientation=0
 
 [rendering]
 renderer/rendering_method="mobile"

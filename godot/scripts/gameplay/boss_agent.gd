@@ -2,6 +2,7 @@ extends "res://scripts/gameplay/enemy_agent.gd"
 ## Three-phase boss controller with authored attack patterns per boss.
 
 signal phase_changed(phase:int)
+signal telegraph_requested(center:Vector3,radius:float,damage:float,windup:float)
 
 var boss_id:=""
 var boss_stats:Dictionary={}
@@ -81,22 +82,25 @@ func _run_pattern()->void:
         "charge","dash":
             var dir:Vector3=(target.global_position-global_position).normalized()
             global_position+=Vector3(dir.x,0,dir.z)*(4.5 if phase==1 else (6.0 if phase==2 else 7.5))
-            area_requested.emit(global_position,2.6 if phase<3 else 3.8,float(stats["damage"])*(0.9+0.25*phase))
+            _warn_area(target.global_position,2.6 if phase<3 else 3.8,float(stats["damage"])*(0.9+0.25*phase),0.72 if phase==1 else 0.55)
             special_timer=3.0 if phase==1 else 2.3
         "summon":
             summon_requested.emit(str(boss_stats.get("summon_id","aether_slime")),2 if phase<3 else 4)
             special_timer=3.7
         "nova","ring","roots","prism","rain","timewave":
-            area_requested.emit(target.global_position,4.2+phase*0.7,float(stats["damage"])*(0.65+0.20*phase))
+            _warn_area(target.global_position,4.2+phase*0.7,float(stats["damage"])*(0.65+0.20*phase),0.95 if phase==1 else 0.72)
             special_timer=3.0 if phase==1 else 2.1
         "teleport":
             var angle:=Time.get_ticks_msec()*0.001
             global_position=target.global_position+Vector3(cos(angle),0,sin(angle))*6.5
-            area_requested.emit(global_position,2.2,float(stats["damage"]))
+            _warn_area(global_position,2.2,float(stats["damage"]),0.8)
             special_timer=3.8
         _:
             projectile_requested.emit(global_position+Vector3(0,1.3,0),target.global_position,float(stats["damage"]))
             special_timer=2.5
+
+func _warn_area(center:Vector3,radius:float,damage:float,windup:float)->void:
+    telegraph_requested.emit(center,radius,damage,windup)
 
 func _projectile_fan(count:int,spread:float)->void:
     var base:Vector3=(target.global_position-global_position).normalized()

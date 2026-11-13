@@ -145,12 +145,19 @@ func _build_face() -> void:
     model_root.add_child(head)
     _mesh_sphere(head, 0.56, Vector3(0, 1.65, 0), skin_color, 14, 9)
     _mesh_box(head, Vector3(0.96, 0.14, 0.64), Vector3(0, 2.04, 0.02), accent_color, 0.08)
+    if style_id=="kaien_arashi":
+        _mesh_sphere(head,0.58,Vector3(0,1.96,0.02),Color("#102a50"),14,8)
+        for i in range(5):
+            var spike:=_mesh_cylinder(head,0.015,0.23,0.62,Vector3(-0.38+float(i)*0.19,2.14,-0.02),Color("#173b70"),8,4)
+            spike.rotation.z=deg_to_rad(float(i-2)*12.0)
+        _mesh_box(head,Vector3(0.18,0.12,0.12),Vector3(0.36,1.98,-0.12),Color("#48d9f2"),0.025)
 
     face = Node3D.new()
     face.name = "Face"
     model_root.add_child(face)
-    _mesh_sphere(face, 0.07, Vector3(-0.20, 1.67, -0.51), Color("#17202c"), 10, 6)
-    _mesh_sphere(face, 0.07, Vector3(0.20, 1.67, -0.51), Color("#17202c"), 10, 6)
+    var eye_color:=Color("#d59b36") if style_id=="kaien_arashi" else Color("#17202c")
+    _mesh_sphere(face, 0.07, Vector3(-0.20, 1.67, -0.51), eye_color, 10, 6)
+    _mesh_sphere(face, 0.07, Vector3(0.20, 1.67, -0.51), eye_color, 10, 6)
     _mesh_sphere(face, 0.022, Vector3(-0.18, 1.69, -0.567), Color.WHITE, 8, 5)
     _mesh_sphere(face, 0.022, Vector3(0.22, 1.69, -0.567), Color.WHITE, 8, 5)
     _mesh_box(face, Vector3(0.24, 0.055, 0.045), Vector3(0, 1.49, -0.545), accent_color, 0.02)
@@ -171,11 +178,15 @@ func _build_gear() -> void:
     model_root.add_child(shoulder_r)
     _mesh_sphere(shoulder_r, 0.22, Vector3(0.55, 1.19, 0), accent_color, 10, 6)
 
-    var visor := Node3D.new()
-    visor.name = "Visor"
-    model_root.add_child(visor)
-    var visor_color := Color("#8ff7ff") if style_id in ["crystal_runner", "sky_runner", "stormbreaker"] else accent_color
-    _mesh_box(visor, Vector3(0.76, 0.12, 0.40), Vector3(0, 1.86, -0.43), visor_color, 0.05)
+    if style_id=="kaien_arashi":
+        _mesh_box(backpack,Vector3(0.62,0.78,0.15),Vector3(-0.30,0.68,-0.30),Color("#205185"),0.04)
+        _mesh_box(backpack,Vector3(0.22,0.70,0.12),Vector3(0.34,0.68,-0.34),Color("#48d9f2"),0.025)
+    else:
+        var visor := Node3D.new()
+        visor.name = "Visor"
+        model_root.add_child(visor)
+        var visor_color := Color("#8ff7ff") if style_id in ["crystal_runner", "sky_runner", "stormbreaker"] else accent_color
+        _mesh_box(visor, Vector3(0.76, 0.12, 0.40), Vector3(0, 1.86, -0.43), visor_color, 0.05)
 
 func _build_weapon() -> void:
     if weapon_root and is_instance_valid(weapon_root):
@@ -190,6 +201,11 @@ func _build_weapon_visual(id: String) -> void:
     weapon_model.name = "Weapon"
     weapon_root.add_child(weapon_model)
     match id:
+        "fulgor_gauntlets":
+            for side in [-1.0,1.0]:
+                _mesh_box(weapon_model,Vector3(0.34,0.34,0.42),Vector3(side*0.56,0.63,-0.08),Color("#173b70"),0.07)
+                _mesh_sphere(weapon_model,0.16,Vector3(side*0.56,0.68,-0.31),Color("#48d9f2"),10,6)
+                _mesh_torus(weapon_model,0.13,0.18,Vector3(side*0.56,0.43,-0.05),Color("#87f5ff"))
         "volt_blades", "aether_lance":
             _mesh_box(weapon_model, Vector3(0.10, 1.55, 0.12), Vector3(0.0, 0.78, -0.02), accent_color, 0.03)
             _mesh_box(weapon_model, Vector3(0.46, 0.12, 0.15), Vector3(0, 1.47, -0.02), Color("#e8faff"), 0.03)

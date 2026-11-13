@@ -212,7 +212,7 @@ data class OfflineMapRuntime(
                     MapSpawnRegion(8f, 14f, -12f, 12f)
                 )
             )
-        )
+        }
 
         private fun map(
             id: String,
