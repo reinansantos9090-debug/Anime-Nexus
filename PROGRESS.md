@@ -15,6 +15,7 @@ Branch de desenvolvimento atual: `dev/anime-nexus-vertical-slice`.
 
 - Godot 4.6.3: import headless completou; runner imprimiu `AETHERIA_TESTS: PASS`; houve warnings de recursos em uso no encerramento.
 - Godot 4.6.3: teste de direção/limite do joystick e smoke run da cena principal passaram sem erro; interação touchscreen ainda precisa de aparelho.
+- GitHub Actions: export Godot 4.7.2 **passou e publicou artifact APK**. Job Kotlin revelou conflito do plugin `org.jetbrains.kotlin.android` separado com suporte Kotlin embutido do AGP 9; migração para o suporte integrado começou nesta branch e precisa de nova execução.
 - Gradle 9.3.1: `:app:testDebugUnitTest :app:assembleDebug` interrompeu na resolução de AGP 9.1.1. Não produziu APK.
 - Último CI de `main` auditado: falhou no verificador de referências externas de fontes Kotlin. Logs listam tipos que têm usos no código, indicando falsos positivos no verificador atual; o Godot passou antes dessa etapa.
 - Android SDK não está instalado no ambiente desta auditoria.

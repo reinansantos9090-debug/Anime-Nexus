@@ -28,5 +28,5 @@
 
 - Godot 4.6.3 headless: import passou; test runner imprimiu `AETHERIA_TESTS: PASS`, com avisos de recursos em uso ao encerrar.
 - Android: build local falhou na resolução do AGP 9.1.1 antes de compilar; não é resultado de teste funcional nem prova de defeito Kotlin. Ambiente sem Android SDK/build-tools.
-- CI da main mais recente observada falhou; arquivo de log do run precisa ser analisado antes de atribuir causa.
+- CI da branch: export Godot 4.7.2 e artifact APK passaram; build Android falhou ao aplicar plugin Kotlin Android separado no AGP 9.1.1. Remoção do plugin e nova execução pendentes.
 - Sem aparelho Android ligado a este ambiente, FPS, toque real, instalação APK e qualidade visual ainda não foram verificados.
