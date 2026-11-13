@@ -44,6 +44,8 @@ jobs:
           path: app/build/outputs/apk/debug/*.apk
 
   godot-android:
+    # Native Godot binding compilation is intentionally manual due to its long runtime.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout exact revision
