@@ -1,4 +1,6 @@
-# Aetheria: Echoes — referência de design offline e desempenho mobile
+# Referência histórica de design offline e desempenho mobile
+
+> Documento legado do protótipo Aetheria: Echoes. Não descreve a identidade ou os sistemas implementados de Anime Nexus. As orientações genéricas de offline/performance continuam úteis; o design atual está em `GAME_DESIGN_DOCUMENT.md` e `TECHNICAL_ARCHITECTURE.md`.
 
 Esta documentação registra a separação entre referência de experiência e implementação própria.
 

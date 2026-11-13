@@ -1,25 +1,24 @@
-# Aetheria: Echoes — progresso
+# Progresso — Anime Nexus
 
-## Estado atual
+Branch de desenvolvimento atual: `dev/anime-nexus-vertical-slice`.
 
-- Hub/QG 3D e batalha em tempo real já existem.
-- Godot 4 está versionado e validado/exportado pelo CI.
-- O conteúdo offline já cobre mapas, inimigos, chefes, armas, habilidades, história, wardrobe, núcleos, eventos e atividades.
-- Esta etapa remove fontes geradas e o RPG 2D legado.
+## Fase atual
 
-## Em correção
+- Auditoria inicial do checkout concluída.
+- Documentos de universo, campanha, kits, regiões, equipamento, arte, arquitetura, offline, testes, roteiro e estados reais adicionados em `docs/`.
+- Godot escolhido como runtime de jogo para a vertical slice, sujeito a validação do APK; Kotlin/OpenGL preservado como protótipo existente durante a avaliação.
+- Workflow revisado para validar a revisão exata e gerar artifacts sem alterar `main`.
+- Primeiro elemento de controle da slice integrado ao runtime Godot: joystick touch analógico substituiu as setas fixas e preserva intensidade gradual de movimento.
+- Próximo trabalho: adaptar o runtime Godot para Kaien/Nimbara e desenvolver a slice em landscape.
 
-- Remover todos os GeneratedPack de offline/generated.
-- Remover o código 2D por turnos sem referências no app 3D.
-- Corrigir a divisão do engine Kotlin para manter cada arquivo abaixo de 800 linhas.
-- Corrigir parsing/tipagem Godot reportados pelo CI.
-- Cobrir dano, XP, loot, crafting e save com testes.
-- Fortalecer o CI para detectar código legado/gerado.
+## Validação executada
 
-## Critério de linhas
+- Godot 4.6.3: import headless completou; runner imprimiu `AETHERIA_TESTS: PASS`; houve warnings de recursos em uso no encerramento.
+- Godot 4.6.3: teste de direção/limite do joystick e smoke run da cena principal passaram sem erro; interação touchscreen ainda precisa de aparelho.
+- Gradle 9.3.1: `:app:testDebugUnitTest :app:assembleDebug` interrompeu na resolução de AGP 9.1.1. Não produziu APK.
+- Último CI de `main` auditado: falhou no verificador de referências externas de fontes Kotlin. Logs listam tipos que têm usos no código, indicando falsos positivos no verificador atual; o Godot passou antes dessa etapa.
+- Android SDK não está instalado no ambiente desta auditoria.
 
-O limite é um teto de 500.000 linhas Kotlin. Não serão adicionadas linhas apenas para aumentar contagem.
+## Estado
 
-## Validação
-
-A última execução do CI (37712909647) exportou o APK Godot, mas falhou nos testes Kotlin e registrou erros de parsing Godot. O projeto ainda não está certificado como concluído.
+Anime Nexus ainda não tem build, conteúdo de campanha nem arte final. Ver detalhes em `docs/IMPLEMENTATION_STATUS.md`.

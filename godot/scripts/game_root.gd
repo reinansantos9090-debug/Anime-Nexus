@@ -609,7 +609,7 @@ func _process(delta:float)->void:
 
     var v:Vector2=hud.move_vector if hud and hud.move_vector.length_squared()>0.01 else Input.get_vector("move_left","move_right","move_forward","move_back")
     if v.length_squared()>0.001 and dead_timer<=0.0:
-        v=v.normalized()
+        v=v.limit_length(1.0)
         var step:=Vector3(v.x,0,v.y)*6.2*delta
         var next:=player.position+step
         if mode=="EXPEDITION" and maps.blocked(str(portal_service.destination),next,0.62):

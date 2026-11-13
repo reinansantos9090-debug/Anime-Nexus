@@ -1,4 +1,5 @@
 extends CanvasLayer
+const JoystickScript=preload("res://scripts/ui/virtual_joystick.gd")
 signal attack_pressed
 signal ability_pressed(index: int)
 signal portal_pressed
@@ -15,6 +16,7 @@ var title_label: Label
 var stats_label: Label
 var quest_label: Label
 var move_vector := Vector2.ZERO
+var move_stick: Control
 var boss_panel: Panel
 var boss_name: Label
 var boss_bar: ProgressBar
@@ -57,10 +59,12 @@ func _build() -> void:
     _btn(root,"H1",Vector2(790,545),Vector2(78,78)).pressed.connect(func(): ability_pressed.emit(0))
     _btn(root,"H2",Vector2(875,505),Vector2(78,78)).pressed.connect(func(): ability_pressed.emit(1))
     _btn(root,"H3",Vector2(875,595),Vector2(78,78)).pressed.connect(func(): ability_pressed.emit(2))
-    _move_button(root,"▲",Vector2(42,545),Vector2(84,68),Vector2(0,-1))
-    _move_button(root,"◀",Vector2(0,612),Vector2(84,68),Vector2(-1,0))
-    _move_button(root,"●",Vector2(84,612),Vector2(84,68),Vector2(0,1))
-    _move_button(root,"▶",Vector2(168,612),Vector2(84,68),Vector2(1,0))
+    move_stick=JoystickScript.new()
+    move_stick.name="MoveJoystick"
+    move_stick.position=Vector2(28,508)
+    move_stick.size=Vector2(184,184)
+    move_stick.vector_changed.connect(_set_move_vector)
+    root.add_child(move_stick)
     boss_panel=Panel.new()
     boss_panel.position=Vector2(330,28)
     boss_panel.size=Vector2(390,78)
@@ -76,11 +80,8 @@ func _build() -> void:
     boss_bar.show_percentage=false
     boss_panel.add_child(boss_bar)
 
-func _move_button(parent: Control, caption: String, pos: Vector2, size: Vector2, direction: Vector2) -> void:
-    var b := _btn(parent,caption,pos,size)
-    b.button_down.connect(func(): move_vector=direction)
-    b.button_up.connect(func(): move_vector=Vector2.ZERO)
-    b.mouse_entered.connect(func(): move_vector=direction if b.button_pressed else move_vector)
+func _set_move_vector(value: Vector2) -> void:
+    move_vector=value
 
 func _btn(parent: Control, text_value: String, pos: Vector2, size: Vector2) -> Button:
     var b := Button.new()

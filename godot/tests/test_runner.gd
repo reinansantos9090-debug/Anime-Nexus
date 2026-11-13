@@ -7,6 +7,7 @@ const CombatScript=preload("res://scripts/gameplay/combat_service.gd")
 const LootScript=preload("res://scripts/gameplay/loot_service.gd")
 const ContentScript=preload("res://scripts/core/content_database.gd")
 const SaveScript=preload("res://scripts/core/save_service.gd")
+const JoystickScript=preload("res://scripts/ui/virtual_joystick.gd")
 const GameRootScript=preload("res://scripts/game_root.gd")
 const EnemyScript=preload("res://scripts/gameplay/enemy_agent.gd")
 const BossScript=preload("res://scripts/gameplay/boss_agent.gd")
@@ -21,6 +22,7 @@ func _init()->void:
     _test_damage()
     _test_loot()
     _test_save()
+    _test_virtual_joystick()
     if failures.is_empty():
         print("AETHERIA_TESTS: PASS")
         quit(0)
@@ -69,3 +71,14 @@ func _test_save()->void:
     state.data["hunter"]["gold"]=1
     _expect(save.load_now(),"Save: could not reload save")
     _expect(int(state.data["hunter"]["gold"])==9876,"Save: persisted value mismatch")
+
+func _test_virtual_joystick()->void:
+    var stick=JoystickScript.new()
+    stick.size=Vector2(180,180)
+    stick._update_vector(Vector2(90,90))
+    _expect(stick.vector==Vector2.ZERO,"Joystick: center must be neutral")
+    stick._update_vector(Vector2(180,90))
+    _expect(stick.vector.x>0.99 and absf(stick.vector.y)<0.01,"Joystick: full horizontal input mismatch")
+    stick._update_vector(Vector2(0,0))
+    _expect(is_equal_approx(stick.vector.length(),1.0),"Joystick: diagonal input must clamp to unit length")
+    stick.free()
