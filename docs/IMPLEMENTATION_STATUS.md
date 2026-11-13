@@ -6,7 +6,7 @@ Data da auditoria: 13 nov. 2026, branch `dev/anime-nexus-vertical-slice`, base `
 |---|---|---|
 | App Android nativo | Implementado (host do protótipo) | Activity Kotlin e manifest; nome/pacote/orientação atuais não são finais |
 | OpenGL ES e loop de combate Kotlin | Implementado (protótipo Aetheria) | engine/render/AI/combat/session/HUD em `app/src/main/java/.../game3d`; geometria procedural |
-| Godot Android export | Testado | workflow Godot 4.7.2 validou runner e exportou APK debug atual (run `43406704240`, artifact de 28,2 MB); instalação/touch em aparelho pendentes |
+| Godot Android export | Testado | workflow Godot 4.7.2 validou runner e exportou APK debug da slice (run `43409376899`); instalação/touch em aparelho pendentes |
 | Escolha de Godot para slice | Implementado (decisão documental) | comparar em `TECHNICAL_ARCHITECTURE.md`; reavaliável após APK |
 | Câmera isométrica | Implementado (protótipo) | câmera ortográfica diagonal com acompanhamento suave; zoom, ocultação de obstáculos e teste visual em aparelho pendentes |
 | Kaien | Em desenvolvimento | avatar procedural blockout com cores, cabelo e manoplas distintivos; sem modelo anime final, rig/skinning ou animações de produção |
@@ -24,11 +24,11 @@ Data da auditoria: 13 nov. 2026, branch `dev/anime-nexus-vertical-slice`, base `
 | Áudio local final | Planejado | bus gera/aciona sons, mas nenhum recurso de música ou SFX existe |
 | Perfiles de qualidade/perf | Implementado (protótipo) | existe perfil/telemetria Kotlin e serviço Godot; sem medições reais de FPS |
 | AI Studio como ferramenta principal | Bloqueado/inadequado | limitações atuais e incompatibilidade detalhadas na arquitetura; repo direto é fonte de verdade |
-| Kotlin Android build | Bloqueado | CI com AGP 9.1.1 chegou à compilação Kotlin e encontrou 155 erros em 10 arquivos preexistentes do protótipo (`Game3DEngine*`, `Game3DModels`, `GameHUDView`, `GameRenderer`, `OfflineHistoryArchive`, `OfflineHunterDirector`, `OfflineMapRuntime`, `OfflineRooftopController`); inclui sintaxe inválida e tipos/referências ausentes |
-| Kotlin JUnit | Bloqueado | testes não iniciam porque `:app:compileDebugKotlin` falha antes |
+| Kotlin Android build | Testado (host legado) | run `43409376899` passou `:app:assembleDebug` e anexou o APK Kotlin; ele ainda abre o protótipo Aetheria, não o jogo final Anime Nexus |
+| Kotlin JUnit | Testado (CI) | `:app:testDebugUnitTest` passou no run `43409376899` |
 | Godot test runner | Testado | `ANIME_NEXUS_TESTS: PASS` local em Godot 4.6.3; warnings de recursos em uso ao sair |
-| GitHub Actions Godot APK | Testado | APK debug da slice atual exportado e anexado à run `43406704240` |
-| GitHub Actions Kotlin APK | Bloqueado | nenhum APK Kotlin publicado enquanto os erros de compilação preexistentes não forem corrigidos |
+| GitHub Actions Godot APK | Testado | APK debug da slice atual exportado e anexado à run `43409376899` |
+| GitHub Actions Kotlin APK | Testado (host legado) | APK debug anexado à run `43409376899`; não confundir com uma build jogável de Anime Nexus |
 
 ## Barra de aceitação
 
@@ -36,8 +36,8 @@ Só mover uma linha para **Testado** depois de evidência de build correspondent
 
 ## Execução de CI mais recente
 
-Run `43406704240`, commit `036b9ad3e621a660c34d8230d680e6b8c1d20c79`: job `godot-android` validou os scripts/testes com Godot 4.7.2 e publicou o APK debug anexado à [run 43406704240](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43406704240) (28,2 MB). Não foi instalado em aparelho. Job `android-host` falhou em `:app:compileDebugKotlin` com os mesmos 155 erros em 10 arquivos Kotlin preexistentes; não gerou APK Kotlin.
+Run `43409376899`, commit `065f1fdea09ef12c1dc2235e9b750b23809b524c`: `android-host` passou unit tests e `assembleDebug`, e `godot-android` passou validação e export Android; artifacts dos dois APKs estão na [execução 43409376899](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43409376899). APKs não foram instalados em aparelho. O APK Godot é a slice Anime Nexus em blockout; o APK Kotlin é o protótipo Aetheria legado.
 
 ## Slice em construção (13 nov. 2026)
 
-Em Godot 4.6.3 local e 4.7.2 no CI: projeto/app identificados como Anime Nexus, orientação landscape, package ID próprio, save local separado, câmera ortográfica diagonal, avatar blockout de Kaien, Nimbara blockout, kit elétrico, quatro criaturas e chefe Cérvido de Cristal. A cadeia testada em regras é: derrotar quatro Musgos Saltadores → derrotar o Cérvido → aproximar-se e interagir com a Âncora. Ataques em área do chefe anunciam a região antes de aplicar dano. `ANIME_NEXUS_TESTS: PASS`, smoke run local sem erros de script e export CI atual passaram. Instalação, imagem e touchscreen em aparelho seguem pendentes.
+Em Godot 4.6.3 local e 4.7.2 no CI: projeto/app identificados como Anime Nexus, orientação landscape, package ID próprio, save local separado, câmera ortográfica diagonal, avatar blockout de Kaien, Nimbara blockout, kit elétrico, quatro criaturas e chefe Cérvido de Cristal. A cadeia testada em regras é: derrotar quatro Musgos Saltadores → derrotar o Cérvido → aproximar-se e interagir com a Âncora. Ataques em área do chefe anunciam a região antes de aplicar dano. `ANIME_NEXUS_TESTS: PASS`, smoke run local sem erros de script, export Godot, testes Kotlin e APK do host passaram na run `43409376899`. Instalação, imagem e touchscreen em aparelho seguem pendentes.

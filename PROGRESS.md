@@ -17,13 +17,12 @@ Branch de desenvolvimento atual: `dev/anime-nexus-vertical-slice`.
 
 - Godot 4.6.3: import headless e runner `ANIME_NEXUS_TESTS: PASS`; testes cobrem joystick, loadout, dados Nimbara, cadeia da missão/boss/Âncora e lentidão do Campo Estático. Ainda há warnings de recursos em uso ao encerrar o runner.
 - Godot 4.6.3: smoke run headless por 180 frames encerrou sem erros de script. Render visual, toque real, APK atual e instalação ainda não foram verificados.
-- GitHub Actions run `43406704240`, commit `036b9ad`: testes headless Godot 4.7.2 e export Android debug **passaram**; artifact Godot anexado à [execução 43406704240](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43406704240) (28,2 MB).
-- O job Android Kotlin chegou à compilação, mas falhou em `:app:compileDebugKotlin` com os mesmos 155 erros em 10 arquivos do protótipo; `:app:testDebugUnitTest` não pôde rodar e não foi produzido APK Kotlin.
-- O conflito inicial de plugin Kotlin/AGP 9 foi corrigido nesta branch; a barreira atual são erros de compilação do código-fonte já existente.
+- GitHub Actions run `43409376899`, commit `065f1fdea09ef12c1dc2235e9b750b23809b524c`: testes unitários Kotlin, build APK do host, testes Godot 4.7.2 e export Android **passaram**. Foram anexados artifacts Kotlin e Godot; a [execução 43409376899](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43409376899) tem os dois.
+- As falhas de compilação Kotlin da revisão anterior foram corrigidas no host legado. O APK Kotlin ainda representa o protótipo Aetheria, não a versão final Anime Nexus; o APK Godot representa a slice Anime Nexus em blockout.
 - Gradle local não conseguiu resolver AGP 9.1.1 nesta máquina, então a compilação foi observada no runner GitHub.
 - Último CI de `main` auditado: falhou no verificador de referências externas de fontes Kotlin. Logs listam tipos que têm usos no código, indicando falsos positivos no verificador atual; o Godot passou antes dessa etapa.
 - Android SDK não está instalado no ambiente local desta auditoria.
 
 ## Estado
 
-Anime Nexus ainda não tem build instalada/testada em aparelho, campanha completa nem arte final. O CI já exporta um APK debug da slice em blockout. Ver detalhes em `docs/IMPLEMENTATION_STATUS.md`.
+Anime Nexus ainda não foi instalado/testado em aparelho e não tem campanha completa nem arte final. O CI produz os APKs de protótipo (host Aetheria e slice Godot em blockout). Ver detalhes em `docs/IMPLEMENTATION_STATUS.md`.

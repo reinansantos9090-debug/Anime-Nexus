@@ -28,6 +28,6 @@
 
 - Godot 4.6.3 headless: import passou; runner atual imprimiu `ANIME_NEXUS_TESTS: PASS`, incluindo dados/avanço da missão Nimbara, chefe, interação da Âncora e aviso do telegraph antes do dano; restam avisos de recursos em uso ao encerrar.
 - Godot 4.6.3 headless: cena principal completou smoke run de 180 frames sem erro de script.
-- Android: build local não conseguiu resolver AGP 9.1.1; ambiente sem Android SDK/build-tools. CI anterior chegou a compilar Kotlin e encontrou 155 erros de código em 10 arquivos. Nenhum APK Kotlin foi produzido.
-- CI da revisão `036b9ad`: editor/runner Godot 4.7.2 e export Android debug passaram. Artifact APK de 28,2 MB publicado na [run 43406704240](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43406704240); instalação e uso no aparelho seguem sem teste.
+- Android local: build não conseguiu resolver AGP 9.1.1 neste ambiente. No GitHub Actions, a run `43409376899` passou `:app:testDebugUnitTest` e `:app:assembleDebug`.
+- CI da revisão `065f1fd`: runner Godot 4.7.2, export Android Godot, testes unitários Kotlin e APK do host Kotlin passaram; artifacts publicados na [run 43409376899](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43409376899). Nenhum APK foi instalado ou testado em aparelho.
 - Sem aparelho Android ligado a este ambiente, FPS, toque real, instalação APK e qualidade visual ainda não foram verificados.
