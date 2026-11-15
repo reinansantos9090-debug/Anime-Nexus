@@ -11,6 +11,7 @@ var slot_labels:Array[Label]=[]
 var load_buttons:Array[Button]=[]
 var save_buttons:Array[Button]=[]
 var overwrite_dialog:ConfirmationDialog
+var status_label:Label
 var pending_slot:=-1
 
 func _ready()->void:
@@ -57,7 +58,7 @@ func _build()->void:
         card.add_child(name)
         var details:=Label.new()
         details.position=Vector2(18,43)
-        details.size=Vector2(340,36)
+        details.size=Vector2(400,36)
         details.add_theme_font_size_override("font_size",14)
         card.add_child(details)
         slot_labels.append(details)
@@ -75,9 +76,14 @@ func _build()->void:
         save_button.pressed.connect(_request_save.bind(slot))
         card.add_child(save_button)
         save_buttons.append(save_button)
+    status_label=Label.new()
+    status_label.position=Vector2(28,445)
+    status_label.size=Vector2(560,40)
+    status_label.add_theme_font_size_override("font_size",14)
+    panel.add_child(status_label)
     var close_button:=Button.new()
     close_button.text="FECHAR"
-    close_button.position=Vector2(620,455)
+    close_button.position=Vector2(620,495)
     close_button.size=Vector2(165,44)
     close_button.pressed.connect(hide_menu)
     panel.add_child(close_button)
@@ -94,7 +100,9 @@ func _refresh()->void:
         var compatible:=bool(summary.get("compatible",false))
         if compatible:
             var selected:=" • ATIVO" if int(save_service.active_slot)==slot else ""
-            var recovery:=" • BACKUP" if str(summary.get("recovery_source",""))=="backup" else ""
+            var recovery:=""
+            if str(summary.get("recovery_source",""))=="backup":recovery=" • BACKUP"
+            elif str(summary.get("recovery_source",""))=="temporary":recovery=" • TEMPORÁRIO"
             if bool(summary.get("protected_by_future_save",false)):recovery+=" • versão nova preservada"
             slot_labels[slot].text="Nível %d • capítulo %d%s%s"%[int(summary.get("level",1)),int(summary.get("chapter",1)),selected,recovery]
         elif bool(summary.get("future_schema",false)):
@@ -123,9 +131,14 @@ func _request_save(slot:int)->void:
 
 func _confirm_save()->void:
     if save_service==null or pending_slot<0:return
+    var slot_number:=pending_slot+1
     if save_service.save_slot(pending_slot):
         pending_slot=-1
+        status_label.text="ESPAÇO %d SALVO NESTE DISPOSITIVO"%slot_number
         _refresh()
+    else:
+        pending_slot=-1
+        status_label.text="Falha ao gravar. O salvamento anterior foi preservado."
 
 func show_menu()->void:
     visible=true
