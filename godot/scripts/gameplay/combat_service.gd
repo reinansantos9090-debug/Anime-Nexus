@@ -85,7 +85,7 @@ func _slow_nearby(origin:Node3D,radius:float)->void:
     var tree:=get_tree()
     if tree==null:return
     for candidate in tree.get_nodes_in_group("enemy_agents"):
-        if not is_instance_valid(candidate) or candidate==origin or not candidate is Node3D:continue
+        if not is_instance_valid(candidate) or candidate==origin or not (candidate is Node3D):continue
         var enemy:=candidate as Node3D
         if enemy.global_position.distance_to(origin.global_position)<=radius and enemy.has_method("apply_slow"):
             enemy.apply_slow(2.4,0.48)
@@ -94,7 +94,7 @@ func _pull_nearby(origin:Node3D,radius:float)->void:
     var tree:=get_tree()
     if tree==null:return
     for candidate in tree.get_nodes_in_group("enemy_agents"):
-        if not is_instance_valid(candidate) or candidate==origin or not candidate is Node3D:continue
+        if not is_instance_valid(candidate) or candidate==origin or not (candidate is Node3D):continue
         var enemy:=candidate as Node3D
         if enemy.global_position.distance_to(origin.global_position)<=radius:
             enemy.global_position=enemy.global_position.lerp(origin.global_position,0.28)
