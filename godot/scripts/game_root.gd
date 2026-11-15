@@ -1300,7 +1300,8 @@ func _quest_completed(id:String)->void:
         _story()
     if id=="nimbara_side_04":
         state.set_story_flag("akari_flame_stabilized",true)
-        if hud:hud.set_mode("FLOR DE BRASA ESTABILIZADA • A PRÓXIMA VISITA A NIMBARA MOSTRARÁ SUA NOVA LUZ")
+        if hud:
+            hud.set_mode("FLOR DE BRASA ESTABILIZADA • A PRÓXIMA VISITA A NIMBARA MOSTRARÁ SUA NOVA LUZ")
     if id=="epilogue_01":
         state.data["story"]["flags"]["nexus_campaign_epilogue_complete"]=true
         state.story_changed.emit()
