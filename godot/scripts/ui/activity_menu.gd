@@ -10,7 +10,8 @@ var root: Control
 const ACTIONS := [
     ["expedition","EXPEDIÇÃO • NIMBARA","Continuar a missão da Clareira Luminar"],
     ["rift","CHEFE • CÉRVIDO","Enfrentar o guardião da primeira Âncora"],
-    ["history","DIÁLOGOS","Continuar o prólogo de Kaien"]
+    ["history","DIÁLOGOS","Continuar o prólogo de Kaien"],
+    ["saves","SALVAMENTOS","Gerenciar três espaços locais"]
 ]
 
 func _ready() -> void:

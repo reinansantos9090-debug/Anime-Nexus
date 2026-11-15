@@ -1,16 +1,43 @@
 extends Node
 const PATH := "user://anime_nexus_save_v1.json"
 const BACKUP_PATH := "user://anime_nexus_save_v1.bak.json"
+const SLOT_COUNT := 3
+const SLOT_PATHS := [
+    PATH,
+    "user://anime_nexus_save_slot_2.json",
+    "user://anime_nexus_save_slot_3.json"
+]
+const SLOT_BACKUP_PATHS := [
+    BACKUP_PATH,
+    "user://anime_nexus_save_slot_2.bak.json",
+    "user://anime_nexus_save_slot_3.bak.json"
+]
 const SAVE_INTERVAL := 15.0
+
 var elapsed := 0.0
 var dirty := false
 var game_state: Node
 var storage_path:=PATH
 var backup_storage_path:=BACKUP_PATH
+var active_slot:=0
+var slot_paths:Array=SLOT_PATHS.duplicate()
+var slot_backup_paths:Array=SLOT_BACKUP_PATHS.duplicate()
+var custom_paths:=false
 
 func configure_paths(save_path:String,backup_path:String)->void:
+    custom_paths=true
+    active_slot=-1
     storage_path=save_path
     backup_storage_path=backup_path
+
+func configure_slot_paths(paths:Array)->void:
+    if paths.size()!=SLOT_COUNT:return
+    custom_paths=false
+    slot_paths=paths.duplicate()
+    slot_backup_paths.clear()
+    for path in slot_paths:
+        slot_backup_paths.append(str(path)+".bak")
+    _select_slot_paths(0)
 
 func setup(state: Node) -> void:
     game_state = state
@@ -26,6 +53,43 @@ func _process(delta: float) -> void:
 func mark_dirty() -> void:
     dirty = true
 
+func select_slot(slot:int,load_data:=true)->bool:
+    if custom_paths or slot<0 or slot>=SLOT_COUNT:return false
+    _select_slot_paths(slot)
+    return load_now() if load_data else true
+
+func save_slot(slot:int)->bool:
+    if custom_paths or slot<0 or slot>=SLOT_COUNT:return false
+    _select_slot_paths(slot)
+    return save_now()
+
+func load_slot(slot:int)->bool:
+    if custom_paths or slot<0 or slot>=SLOT_COUNT:return false
+    var summary:Dictionary=slot_summary(slot)
+    if not bool(summary.get("has_save",false)):return false
+    _select_slot_paths(slot)
+    return load_now()
+
+func slot_summary(slot:int)->Dictionary:
+    if slot<0 or slot>=SLOT_COUNT:return {}
+    var data:Dictionary=_read(str(slot_paths[slot]))
+    if data.is_empty():data=_read(str(slot_backup_paths[slot]))
+    if data.is_empty():return {"slot":slot,"has_save":false}
+    var hunter:Dictionary=data.get("hunter",{})
+    var story:Dictionary=data.get("story",{})
+    return {
+        "slot":slot,
+        "has_save":true,
+        "level":int(hunter.get("level",1)),
+        "chapter":int(story.get("chapter",1)),
+        "saved_at_unix":int(data.get("saved_at_unix",0))
+    }
+
+func _select_slot_paths(slot:int)->void:
+    active_slot=slot
+    storage_path=str(slot_paths[slot])
+    backup_storage_path=str(slot_backup_paths[slot])
+
 func save_now() -> bool:
     if game_state == null:
         return false
@@ -37,11 +101,15 @@ func save_now() -> bool:
             var backup := FileAccess.open(backup_storage_path, FileAccess.WRITE)
             if backup:
                 backup.store_string(old.get_as_text())
+                backup.flush()
+                backup.close()
+            old.close()
     var file := FileAccess.open(storage_path, FileAccess.WRITE)
     if file == null:
         return false
     file.store_string(JSON.stringify(payload))
     file.flush()
+    file.close()
     dirty = false
     return true
 
@@ -64,7 +132,9 @@ func _read(path: String) -> Dictionary:
     if file == null:
         return {}
     var parser := JSON.new()
-    if parser.parse(file.get_as_text()) != OK:
+    var parse_result:=parser.parse(file.get_as_text())
+    file.close()
+    if parse_result != OK:
         return {}
     return parser.data if parser.data is Dictionary else {}
 

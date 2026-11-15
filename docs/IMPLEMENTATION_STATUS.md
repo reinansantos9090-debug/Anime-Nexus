@@ -21,7 +21,7 @@ Data da auditoria: 15 nov. 2026, branch `dev/anime-nexus-vertical-slice`.
 | Companions com máquina de estados | Planejado | nenhum squad follow/combat completo observado no runtime Godot |
 | Campanha principal e secundárias | Planejado | story/quest catalogs Aetheria menores; não há 60+45 Anime Nexus |
 | Inventário/equipamentos | Implementado (protótipo) | inventário/wardrobe/crafting Aetheria; slots e catálogo alvo não integram |
-| Save offline | Testado (protótipo) | save Godot single JSON + backup; fallback após JSON principal corrompido passou teste headless local e CI; Kotlin codec; faltam 3 slots, integridade e migração |
+| Save offline | Em desenvolvimento | progresso local com backup e recuperação já existe; três espaços com carregar/salvar e confirmação de sobrescrita integrados ao menu; teste curto de isolamento entre slots adicionado, ainda aguarda execução Godot manual; integridade atômica e migração permanecem pendentes |
 | Arte original final | Planejado | só ícones, materiais simples e meshes procedurais; inventário em `ASSET_PRODUCTION.md` |
 | Áudio local final | Planejado | bus gera/aciona sons, mas nenhum recurso de música ou SFX existe |
 | Perfiles de qualidade/perf | Implementado (protótipo) | existe perfil/telemetria Kotlin e serviço Godot; sem medições reais de FPS |

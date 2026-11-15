@@ -28,6 +28,7 @@ func _init()->void:
     _test_elemental_reaction_runtime()
     _test_loot()
     _test_save()
+    _test_save_slots()
     _test_virtual_joystick()
     _test_nimbara_vertical_slice_data_and_quest()
     _test_boss_telegraph()
@@ -140,6 +141,29 @@ func _test_save()->void:
     state.free()
     DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.json"))
     DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.bak.json"))
+
+func _test_save_slots()->void:
+    var state=StateScript.new()
+    state.reset()
+    var save=SaveScript.new()
+    save.setup(state)
+    var paths:Array=["user://anime_nexus_test_slot_1.json","user://anime_nexus_test_slot_2.json","user://anime_nexus_test_slot_3.json"]
+    save.configure_slot_paths(paths)
+    state.data["hunter"]["gold"]=111
+    _expect(save.save_slot(0),"Save slots: could not write slot 1")
+    state.data["hunter"]["gold"]=222
+    _expect(save.save_slot(1),"Save slots: could not write slot 2")
+    state.data["hunter"]["gold"]=333
+    _expect(not bool(save.slot_summary(2).get("has_save",false)),"Save slots: empty slot 3 should remain empty")
+    _expect(save.load_slot(0),"Save slots: could not load slot 1")
+    _expect(int(state.data["hunter"]["gold"])==111,"Save slots: slot 1 data was overwritten by slot 2")
+    _expect(save.load_slot(1),"Save slots: could not load slot 2")
+    _expect(int(state.data["hunter"]["gold"])==222,"Save slots: slot 2 data mismatch")
+    save.free()
+    state.free()
+    for path in paths:
+        DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+        DirAccess.remove_absolute(ProjectSettings.globalize_path(str(path)+".bak"))
 
 func _test_virtual_joystick()->void:
     var stick=JoystickScript.new()

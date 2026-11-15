@@ -1,6 +1,7 @@
 extends Node3D
 const StateScript=preload("res://scripts/core/game_state.gd")
 const SaveScript=preload("res://scripts/core/save_service.gd")
+const SaveSlotsMenuScript=preload("res://scripts/ui/save_slots_menu.gd")
 const ContentScript=preload("res://scripts/core/content_database.gd")
 const PerfScript=preload("res://scripts/core/performance_service.gd")
 const WorldScript=preload("res://scripts/world/world_service.gd")
@@ -52,6 +53,7 @@ var wardrobe:Node
 var portal_service:Node
 var director:Node
 var operations_menu:CanvasLayer
+var save_slots_menu:CanvasLayer
 var player:Node3D
 var camera:Camera3D
 var enemies:Array[Node3D]=[]
@@ -126,6 +128,10 @@ func _ready()->void:
     operations_menu=OperationsMenuScript.new()
     add_child(operations_menu)
     operations_menu.selected.connect(_run_operation)
+    save_slots_menu=SaveSlotsMenuScript.new()
+    add_child(save_slots_menu)
+    save_slots_menu.setup(save,state)
+    save_slots_menu.slot_loaded.connect(_on_save_slot_loaded)
 
     world.build_hq()
     _apply_quality(perf.current())
@@ -246,6 +252,10 @@ func _open_operations()->void:
     if operations_menu and not operations_menu.is_open():
         operations_menu.show_menu()
 
+func _on_save_slot_loaded(slot_number:int)->void:
+    _enter_hq()
+    hud.set_mode("ESPAÇO %d CARREGADO • OBSERVATÓRIO DE ÍRIS"%slot_number)
+
 func _run_operation(action_id:String)->void:
     match action_id:
         "expedition":_enter_expedition()
@@ -275,6 +285,8 @@ func _run_operation(action_id:String)->void:
                     break
             if not crafted:hud.set_mode("OFICINA • MATERIAIS INSUFICIENTES")
         "history":_story()
+        "saves":
+            if save_slots_menu:save_slots_menu.show_menu()
 
 func _cycle_weapon()->void:
     var ids:Array=content.WEAPONS.keys()
