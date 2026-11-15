@@ -20,7 +20,7 @@ func reset() -> void:
         "settings": {"difficulty":"adventure"},
         "hunter": {"name":"Kaien Arashi","level":1,"xp":0,"xp_to_next":120,"hp":140,"max_hp":140,"energy":100.0,"max_energy":100.0,"gold":0,"chaos_energy":0,"rank":0},
         "loadout": {"weapon":"fulgor_gauntlets","ability_1":"lightning_step","ability_2":"sky_chain","ability_3":"static_field","core_slots":["damage","cooldown","dodge"]},
-        "party": {"companions":["akari_solen","ren_aozora"]},
+        "party": {"companions":["akari_solen","ren_aozora"],"command":"auto"},
         "inventory": {"aether_core":8,"slime_gel":12,"plasma_fiber":4,"scrap_plate":5,"power_cell":3,"oak_branch":8,"stone":6,"herb":10},
         "quests": {"active":["nimbara_01"],"progress":{},"completed":[]},
         "story": {"chapter":1,"scene":0,"flags":{"tutorial_complete":false,"rooftop_unlocked":true},"journal":[]},

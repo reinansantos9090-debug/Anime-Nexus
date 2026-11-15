@@ -134,6 +134,7 @@ func _ready()->void:
     add_child(operations_menu)
     operations_menu.selected.connect(_run_operation)
     operations_menu.set_difficulty(str(state.data.get("settings",{}).get("difficulty","adventure")))
+    operations_menu.set_companion_order(str(state.data.get("party",{}).get("command","auto")))
     save_slots_menu=SaveSlotsMenuScript.new()
     add_child(save_slots_menu)
     save_slots_menu.setup(save,state)
@@ -295,6 +296,20 @@ func _enter_versus()->void:
     _spawn_wave(mini(8,perf.max_enemies()))
     hud.set_mode("VERSUS • SIMULAÇÃO OFFLINE")
 
+func _cycle_companion_order()->void:
+    var order:Array=["auto","follow","retreat"]
+    var party:Dictionary=state.data.get("party",{}).duplicate(true)
+    var current:=str(party.get("command","auto"))
+    var index:=order.find(current)
+    if index<0:index=0
+    var next_id:=str(order[(index+1)%order.size()])
+    party["command"]=next_id
+    state.data["party"]=party
+    state.state_changed.emit()
+    operations_menu.set_companion_order(next_id)
+    var labels:Dictionary={"auto":"COMBATE AUTOMÁTICO","follow":"SEGUIR Kaien","retreat":"RECUAR PARA PERTO DE Kaien"}
+    hud.set_mode("ALIADOS • "+str(labels[next_id]))
+
 func _cycle_difficulty()->void:
     if mode!="HQ":
         hud.set_mode("DIFICULDADE • ALTERE NO OBSERVATÓRIO")
@@ -315,6 +330,8 @@ func _open_operations()->void:
         operations_menu.show_menu()
 
 func _on_save_slot_loaded(slot_number:int)->void:
+    operations_menu.set_difficulty(str(state.data.get("settings",{}).get("difficulty","adventure")))
+    operations_menu.set_companion_order(str(state.data.get("party",{}).get("command","auto")))
     _refresh_companions()
     _enter_hq()
     hud.set_mode("ESPAÇO %d CARREGADO • OBSERVATÓRIO DE ÍRIS"%slot_number)
@@ -353,6 +370,7 @@ func _run_operation(action_id:String)->void:
         "difficulty":_cycle_difficulty()
         "companions":
             if companion_roster_menu:companion_roster_menu.show_menu()
+        "companion_order":_cycle_companion_order()
 
 func _cycle_weapon()->void:
     var ids:Array=content.WEAPONS.keys()

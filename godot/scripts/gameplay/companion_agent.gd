@@ -63,12 +63,14 @@ func _physics_process(delta:float)->void:
     if owner_distance>24.0:
         reset_formation()
         owner_distance=global_position.distance_to(owner_actor.global_position)
+    var party:Dictionary=game_state.data.get("party",{}) if game_state else {}
+    var command:=str(party.get("command","auto"))
     var target:Node3D=null
-    if combat_active:target=_nearest_target(7.0)
+    if combat_active and command!="follow":target=_nearest_target(7.0)
     var enemy_distance:float=global_position.distance_to(target.global_position) if target else -1.0
     var hunter:Dictionary=game_state.get_hunter() if game_state else {}
     var hp_ratio:=float(hunter.get("hp",1.0))/maxf(1.0,float(hunter.get("max_hp",1.0)))
-    var decision:Dictionary=native_core.companion_decision(owner_distance,enemy_distance,hp_ratio)
+    var decision:Dictionary=native_core.companion_decision(owner_distance,enemy_distance,hp_ratio,command)
     state_name=str(decision.get("state","follow"))
     if target and (state_name=="attack" or (state_name=="guard" and enemy_distance<=2.6)):
         _attack_target(target)
@@ -135,6 +137,7 @@ func _count_targets(radius:float)->int:
 func _follow_owner(delta:float,speed_multiplier:float)->void:
     var offset:=formation_offset
     if state_name=="guard":offset=Vector3(-formation_offset.x,0.0,-1.5)
+    elif state_name=="retreat":offset=Vector3(0.0,0.0,3.0)
     var destination:=owner_actor.global_position+owner_actor.global_basis*offset
     destination.y=owner_actor.global_position.y
     var direction:=destination-global_position

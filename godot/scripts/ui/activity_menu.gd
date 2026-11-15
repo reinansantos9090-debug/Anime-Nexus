@@ -13,6 +13,7 @@ const ACTIONS := [
     ["rift","CHEFE • CÉRVIDO","Enfrentar o guardião da primeira Âncora"],
     ["history","DIÁLOGOS","Continuar o prólogo de Kaien"],
     ["companions","COMPANHEIROS","Escolher até dois aliados offline"],
+    ["companion_order","ORDEM • AUTO","Alternar entre combate, seguir e recuar"],
     ["saves","SALVAMENTOS","Gerenciar três espaços locais"],
     ["difficulty","DIFICULDADE • AVENTURA","Alternar o desafio da campanha offline"]
 ]
@@ -82,6 +83,12 @@ func set_difficulty(difficulty_id:String)->void:
     var labels:Dictionary={"casual":"CASUAL","adventure":"AVENTURA","challenge":"DESAFIO"}
     var label:=str(labels.get(difficulty_id,"AVENTURA"))
     action_buttons["difficulty"].text="DIFICULDADE • "+label+"\nToque para alternar a campanha offline"
+
+func set_companion_order(order_id:String)->void:
+    if not action_buttons.has("companion_order"):return
+    var labels:Dictionary={"auto":"AUTO","follow":"SEGUIR","retreat":"RECUAR"}
+    var label:=str(labels.get(order_id,"AUTO"))
+    action_buttons["companion_order"].text="ORDEM • "+label+"\nDefinir comportamento dos aliados"
 
 func _choose(action_id: String) -> void:
     hide_menu()

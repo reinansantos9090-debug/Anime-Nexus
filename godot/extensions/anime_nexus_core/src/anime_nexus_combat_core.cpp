@@ -15,8 +15,8 @@ void AnimeNexusCombatCore::_bind_methods() {
             &AnimeNexusCombatCore::resolve_elemental_reaction);
     ClassDB::bind_method(D_METHOD("advance_experience", "hunter", "progression", "amount"),
             &AnimeNexusCombatCore::advance_experience);
-    ClassDB::bind_method(D_METHOD("companion_decision", "owner_distance", "enemy_distance", "owner_hp_ratio"),
-            &AnimeNexusCombatCore::companion_decision);
+    ClassDB::bind_method(D_METHOD("companion_decision", "owner_distance", "enemy_distance", "owner_hp_ratio", "command"),
+            &AnimeNexusCombatCore::companion_decision, DEFVAL("auto"));
     ClassDB::bind_method(D_METHOD("companion_damage", "base_damage", "player_level", "role_multiplier"),
             &AnimeNexusCombatCore::companion_damage);
     ClassDB::bind_method(D_METHOD("companion_avoidance_turn", "forward_blocked", "left_blocked",
@@ -109,16 +109,21 @@ Dictionary AnimeNexusCombatCore::resolve_elemental_reaction(const String &elemen
 }
 
 Dictionary AnimeNexusCombatCore::companion_decision(double owner_distance, double enemy_distance,
-        double owner_hp_ratio) const {
+        double owner_hp_ratio, const String &command) const {
     const double safe_owner_distance = std::max(0.0, owner_distance);
     const double safe_enemy_distance = enemy_distance;
     const double safe_owner_hp_ratio = std::clamp(owner_hp_ratio, 0.0, 1.0);
     Dictionary result;
     result["state"] = "follow";
     result["speed_multiplier"] = 1.0;
-    if (safe_owner_distance > 16.0) {
+    if (command.to_lower() == "retreat") {
+        result["state"] = "retreat";
+        result["speed_multiplier"] = 1.55;
+    } else if (safe_owner_distance > 16.0) {
         result["state"] = "regroup";
         result["speed_multiplier"] = 1.8;
+    } else if (command.to_lower() == "follow") {
+        result["state"] = "follow";
     } else if (safe_owner_hp_ratio <= 0.20) {
         result["state"] = "guard";
         result["speed_multiplier"] = 1.2;
