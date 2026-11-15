@@ -29,7 +29,7 @@
 | EN-AURELIO | 6 inimigos do deserto | cristal, escaravelho, miragem, vigia, ampulheta e guardião | mesma faixa modular, silhuetas distintas | movimento, ataque, telegraph, retorno | Dados/saques offline e seis silhuetas procedurais de blockout integrados; rigs, animações e modelos finais pendentes; original |
 | EN-VESPER | 6 inimigos costeiros | bolha, coral, água-viva, caranguejo, onda e sentinela | rigs pequenos, água não exige transparência em toda peça | ricochete, onda, guarda, mergulho | Planejado; original |
 | EN-FERRUMIA | 6 inimigos mecânicos | drone, engrenagem, sentinela, autômato, magnético e núcleo | peças reutilizáveis em atlas sem reutilizar silhueta completa | patrulha, tiro, montagem, stagger | Dados/saques offline e seis silhuetas procedurais blockout integrados; IA/rigs/animações finais pendentes; original |
-| EN-IVERN | 6 inimigos de geada | floco, raposa, cristal, nevasca, guardião e sentinela | rig de criatura e partículas limitadas | pulo, névoa, ataque vertical, retorno | Planejado; original |
+| EN-IVERN | 6 inimigos de geada | floco, raposa, cristal, nevasca, guardião e sentinela | rig de criatura e partículas limitadas | pulo, névoa, ataque vertical, retorno | Dados/saques offline e seis silhuetas procedurais de blockout integrados; rigs, animações e modelos finais pendentes; original |
 | EN-UMBRAL | 6 inimigos de reflexo | eco, borboleta, espelho, sombra, ilusão e vigia | mesh leve; dissolve/duplicata por shader | invisibilidade curta e leitura de pista | Planejado; original |
 | EN-NEXO | ecos de cada região | variações narrativas locais dos inimigos aprovados | combinações de material e comportamento; não só troca de cor | ataques combinados e reações próprias | Planejado; original |
 | ENV-OBSERVATORIO | hub principal | pedra suspensa, vidro astral, luz de portal azul | 1 cena modular, 3 setores visíveis, LOD/occlusion | bandeiras, portal, NPCs, luz narrativa | Blockout do hub reutilizado; arte final e áreas funcionais planejadas; original |
@@ -37,7 +37,7 @@
 | ENV-AURELIO | deserto/templo/oásis | duna dourada, pedra coral, céu violeta | módulos de ruína e plataforma; terreno com rota | poeira, mecanismo, faixa de calor | Expedição blockout selecionável com marcos de arenito, cristas decorativas e fragmentos do templo; puzzles temporais, plataformas e arte final pendentes; original |
 | ENV-VESPER | porto/ilhas/caverna | água cobalto, coral, pontes de luz | kit de costa, cavernas, skiff e farol | maré, água, barco e ponte | Blockout costeiro procedural com enseadas, cais e corais acessível como expedição; maré interativa, subáreas e arte final pendentes; original |
 | ENV-FERRUMIA | cidade/trilhos/torre | cobre, magenta, azul elétrico | kit modular, plataformas, elevadores e cabos | trilhos/elevadores e máquinas | Expedição blockout com trilhos estáticos, quatro torres e engrenagens decorativas; elevadores, máquinas interativas, subáreas e arte final pendentes; original |
-| ENV-IVERN | vale/templo/picos | neve pérola, aurora lilás/dourada | terreno, cristais e pontes; material neve mobile | neve leve, corrente de vento e aurora | Planejado; original |
+| ENV-IVERN | vale/templo/picos | neve pérola, aurora lilás/dourada | terreno, cristais e pontes; material neve mobile | neve leve, corrente de vento e aurora | Expedição blockout selecionável com bancos de neve, cristais e arcos fixos de aurora; vento, pontes dinâmicas, templo, subáreas e arte final pendentes; original |
 | ENV-UMBRAL | jardim/galeria/palácio | violeta profundo, rosa, prata | módulos duplicáveis com variantes de rota | transição de geometria discreta | Planejado; original |
 | ENV-NUCLEO | ponte/salão/coração | mistura de paletas sem perder legibilidade | kit modular com pontos de âncora e arenas boss | transições de fase e fragmentos | Planejado; original |
 | UI-KIT | HUD/menu/inventário/oficina/mapa | ornamentos próprios de constelação, borda e ícones elementais | SVG/vector ou texturas 9-slice escaláveis; fonte legível licenciada | estados hover/touch/cooldown/quest | Planejado; original/licença documentada |
@@ -163,3 +163,15 @@ GLB é formato de intercâmbio; preservar fonte editável em arquivo de criaçã
 | EN-FER-AUTOMATO | Autômato Instável; torso geométrico violeta com núcleo suspenso | Ferrúmia | Dados e silhueta de blockout integrados; estados alternados, rig e arte final pendentes; original |
 | EN-FER-MAGNETICO | Guardião Magnético; silhueta grande com anel orbital ciano | Ferrúmia | Dados e silhueta de blockout integrados; puxão, rig e arte final pendentes; original |
 | EN-FER-NUCLEO | Núcleo Mecânico; esfera rosa envolvida por lâminas de metal | Ferrúmia | Dados e silhueta de blockout integrados; invocação, rig e arte final pendentes; original |
+
+
+## Criaturas blockout de Ivern
+
+| Asset | Papel / desenho / paleta | Região | Estado e origem |
+|---|---|---|---|
+| EN-IVE-FLOCO | Floco Vivente; cristal flutuante ciano com três braços radiais | Ivern | Silhueta procedural no runtime; rig/animações de flutuação e modelo final pendentes; original |
+| EN-IVE-RAPOSA | Raposa Boreal; corpo branco-pérola, orelhas lilás e cauda longa | Ivern | Silhueta procedural no runtime; rig e animações de salto/isca pendentes; original |
+| EN-IVE-CRISTAL | Cristal Errático; guardião geométrico azul com cristal lateral | Ivern | Silhueta procedural no runtime; teleporte visual, rig e modelo final pendentes; original |
+| EN-IVE-NEVASCA | Espírito da Nevasca; núcleo vertical azul cercado por três aros | Ivern | Silhueta procedural no runtime; VFX de neblina, animação e modelo final pendentes; original |
+| EN-IVE-GUARDIAO | Guardião de Geada; golem azul com cristal dorsal | Ivern | Silhueta procedural no runtime; rig e animações de defesa pendentes; original |
+| EN-IVE-SENTINELA | Sentinela da Aurora; prisma azul com nadadeiras lilás e aro dourado | Ivern | Silhueta procedural no runtime; telegraph vertical, rig e modelo final pendentes; original |

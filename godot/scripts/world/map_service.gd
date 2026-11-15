@@ -1,5 +1,5 @@
 extends Node
-## Nine offline expedition maps. Each biome owns its encounter pool,
+## Ten offline expedition maps. Each biome owns its encounter pool,
 ## difficulty, obstacle layout and environmental hazard.
 
 var maps: Dictionary = {}
@@ -120,6 +120,21 @@ func _ready() -> void:
                 {"shape":"ruin","pos":Vector3(10,0,9),"size":Vector3(2.2,3.7,2.2)},
                 {"shape":"ruin","pos":Vector3(0,0,-12),"size":Vector3(2.0,2.8,2.4)},
                 {"shape":"ruin","pos":Vector3(0,0,11),"size":Vector3(3.0,2.4,2.0)}
+            ]
+        },
+        "ivern": {
+            "name":"Ivern • Montanhas da Aurora",
+            "difficulty":1.34,"duration":185.0,"goal":15,"hazard":"rajadas da aurora",
+            "ground":Color("#7183a0"),"accent":Color("#d5e9ff"),"fog":Color("#bdc9e2"),
+            "enemies":["snowflake_wisp","boreal_fox","erratic_crystal","blizzard_spirit","frost_guardian","aurora_sentinel"],
+            "obstacles":[
+                {"shape":"ice","pos":Vector3(-12,0,-10),"size":Vector3(2.8,0.6,2.6)},
+                {"shape":"crystal","pos":Vector3(11,0,-10),"size":Vector3(1.3,3.0,1.3)},
+                {"shape":"snowbank","pos":Vector3(-10,0,8),"size":Vector3(3.6,1.7,2.8)},
+                {"shape":"snowbank","pos":Vector3(11,0,8),"size":Vector3(3.2,1.5,3.0)},
+                {"shape":"ice","pos":Vector3(0,0,-15),"size":Vector3(4.2,0.7,2.0)},
+                {"shape":"crystal","pos":Vector3(-2,0,2),"size":Vector3(1.0,2.5,1.0)},
+                {"shape":"snowbank","pos":Vector3(0,0,14),"size":Vector3(4.5,1.4,2.8)}
             ]
         },
         "ferrumia": {

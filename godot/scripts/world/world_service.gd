@@ -87,12 +87,26 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
         "sky_ruins":
             for p in [Vector3(-18,0,-15),Vector3(17,0,-15),Vector3(-17,0,15),Vector3(18,0,15)]:
                 _ruin_pillar(p,accent)
+        "ivern":
+            _make_ivern_aurora(accent)
         "ferrumia":
             _make_ferrumia_tracks(accent)
         "aurelio":
             _make_aurelio_ruins(accent,ground)
         "vesper":
             _make_vesper_cove(accent,ground)
+
+func _make_ivern_aurora(accent:Color)->void:
+    # The sky arcs are fixed low-cost landmarks, not dynamic aurora or wind gameplay.
+    for p in [Vector3(-19,0,-15),Vector3(19,0,-15),Vector3(-18,0,16),Vector3(18,0,16)]:
+        Factory.make_crystal(world_root,p+Vector3(0,0.1,0),accent)
+    for i in range(3):
+        var arc:=Factory.torus(world_root,8.0+float(i)*1.1,8.25+float(i)*1.1,Vector3(0,4.0+float(i)*0.55,-17),Color("#a8caff").lerp(Color("#d69cff"),float(i)*0.22))
+        arc.rotation_degrees=Vector3(20.0,-18.0+float(i)*18.0,0)
+        arc.scale=Vector3(1.25,0.6,1.0)
+    for p in [Vector3(-18,0,0),Vector3(18,0,0)]:
+        Factory.box(world_root,Vector3(1.3,5.2,1.3),p+Vector3(0,2.6,0),Color("#667c9a"))
+        Factory.make_crystal(world_root,p+Vector3(0,5.2,0),accent.lightened(0.12))
 
 func _make_ferrumia_tracks(accent:Color)->void:
     # Static rails and tower pieces suggest the industrial district; they do not move.
@@ -194,6 +208,12 @@ func _make_obstacle(obstacle:Dictionary,accent:Color)->void:
             _cactus(pos,accent,maxf(1.0,size.y/1.9))
         "scrap":
             _scrap_stack(pos,accent,size)
+        "snowbank":
+            var bank:=Factory.sphere(world_root,1.0,pos+Vector3(0,size.y*0.42,0),Color("#c9d8ec"))
+            bank.scale=Vector3(size.x*0.5,size.y*0.55,size.z*0.5)
+        "ice":
+            var ice:=Factory.box(world_root,Vector3(size.x,size.y,size.z),pos+Vector3(0,size.y*0.5,0),Color("#91c9e2"))
+            ice.rotation.y=0.14
         "gear":
             _make_ferrumia_gear(pos,accent,size)
         "sandstone":

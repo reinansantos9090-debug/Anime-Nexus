@@ -725,12 +725,51 @@ func _attach_enemy_visual(e:Node3D,behavior:String,index:int)->void:
         e.attach_visual(_make_aurelio_enemy_visual(e,str(e.monster_id)))
     elif str(e.monster_id).begins_with("prism_") or e.monster_id in ["living_gear","copper_sentinel","unstable_automaton","magnetic_guardian","mechanical_core"]:
         e.attach_visual(_make_ferrumia_enemy_visual(e,str(e.monster_id)))
+    elif str(e.monster_id).begins_with("snowflake_") or e.monster_id in ["boreal_fox","erratic_crystal","blizzard_spirit","frost_guardian","aurora_sentinel"]:
+        e.attach_visual(_make_ivern_enemy_visual(e,str(e.monster_id)))
     elif behavior in ["flying","orbit"]:e.attach_visual(Factory.make_moth(e,base))
     elif behavior in ["guardian","shielded","knockback"]:e.attach_visual(Factory.make_golem(e,base,Color("#e9fcff")))
     elif behavior in ["berserker","crusher"]:e.attach_visual(Factory.make_colossus(e,base,Color("#ffd86b")))
     elif behavior in ["sniper","ranged","turret"]:e.attach_visual(Factory.make_crystal_monster(e,base))
     elif behavior in ["assassin","stealth","teleporter"]:e.attach_visual(Factory.make_hound(e,base))
     else:e.attach_visual(Factory.make_slime(e,base))
+
+func _make_ivern_enemy_visual(parent:Node3D,monster_id:String)->Node3D:
+    var visual:=Node3D.new()
+    parent.add_child(visual)
+    match monster_id:
+        "snowflake_wisp":
+            Factory.make_crystal(visual,Vector3(0,0.9,0),Color("#d9f3ff"))
+            for i in range(3):
+                var ray:=Factory.box(visual,Vector3(0.16,1.25,0.16),Vector3(0,0.95,0),Color("#80d8ed"))
+                ray.rotation.z=TAU*float(i)/3.0
+        "boreal_fox":
+            var body:=Factory.sphere(visual,0.48,Vector3(0,0.78,0),Color("#b5cedf"))
+            body.scale=Vector3(0.85,0.72,1.35)
+            Factory.sphere(visual,0.33,Vector3(0,1.05,-0.42),Color("#eff7ff"))
+            for side in [-1.0,1.0]:
+                var ear:=Factory.box(visual,Vector3(0.18,0.5,0.16),Vector3(side*0.22,1.43,-0.48),Color("#8e82bb"))
+                ear.rotation.z=side*0.16
+                Factory.sphere(visual,0.07,Vector3(side*0.12,1.08,-0.72),Color("#f9dc9a"))
+            var tail:=Factory.sphere(visual,0.28,Vector3(0.32,0.7,0.52),Color("#d6eaff"))
+            tail.scale=Vector3(0.65,0.7,1.6)
+        "erratic_crystal":
+            Factory.make_crystal_monster(visual,Color("#8bb9d6"))
+            Factory.make_crystal(visual,Vector3(0.65,1.4,0.05),Color("#d4b9ff"))
+        "blizzard_spirit":
+            var core:=Factory.sphere(visual,0.48,Vector3(0,1.15,0),Color("#a5c8e0"))
+            core.scale=Vector3(0.68,1.3,0.68)
+            for i in range(3):Factory.torus(visual,0.42+float(i)*0.12,0.49+float(i)*0.12,Vector3(0,0.75+float(i)*0.38,0),Color("#c8ddf4").lerp(Color("#c198e2"),float(i)*0.35))
+        "frost_guardian":
+            Factory.make_golem(visual,Color("#687f9e"),Color("#d5f1ff"))
+            Factory.make_crystal(visual,Vector3(0,2.25,0.22),Color("#a9ddf7"))
+        "aurora_sentinel":
+            Factory.make_crystal_monster(visual,Color("#7686ad"))
+            for side in [-1.0,1.0]:
+                var fin:=Factory.box(visual,Vector3(0.22,1.05,0.28),Vector3(side*0.74,1.28,0),Color("#d3a7e8"))
+                fin.rotation.z=side*0.32
+            Factory.torus(visual,0.42,0.49,Vector3(0,1.8,0),Color("#f1e5bd"))
+    return visual
 
 func _make_ferrumia_enemy_visual(parent:Node3D,monster_id:String)->Node3D:
     var visual:=Node3D.new()

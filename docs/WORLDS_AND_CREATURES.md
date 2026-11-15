@@ -1,6 +1,6 @@
 # Mundos e criaturas
 
-Esta tabela permanece a especificação de longo prazo. A build atual ainda é um protótipo: Nimbara continua sendo a missão vertical slice, e a lista de expedições inclui mapas de combate compactos. Aurélio, Ferrúmia e Vesper agora têm expedições blockout com fauna local; nenhum desses mapas equivale às regiões completas de exploração previstas abaixo.
+Esta tabela permanece a especificação de longo prazo. A build atual ainda é um protótipo: Nimbara continua sendo a missão vertical slice, e a lista de expedições inclui mapas de combate compactos. Aurélio, Ferrúmia, Ivern e Vesper agora têm expedições blockout com fauna local; nenhum desses mapas equivale às regiões completas de exploração previstas abaixo.
 
 | Região / identidade | Subáreas e mecânicas de exploração | Criaturas comuns/especiais | Chefe e encontro |
 |---|---|---|---|
@@ -21,6 +21,10 @@ Cada espécie precisa de locomotion/pathing, telegraph, hitbox, reação, recupe
 
 Doze masmorras alvo devem variar rota e objetivo: fuga de raízes, sala de espelhos, corrida de plataforma, investigação sem combate, escolta, arena de ondas, quebra-cabeça temporal, barco em maré, máquina sob pressão, subida de ventos, memória em dupla e combate final cronometrado. Portais de desafio usam modificadores configuráveis offline. Evento local é escolhido ao entrar ou após marco de jogo e não expira por ausência.
 
+
+## Estado runtime de Ivern
+
+Ivern está disponível como expedição compacta com seis criaturas e saques locais. O cenário blockout tem bancos de neve decorativos, cristais e arcos estáticos em paleta pérola/lilás; não representa neve física nem aurora dinâmica. Pontes que surgem com o vento, saltos entre picos, templo, chefe e subáreas não estão implementados. As seis criaturas têm silhuetas próprias de blockout sem rig ou animação final.
 
 ## Estado runtime de Ferrúmia
 

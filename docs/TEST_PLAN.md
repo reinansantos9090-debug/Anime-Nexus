@@ -101,3 +101,12 @@ O runner Godot segue manual; nenhum teste longo ou emulador será disparado auto
 - Não considerar elevadores, trilhos funcionais, máquinas interativas ou chefe implementados.
 
 O runner segue manual; nenhum teste longo/emulador automático foi adicionado ou iniciado.
+
+
+## Contrato de conteúdo de Ivern (runner manual curto)
+
+- Conferir os seis encontros e toda referência de loot local no catálogo.
+- Abrir a expedição Ivern offline, verificar a rota de blockout e distinguir os arcos fixos da aurora como decoração.
+- Não considerar vento, pontes dinâmicas, salto entre picos ou chefe concluídos.
+
+Runner Godot é manual; nenhum teste longo/emulador automático foi adicionado ou iniciado.

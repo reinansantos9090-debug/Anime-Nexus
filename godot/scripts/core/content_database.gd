@@ -92,6 +92,12 @@ const MONSTERS := {
     "void_glider":{"name":"Planador do Vazio","hp":230.0,"damage":44.0,"speed":3.6,"xp":175,"tier":5,"behavior":"flying","loot":["void_membrane","sky_fragment"]},
     "storm_caster":{"name":"Conjurador da Tempestade","hp":205.0,"damage":52.0,"speed":2.0,"xp":190,"tier":5,"behavior":"ranged","loot":["storm_core","prism_fragment"]},
     "chrono_knight":{"name":"Cavaleiro Crono","hp":360.0,"damage":62.0,"speed":2.1,"xp":240,"tier":6,"behavior":"controller","loot":["chrono_gear","gravity_shard"]},
+    "snowflake_wisp":{"element":"ice","name":"Floco Vivente","hp":102.0,"damage":22.0,"speed":3.2,"xp":84,"tier":3,"behavior":"orbit","loot":["snowglass","aurora_shard"]},
+    "boreal_fox":{"element":"wind","name":"Raposa Boreal Encantada","hp":148.0,"damage":35.0,"speed":5.0,"xp":132,"tier":4,"behavior":"assassin","loot":["boreal_fur","snowglass"]},
+    "erratic_crystal":{"element":"ice","name":"Cristal Errático","hp":176.0,"damage":31.0,"speed":2.4,"xp":148,"tier":4,"behavior":"teleporter","loot":["aurora_shard","warm_crystal"]},
+    "blizzard_spirit":{"element":"ice","name":"Espírito da Nevasca","hp":190.0,"damage":39.0,"speed":2.2,"xp":170,"tier":4,"behavior":"controller","loot":["storm_silk","snowglass"]},
+    "frost_guardian":{"element":"ice","name":"Guardião de Geada","hp":392.0,"damage":46.0,"speed":1.25,"xp":230,"tier":5,"behavior":"guardian","loot":["warm_crystal","aurora_shard"]},
+    "aurora_sentinel":{"element":"light","name":"Sentinela da Aurora","hp":220.0,"damage":50.0,"speed":1.6,"xp":205,"tier":5,"behavior":"sniper","loot":["aurora_shard","storm_silk"]},
     "prism_drone":{"element":"light","name":"Drone Prismático","hp":132.0,"damage":31.0,"speed":2.5,"xp":108,"tier":3,"behavior":"turret","loot":["arc_coil","prism_glass"]},
     "living_gear":{"element":"gravity","name":"Engrenagem Viva","hp":105.0,"damage":20.0,"speed":4.6,"xp":82,"tier":3,"behavior":"swarm","loot":["gear_teeth","arc_coil"]},
     "copper_sentinel":{"element":"thunder","name":"Sentinela de Cobre","hp":275.0,"damage":34.0,"speed":1.5,"xp":152,"tier":4,"behavior":"shielded","loot":["copper_plate","gear_teeth"]},
@@ -133,7 +139,8 @@ const BIOMES := {
     "sky_ruins":{"name":"Ruínas do Céu","ground":Color("#6178b1"),"accent":Color("#e0f7ff"),"fog":Color("#b4c9ff")},
     "vesper":{"name":"Vesper • Arquipélago das Marés","ground":Color("#376e77"),"accent":Color("#59d8d2"),"fog":Color("#527f91")},
     "aurelio":{"name":"Aurélio • Deserto das Horas","ground":Color("#b78555"),"accent":Color("#ffd17e"),"fog":Color("#d2a487")},
-    "ferrumia":{"name":"Ferrúmia • Cidade das Engrenagens","ground":Color("#594c6d"),"accent":Color("#ff8bc7"),"fog":Color("#927b9f")}
+    "ferrumia":{"name":"Ferrúmia • Cidade das Engrenagens","ground":Color("#594c6d"),"accent":Color("#ff8bc7"),"fog":Color("#927b9f")},
+    "ivern":{"name":"Ivern • Montanhas da Aurora","ground":Color("#7183a0"),"accent":Color("#d5e9ff"),"fog":Color("#bdc9e2")}
 }
 
 const QUESTS := [
@@ -207,6 +214,11 @@ const ITEMS := {
     "rift_hide":{"name":"Pele da Fenda","value":37},"gravity_shard":{"name":"Estilhaço Gravitacional","value":43},
     "void_membrane":{"name":"Membrana do Vazio","value":48},"storm_core":{"name":"Núcleo de Tempestade","value":50},
     "chrono_gear":{"name":"Engrenagem Crono","value":58},
+    "snowglass":{"name":"Vidro de Neve","value":24},
+    "aurora_shard":{"name":"Fragmento da Aurora","value":36},
+    "boreal_fur":{"name":"Pelo Boreal","value":31},
+    "warm_crystal":{"name":"Cristal de Calor","value":39},
+    "storm_silk":{"name":"Seda da Nevasca","value":42},
     "arc_coil":{"name":"Bobina de Arco","value":30},
     "prism_glass":{"name":"Vidro Prismático","value":28},
     "gear_teeth":{"name":"Dentes de Engrenagem","value":18},
