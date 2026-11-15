@@ -64,3 +64,5 @@ Este fluxo requer teste manual no Godot; nenhum job longo/emulador automático s
 - Criar uma receita com materiais suficientes e confirmar que o saldo e o resultado atualizam sem fechar a oficina.
 - Tentar criar sem saldo; o botão deve permanecer desabilitado e nenhum item pode ser debitado.
 - Voltar a uma expedição; a oficina só pode abrir no Observatório.
+
+- Oficina: fabricar cada um dos três projetos de instrumento; confirmar custo debitado uma única vez, licença persistida após recarregar o espaço e arma habilitada no Arsenal. Tentar fabricar projeto já concluído e conferir que inventário não muda.

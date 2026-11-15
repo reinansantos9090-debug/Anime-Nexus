@@ -426,16 +426,25 @@ func _run_operation(action_id:String)->void:
 
 func _workshop_crafted(recipe_id:String,success:bool)->void:
     if not success:
-        hud.set_mode("OFICINA • MATERIAIS INSUFICIENTES")
+        hud.set_mode("OFICINA • MATERIAIS INSUFICIENTES OU PROJETO JÁ DESBLOQUEADO")
         return
     for recipe in content.RECIPES:
         if str(recipe.get("id",""))==recipe_id:
-            hud.set_mode("OFICINA • CRIADO: "+str(recipe.get("name",recipe_id)))
+            var weapon_id:=str(recipe.get("unlock_weapon",""))
+            if not weapon_id.is_empty():
+                var weapon:Dictionary=content.WEAPONS.get(weapon_id,{})
+                hud.set_mode("INSTRUMENTO DESBLOQUEADO • %s • USE ARSENAL PARA EQUIPAR"%str(weapon.get("name",recipe_id)))
+            else:
+                hud.set_mode("OFICINA • CRIADO: "+str(recipe.get("name",recipe_id)))
             audio.level_up()
             return
 
 func _cycle_weapon()->void:
-    var ids:Array=content.WEAPONS.keys()
+    var ids:Array=[]
+    for raw_id in content.WEAPONS.keys():
+        var id:=str(raw_id)
+        if id=="fulgor_gauntlets" or inventory.quantity("weapon_license_"+id)>0:
+            ids.append(id)
     if ids.is_empty():return
     ids.sort()
     var current:=str(state.data["loadout"]["weapon"])

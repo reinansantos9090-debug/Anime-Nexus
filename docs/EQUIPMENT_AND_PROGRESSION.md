@@ -62,3 +62,8 @@ Mascotes desbloqueáveis: Mariposa-Lanterna (marca recurso), Musguinho (recupera
 ## Estado
 
 O runtime atual tem catálogos de equipamentos/progressão de Aetheria e alguns sistemas jogáveis, mas não esses slots, receita, árvore, oito personagens ou itens Anime Nexus. Tudo acima: **Planejado**.
+
+
+## Projetos de instrumentos na Oficina
+
+A Oficina oferece três projetos craftáveis: Lâminas Voltaicas (2 Núcleos de Aether + 2 Fibras de Plasma), Arco Tóxico (3 Núcleos de Musgo + 2 Fibras Espinhadas) e Canhão Pulsar (2 Células de Energia + 3 Placas de Sucata + 1 Fragmento Cristalino). Criar consome os materiais pela transação C++ atômica e concede uma licença única persistida no inventário local. A licença aparece como desbloqueio e habilita o instrumento no botão Arsenal; projetos já concluídos ficam desativados. Manoplas Fulgor continuam como opção inicial. Modelos e animações próprios desses instrumentos permanecem pendentes; o sistema usa os kits de combate existentes.

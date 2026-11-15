@@ -24,6 +24,10 @@ func has_cost(cost:Dictionary)->bool:
 
 func craft(recipe:Dictionary)->bool:
     if game_state==null or native_core==null:return false
+    var unlock_weapon:=str(recipe.get("unlock_weapon",""))
+    if not unlock_weapon.is_empty():
+        var license_id:="weapon_license_"+unlock_weapon
+        if quantity(license_id)>0:return false
     var cost:Dictionary=recipe.get("requires",{})
     var results:Dictionary=recipe.get("result",{})
     var outcome:Dictionary=native_core.apply_craft(game_state.get_inventory(),cost,results)

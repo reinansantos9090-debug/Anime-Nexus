@@ -184,7 +184,10 @@ const ITEMS := {
     "chrono_gear":{"name":"Engrenagem Crono","value":58},"oak_branch":{"name":"Galho de Carvalho","value":3},
     "stone":{"name":"Pedra","value":2},"health_kit":{"name":"Kit Sintético","value":40},
     "pulse_grenade":{"name":"Granada Pulsar","value":55},"healing_drone":{"name":"Drone de Cura","value":70},
-    "aether_mine":{"name":"Mina de Aether","value":62},"rift_beacon":{"name":"Sinalizador de Fenda","value":90}
+    "aether_mine":{"name":"Mina de Aether","value":62},"rift_beacon":{"name":"Sinalizador de Fenda","value":90},
+    "weapon_license_volt_blades":{"name":"Projeto • Lâminas Voltaicas","value":0},
+    "weapon_license_toxic_bow":{"name":"Projeto • Arco Tóxico","value":0},
+    "weapon_license_pulse_cannon":{"name":"Projeto • Canhão Pulsar","value":0}
 }
 
 const RECIPES := [
@@ -192,5 +195,8 @@ const RECIPES := [
     {"id":"pulse_grenade","name":"Granada Pulsar","requires":{"power_cell":1,"plasma_fiber":2},"result":{"pulse_grenade":1}},
     {"id":"healing_drone","name":"Drone de Cura","requires":{"moss_core":2,"aether_core":2,"power_cell":1},"result":{"healing_drone":1}},
     {"id":"aether_mine","name":"Mina de Aether","requires":{"scrap_plate":2,"aether_core":2,"prism_fragment":1},"result":{"aether_mine":1}},
-    {"id":"rift_beacon","name":"Sinalizador de Fenda","requires":{"aether_core":6,"plasma_fiber":3,"gravity_shard":1},"result":{"rift_beacon":1}}
+    {"id":"rift_beacon","name":"Sinalizador de Fenda","requires":{"aether_core":6,"plasma_fiber":3,"gravity_shard":1},"result":{"rift_beacon":1}},
+    {"id":"forge_volt_blades","name":"Instrumento • Lâminas Voltaicas","requires":{"aether_core":2,"plasma_fiber":2},"result":{"weapon_license_volt_blades":1},"unlock_weapon":"volt_blades"},
+    {"id":"forge_toxic_bow","name":"Instrumento • Arco Tóxico","requires":{"moss_core":3,"thorn_fiber":2},"result":{"weapon_license_toxic_bow":1},"unlock_weapon":"toxic_bow"},
+    {"id":"forge_pulse_cannon","name":"Instrumento • Canhão Pulsar","requires":{"power_cell":2,"scrap_plate":3,"crystal_shard":1},"result":{"weapon_license_pulse_cannon":1},"unlock_weapon":"pulse_cannon"}
 ]

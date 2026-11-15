@@ -116,9 +116,11 @@ func _refresh()->void:
         result_label.add_theme_font_size_override("font_size",13)
         details.add_child(result_label)
         var craft_button:=Button.new()
-        craft_button.text="CRIAR"
-        craft_button.custom_minimum_size=Vector2(118,48)
-        craft_button.disabled=not inventory_service.has_cost(recipe.get("requires",{}))
+        craft_button.custom_minimum_size=Vector2(150,48)
+        var unlock_weapon:=str(recipe.get("unlock_weapon",""))
+        var unlocked:=not unlock_weapon.is_empty() and inventory_service.quantity("weapon_license_"+unlock_weapon)>0
+        craft_button.text="DESBLOQUEADO" if unlocked else "CRIAR"
+        craft_button.disabled=unlocked or not inventory_service.has_cost(recipe.get("requires",{}))
         craft_button.pressed.connect(_craft.bind(recipe_id))
         row.add_child(craft_button)
 

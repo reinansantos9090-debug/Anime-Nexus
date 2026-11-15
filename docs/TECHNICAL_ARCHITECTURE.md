@@ -58,3 +58,5 @@ Dados de missão/personagem/equipamento serão Resources/JSON versionados com sc
 ## Oficina offline
 
 A oficina só abre no Observatório. `WorkshopMenu` monta a lista a partir de `RECIPES` e dos itens locais, mostra custos/resultados e desabilita a ação quando o saldo não basta. O menu chama `InventoryService`, que usa a transação C++ `apply_craft`; uma criação válida substitui o inventário completo e emite os sinais uma vez. Falha deixa a cópia original intacta.
+
+A Oficina mantém licenças de instrumentos no inventário local (weapon_license_<id>). Projetos de armas são únicos: o serviço confere a licença existente antes da operação e o núcleo C++ valida custos/resultados atomicamente. O ciclo do Arsenal mostra Manoplas Fulgor e armas com licença; como a licença faz parte do inventário do save, ela acompanha os três slots locais sem esquema de migração separado.
