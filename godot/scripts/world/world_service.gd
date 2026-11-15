@@ -87,6 +87,34 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
         "sky_ruins":
             for p in [Vector3(-18,0,-15),Vector3(17,0,-15),Vector3(-17,0,15),Vector3(18,0,15)]:
                 _ruin_pillar(p,accent)
+        "vesper":
+            _make_vesper_cove(accent,ground)
+
+func _make_vesper_cove(accent:Color,ground:Color)->void:
+    # Water and dock geometry are a navigable-scene blockout, not final art or tide simulation.
+    for lake in [
+        {"pos":Vector3(-12,0.035,2),"scale":Vector3(7.5,0.045,10.0)},
+        {"pos":Vector3(12,0.035,-1),"scale":Vector3(7.0,0.045,9.0)},
+        {"pos":Vector3(0,0.035,21),"scale":Vector3(12.0,0.045,4.5)}
+    ]:
+        var water:=Factory.sphere(world_root,1.0,lake.pos,Color("#287b91"))
+        water.scale=lake.scale
+        Factory.torus(world_root,0.95,1.02,lake.pos+Vector3(0,0.025,0),accent.darkened(0.16)).scale=lake.scale*Vector3(1.04,1.0,1.04)
+    for p in [Vector3(-18,0,11),Vector3(18,0,10),Vector3(-17,0,-15),Vector3(17,0,-16)]:
+        _vesper_coral(p,accent,ground)
+    for p in [Vector3(-3,0,-18),Vector3(4,0,-20),Vector3(8,0,-18)]:
+        Factory.make_crystal(world_root,p+Vector3(0,0.1,0),accent.lightened(0.18))
+
+func _vesper_coral(pos:Vector3,accent:Color,ground:Color)->void:
+    var coral:=Node3D.new()
+    coral.position=pos
+    world_root.add_child(coral)
+    Factory.sphere(coral,0.52,Vector3(0,0.48,0),Color("#dc796f"))
+    for i in range(5):
+        var side:float=-1.0 if i%2==0 else 1.0
+        var branch:=Factory.cylinder(coral,0.09,0.15,0.9+float(i%3)*0.22,Vector3(side*float(i%3)*0.22,1.0+float(i%3)*0.16,0),accent.lightened(float(i%2)*0.12))
+        branch.rotation.z=side*(0.18+float(i%3)*0.12)
+    Factory.box(coral,Vector3(1.15,0.12,1.0),Vector3(0,0.05,0),ground.darkened(0.12))
 
 func _make_memory_lake()->void:
     var surface:=Factory.sphere(world_root,1.0,Vector3(0,0.06,13),Color("#347f97"))
@@ -116,6 +144,16 @@ func _make_obstacle(obstacle:Dictionary,accent:Color)->void:
             _cactus(pos,accent,maxf(1.0,size.y/1.9))
         "scrap":
             _scrap_stack(pos,accent,size)
+        "pier":
+            var dock:=Node3D.new()
+            dock.position=pos
+            world_root.add_child(dock)
+            for i in range(4):
+                Factory.box(dock,Vector3(size.x*0.24,size.y,size.z),Vector3((float(i)-1.5)*size.x*0.24,size.y*0.5,0),Color("#795c55"))
+            for x in [-0.42,0.42]:
+                Factory.cylinder(dock,0.10,0.13,1.35,Vector3(size.x*x,0.68,-size.z*0.35),accent.darkened(0.2))
+        "coral":
+            _vesper_coral(pos,accent,Color("#376e77"))
         "ruin":
             _ruin_pillar(pos,accent,size)
         "root":

@@ -35,7 +35,7 @@
 | ENV-OBSERVATORIO | hub principal | pedra suspensa, vidro astral, luz de portal azul | 1 cena modular, 3 setores visíveis, LOD/occlusion | bandeiras, portal, NPCs, luz narrativa | Blockout do hub reutilizado; arte final e áreas funcionais planejadas; original |
 | ENV-NIMBARA | floresta e três subáreas | folhagem verde, bioluminescência turquesa/violeta | kits de árvore, raiz, ruína, lago e trilha; atlas 2K por região | vento/folha/água em ciclos baratos | Blockout da clareira com trilha, árvores, raízes, cristais e Âncora; subáreas e arte final planejadas; original |
 | ENV-AURELIO | deserto/templo/oásis | duna dourada, pedra coral, céu violeta | módulos de ruína e plataforma; terreno com rota | poeira, mecanismo, faixa de calor | Planejado; original |
-| ENV-VESPER | porto/ilhas/caverna | água cobalto, coral, pontes de luz | kit de costa, cavernas, skiff e farol | maré, água, barco e ponte | Planejado; original |
+| ENV-VESPER | porto/ilhas/caverna | água cobalto, coral, pontes de luz | kit de costa, cavernas, skiff e farol | maré, água, barco e ponte | Blockout costeiro procedural com enseadas, cais e corais acessível como expedição; maré interativa, subáreas e arte final pendentes; original |
 | ENV-FERRUMIA | cidade/trilhos/torre | cobre, magenta, azul elétrico | kit modular, plataformas, elevadores e cabos | trilhos/elevadores e máquinas | Planejado; original |
 | ENV-IVERN | vale/templo/picos | neve pérola, aurora lilás/dourada | terreno, cristais e pontes; material neve mobile | neve leve, corrente de vento e aurora | Planejado; original |
 | ENV-UMBRAL | jardim/galeria/palácio | violeta profundo, rosa, prata | módulos duplicáveis com variantes de rota | transição de geometria discreta | Planejado; original |
@@ -63,12 +63,12 @@ Cada linha corresponde a um modelo distinto. Especificação comum: GLB com LOD0
 | EN-AUR-VIGIA | Vigia das Dunas; manto de areia e lança de cristal, dourado/índigo | Aurélio | Planejado; original |
 | EN-AUR-AMPULHETA | Espírito da Ampulheta; corpo de areia em espiral, cobre/roxo | Aurélio | Planejado; original |
 | EN-AUR-GUARDIAO | Guardião do Oásis; massa de pedra e raízes aquáticas, turquesa/dourado | Aurélio | Planejado; original |
-| EN-VES-BOLHA | Bolha Saltitante; corpo translúcido estilizado e anéis de espuma, azul/coral | Vesper | Planejado; original |
-| EN-VES-CORAL | Coral Errante; colônia que anda sobre ramificações, coral/creme | Vesper | Planejado; original |
-| EN-VES-AGUAVIVA | Água-Viva Astral; sino flutuante com pontos luminosos, cobalto/rosa | Vesper | Planejado; original |
-| EN-VES-CARANGUEJO | Caranguejo de Pérolas; pinças-prisma e casco perolado, marinho/prata | Vesper | Planejado; original |
-| EN-VES-ESPIRITO | Espírito das Ondas; figura longa formada por fita de maré, verde-mar/ciano | Vesper | Planejado; original |
-| EN-VES-SENTINELA | Sentinela Abissal; guardião de casco profundo, azul-escuro/coral | Vesper | Planejado; original |
+| EN-VES-BOLHA | Bolha Saltitante; corpo translúcido estilizado e anéis de espuma, azul/coral | Vesper | Blockout procedural próprio integrado no encontro; modelo rigado, animações e VFX finais pendentes; original |
+| EN-VES-CORAL | Coral Errante; colônia que anda sobre ramificações, coral/creme | Vesper | Blockout procedural próprio integrado no encontro; modelo rigado, animações e VFX finais pendentes; original |
+| EN-VES-AGUAVIVA | Água-Viva Astral; sino flutuante com pontos luminosos, cobalto/rosa | Vesper | Blockout procedural próprio integrado no encontro; modelo rigado, animações e VFX finais pendentes; original |
+| EN-VES-CARANGUEJO | Caranguejo de Pérolas; pinças-prisma e casco perolado, marinho/prata | Vesper | Blockout procedural próprio integrado no encontro; modelo rigado, animações e VFX finais pendentes; original |
+| EN-VES-ESPIRITO | Espírito das Ondas; figura longa formada por fita de maré, verde-mar/ciano | Vesper | Blockout procedural próprio integrado no encontro; modelo rigado, animações e VFX finais pendentes; original |
+| EN-VES-SENTINELA | Sentinela Abissal; guardião de casco profundo, azul-escuro/coral | Vesper | Blockout procedural próprio integrado no encontro; modelo rigado, animações e VFX finais pendentes; original |
 | EN-FER-DRONE | Drone Prismático; corpo geométrico com lente frontal, cobre/magenta | Ferrúmia | Planejado; original |
 | EN-FER-ENGRENAGEM | Engrenagem Viva; aro dentado com núcleo animado, aço/ciano | Ferrúmia | Planejado; original |
 | EN-FER-SENTINELA | Sentinela de Cobre; autômato com escudo-placa, cobre/azul | Ferrúmia | Planejado; original |
@@ -142,3 +142,12 @@ GLB é formato de intercâmbio; preservar fonte editável em arquivo de criaçã
 | `Memory Echo Marker` | Ponto interativo de exploração | Clareira de Nimbara | Cristal pálido ciano com halo turquesa e brilho orbital discreto | Nó leve com cristal, torus e esfera de acento; uma instância em cada uma das três posições do mapa | Materiais estilizados do projeto; sem animação até validação de custo | Blockout visual integrado | Geometria procedural original, criada no projeto |
 
 | `Nimbara Memory Lake` | Ponto de interesse e referência para a missão Ecos no Lago | Nimbara | Poça oval azul-petróleo com anéis de margem turquesa, escala pequena para mobile | Esfera achatada e dois torus com poucos vértices | Material toon procedural; sem transparência nem animação | Blockout visual integrado | Geometria procedural original, criada no projeto |
+
+## Blockouts procedurais de Vesper
+
+| Nome | Finalidade | Região/personagem | Descrição visual / paleta | Especificações | Materiais | Animações | Estado | Origem/licença |
+|---|---|---|---|---|---|---|---|---|
+| Enseadas de Vesper | Dar identidade visual à expedição compacta | Vesper | Três poças costeiras azul-cobalto com borda ciano | Malhas esféricas achatadas e torus de baixo polígono; sem colisão navegável | Material fosco simplificado; água decorativa, sem transparência | Sem animação; sem maré dinâmica | Blockout integrado; água interativa e arte final pendentes | Geometria procedural original do projeto |
+| Cais do Porto da Lua | Marcos visuais e obstáculos da rota | Vesper | Tábuas de madeira azul-marinho/coral e postes | 2 cais modulares, meshes simples; sem veículo ou travessia aquática | Materiais foscos mobile | Sem animação | Blockout integrado; barco, interação e arte final pendentes | Geometria procedural original do projeto |
+| Corais da Enseada | Silhuetas de navegação e cobertura visual | Vesper | Núcleo coral com galhos em coral e turquesa | Grupos pequenos de cilindros/esferas low-poly | Materiais opacos estilizados | Sem animação | Blockout integrado; assets finais pendentes | Geometria procedural original do projeto |
+| Seis criaturas de Vesper | Identificar encontros distintos à distância | Vesper | Bolha ciano, coral ramificado, água-viva azul/lilás, caranguejo perolado, espírito turquesa e sentinela marinho | Malhas procedurais leves; sem rig ou esqueleto no blockout | Materiais opacos estilizados; pontos de cor por espécie | IA usa comportamentos existentes; clips de animação ainda ausentes | Seis silhuetas de blockout integradas; modelos rigados, telegraphs e animações finais pendentes | Código e geometria originais do projeto; sem recursos comerciais |

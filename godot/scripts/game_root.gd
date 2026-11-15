@@ -719,12 +719,66 @@ func _attach_enemy_visual(e:Node3D,behavior:String,index:int)->void:
         e.attach_visual(Factory.make_crystal_monster(e,Color("#81ded0")))
     elif e.monster_id=="root_guardian":
         e.attach_visual(Factory.make_golem(e,Color("#456b58"),Color("#9cf4d8")))
+    elif str(e.monster_id).begins_with("vesper_") or e.monster_id in ["wandering_coral","pearl_crab","tide_spirit","abyssal_sentinel"]:
+        e.attach_visual(_make_vesper_enemy_visual(e,str(e.monster_id)))
     elif behavior in ["flying","orbit"]:e.attach_visual(Factory.make_moth(e,base))
     elif behavior in ["guardian","shielded","knockback"]:e.attach_visual(Factory.make_golem(e,base,Color("#e9fcff")))
     elif behavior in ["berserker","crusher"]:e.attach_visual(Factory.make_colossus(e,base,Color("#ffd86b")))
     elif behavior in ["sniper","ranged","turret"]:e.attach_visual(Factory.make_crystal_monster(e,base))
     elif behavior in ["assassin","stealth","teleporter"]:e.attach_visual(Factory.make_hound(e,base))
     else:e.attach_visual(Factory.make_slime(e,base))
+
+func _make_vesper_enemy_visual(parent:Node3D,monster_id:String)->Node3D:
+    var visual:=Node3D.new()
+    parent.add_child(visual)
+    match monster_id:
+        "bubble_jumper":
+            var body:=Factory.sphere(visual,0.68,Vector3(0,0.72,0),Color("#55d8e6"))
+            body.scale=Vector3(1.0,0.80,0.94)
+            Factory.torus(visual,0.48,0.58,Vector3(0,0.20,0),Color("#ff9c88"))
+            Factory.sphere(visual,0.10,Vector3(-0.22,0.85,-0.48),Color.WHITE)
+            Factory.sphere(visual,0.10,Vector3(0.22,0.85,-0.48),Color.WHITE)
+            Factory.sphere(visual,0.045,Vector3(-0.22,0.85,-0.55),Color("#202833"))
+            Factory.sphere(visual,0.045,Vector3(0.22,0.85,-0.55),Color("#202833"))
+        "wandering_coral":
+            Factory.sphere(visual,0.50,Vector3(0,0.45,0),Color("#dc796f"))
+            for i in range(5):
+                var side:float=-1.0 if i%2==0 else 1.0
+                var branch:=Factory.cylinder(visual,0.08,0.14,0.95+float(i%3)*0.18,Vector3(side*float(i%3)*0.2,0.95+float(i%3)*0.14,0),Color("#ff9b8d") if i%2==0 else Color("#63d8ce"))
+                branch.rotation.z=side*0.30
+        "astral_jelly":
+            var bell:=Factory.sphere(visual,0.56,Vector3(0,1.28,0),Color("#62c9f2"))
+            bell.scale=Vector3(1.25,0.72,1.0)
+            Factory.sphere(visual,0.13,Vector3(-0.23,1.34,-0.43),Color("#ffe3a8"))
+            Factory.sphere(visual,0.13,Vector3(0.23,1.34,-0.43),Color("#ffe3a8"))
+            for x in [-0.36,-0.12,0.12,0.36]:
+                var tentacle:=Factory.cylinder(visual,0.035,0.07,0.72,Vector3(x,0.64,0),Color("#da8bd9"))
+                tentacle.rotation.z=x*0.35
+        "pearl_crab":
+            var shell:=Factory.sphere(visual,0.70,Vector3(0,0.78,0),Color("#466d85"))
+            shell.scale=Vector3(1.25,0.62,1.05)
+            Factory.sphere(visual,0.20,Vector3(-0.70,0.70,-0.12),Color("#f29c87"))
+            Factory.sphere(visual,0.20,Vector3(0.70,0.70,-0.12),Color("#f29c87"))
+            for side in [-1.0,1.0]:
+                for leg in range(3):
+                    var limb:=Factory.cylinder(visual,0.06,0.09,0.65,Vector3(side*(0.48+float(leg)*0.14),0.35,0.18-float(leg)*0.28),Color("#d9ac99"))
+                    limb.rotation.z=side*0.65
+            Factory.sphere(visual,0.13,Vector3(-0.20,1.24,-0.35),Color("#fff1d3"))
+            Factory.sphere(visual,0.13,Vector3(0.20,1.24,-0.35),Color("#fff1d3"))
+        "tide_spirit":
+            Factory.cylinder(visual,0.08,0.42,1.35,Vector3(0,0.80,0),Color("#43c9ba"))
+            var crest:=Factory.sphere(visual,0.46,Vector3(0,1.72,0),Color("#64d4d0"))
+            crest.scale=Vector3(0.8,1.1,0.8)
+            Factory.torus(visual,0.52,0.63,Vector3(0,0.48,0),Color("#b6fff2"))
+            Factory.sphere(visual,0.11,Vector3(-0.18,1.78,-0.35),Color("#fff5dc"))
+            Factory.sphere(visual,0.11,Vector3(0.18,1.78,-0.35),Color("#fff5dc"))
+        "abyssal_sentinel":
+            Factory.make_golem(visual,Color("#263e5b"),Color("#ff9989"))
+            Factory.make_crystal(visual,Vector3(0,2.20,0.25),Color("#56d8dd"))
+            for side in [-1.0,1.0]:
+                var fin:=Factory.box(visual,Vector3(0.22,1.15,0.62),Vector3(side*0.92,1.55,0.20),Color("#3b6374"))
+                fin.rotation.z=side*0.28
+    return visual
 
 func _spawn_position(index:int)->Vector3:
     var angle:=float(index)*2.39996

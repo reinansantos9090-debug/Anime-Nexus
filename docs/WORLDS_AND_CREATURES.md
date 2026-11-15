@@ -1,6 +1,6 @@
 # Mundos e criaturas
 
-Regiões abaixo são o conteúdo-alvo. Layout, ambientação e criaturas ainda são **Planejados**; o mapa atual Godot tem cinco arenas de combate Aetheria com base plana e obstáculos procedurais.
+Esta tabela permanece a especificação de longo prazo. A build atual ainda é um protótipo: Nimbara continua sendo a missão vertical slice, e a lista de expedições inclui mapas de combate compactos. Vesper agora tem uma expedição blockout com fauna local; nenhum desses mapas equivale às regiões completas de exploração previstas abaixo.
 
 | Região / identidade | Subáreas e mecânicas de exploração | Criaturas comuns/especiais | Chefe e encontro |
 |---|---|---|---|
@@ -21,6 +21,10 @@ Cada espécie precisa de locomotion/pathing, telegraph, hitbox, reação, recupe
 
 Doze masmorras alvo devem variar rota e objetivo: fuga de raízes, sala de espelhos, corrida de plataforma, investigação sem combate, escolta, arena de ondas, quebra-cabeça temporal, barco em maré, máquina sob pressão, subida de ventos, memória em dupla e combate final cronometrado. Portais de desafio usam modificadores configuráveis offline. Evento local é escolhido ao entrar ou após marco de jogo e não expira por ausência.
 
+
+## Estado runtime de Vesper
+
+Vesper agora possui o mapa de expedição **Vesper • Arquipélago das Marés**, com paleta e encontro locais, sete obstáculos de rota e seis espécies que usam os sistemas offline existentes de spawn, combate e saque. O world builder cria água decorativa sem colisão, dois cais blockout e corais procedurais; os seis inimigos têm silhuetas blockout próprias, ainda sem rig ou animações. Isso não implementa mudança de maré, barco, travessia submersa, farol, chefe ou as subáreas de produção. A água não simula maré e não existe navegação aquática.
 
 ## Interações de exploração integradas
 

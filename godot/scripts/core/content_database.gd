@@ -91,7 +91,13 @@ const MONSTERS := {
     "gravity_wisp":{"element":"gravity","name":"Fagulha Gravitacional","hp":140.0,"damage":36.0,"speed":4.5,"xp":135,"tier":4,"behavior":"orbit","loot":["gravity_shard","aether_core"]},
     "void_glider":{"name":"Planador do Vazio","hp":230.0,"damage":44.0,"speed":3.6,"xp":175,"tier":5,"behavior":"flying","loot":["void_membrane","sky_fragment"]},
     "storm_caster":{"name":"Conjurador da Tempestade","hp":205.0,"damage":52.0,"speed":2.0,"xp":190,"tier":5,"behavior":"ranged","loot":["storm_core","prism_fragment"]},
-    "chrono_knight":{"name":"Cavaleiro Crono","hp":360.0,"damage":62.0,"speed":2.1,"xp":240,"tier":6,"behavior":"controller","loot":["chrono_gear","gravity_shard"]}
+    "chrono_knight":{"name":"Cavaleiro Crono","hp":360.0,"damage":62.0,"speed":2.1,"xp":240,"tier":6,"behavior":"controller","loot":["chrono_gear","gravity_shard"]},
+    "bubble_jumper":{"element":"water","name":"Bolha Saltitante","hp":108.0,"damage":16.0,"speed":3.8,"xp":62,"tier":2,"behavior":"orbit","loot":["vesper_foam","tideglass"]},
+    "wandering_coral":{"element":"nature","name":"Coral Errante","hp":205.0,"damage":21.0,"speed":1.8,"xp":108,"tier":3,"behavior":"guardian","loot":["living_coral","tideglass"]},
+    "astral_jelly":{"element":"water","name":"Água-viva Astral","hp":128.0,"damage":25.0,"speed":3.5,"xp":96,"tier":3,"behavior":"flying","loot":["vesper_foam","moon_pearl"]},
+    "pearl_crab":{"element":"water","name":"Caranguejo de Pérolas","hp":245.0,"damage":31.0,"speed":2.0,"xp":142,"tier":4,"behavior":"shielded","loot":["moon_pearl","living_coral"]},
+    "tide_spirit":{"element":"water","name":"Espírito das Ondas","hp":176.0,"damage":33.0,"speed":2.6,"xp":154,"tier":4,"behavior":"ranged","loot":["tidal_essence","moon_pearl"]},
+    "abyssal_sentinel":{"element":"shadow","name":"Sentinela Abissal","hp":390.0,"damage":46.0,"speed":2.2,"xp":225,"tier":5,"behavior":"charger","loot":["abyssal_scale","tidal_essence"]}
 }
 
 const BOSSES := {
@@ -112,7 +118,8 @@ const BIOMES := {
     "crystal_forest":{"name":"Floresta Cristalina","ground":Color("#547fc4"),"accent":Color("#a3fff4"),"fog":Color("#89aef0")},
     "sunset_desert":{"name":"Deserto do Poente","ground":Color("#d39a57"),"accent":Color("#ffcf7d"),"fog":Color("#f0bd8a")},
     "rust_canyons":{"name":"Cânions de Sucata","ground":Color("#8a5d50"),"accent":Color("#ffc36a"),"fog":Color("#9d7970")},
-    "sky_ruins":{"name":"Ruínas do Céu","ground":Color("#6178b1"),"accent":Color("#e0f7ff"),"fog":Color("#b4c9ff")}
+    "sky_ruins":{"name":"Ruínas do Céu","ground":Color("#6178b1"),"accent":Color("#e0f7ff"),"fog":Color("#b4c9ff")},
+    "vesper":{"name":"Vesper • Arquipélago das Marés","ground":Color("#376e77"),"accent":Color("#59d8d2"),"fog":Color("#527f91")}
 }
 
 const QUESTS := [
@@ -185,7 +192,14 @@ const ITEMS := {
     "repair_chip":{"name":"Chip Reparador","value":20},"sky_fragment":{"name":"Fragmento Celeste","value":41},
     "rift_hide":{"name":"Pele da Fenda","value":37},"gravity_shard":{"name":"Estilhaço Gravitacional","value":43},
     "void_membrane":{"name":"Membrana do Vazio","value":48},"storm_core":{"name":"Núcleo de Tempestade","value":50},
-    "chrono_gear":{"name":"Engrenagem Crono","value":58},"oak_branch":{"name":"Galho de Carvalho","value":3},
+    "chrono_gear":{"name":"Engrenagem Crono","value":58},
+    "vesper_foam":{"name":"Espuma de Vesper","value":12},
+    "tideglass":{"name":"Vidro de Maré","value":24},
+    "living_coral":{"name":"Coral Vivo","value":20},
+    "moon_pearl":{"name":"Pérola Lunar","value":34},
+    "tidal_essence":{"name":"Essência das Marés","value":42},
+    "abyssal_scale":{"name":"Escama Abissal","value":48},
+    "oak_branch":{"name":"Galho de Carvalho","value":3},
     "stone":{"name":"Pedra","value":2},"health_kit":{"name":"Kit Sintético","value":40},
     "pulse_grenade":{"name":"Granada Pulsar","value":55},"healing_drone":{"name":"Drone de Cura","value":70},
     "aether_mine":{"name":"Mina de Aether","value":62},"rift_beacon":{"name":"Sinalizador de Fenda","value":90},

@@ -1,5 +1,5 @@
 extends Node
-## Five authored expedition maps. Each biome owns its encounter pool,
+## Seven offline expedition maps. Each biome owns its encounter pool,
 ## difficulty, obstacle layout and environmental hazard.
 
 var maps: Dictionary = {}
@@ -120,6 +120,26 @@ func _ready() -> void:
                 {"shape":"ruin","pos":Vector3(10,0,9),"size":Vector3(2.2,3.7,2.2)},
                 {"shape":"ruin","pos":Vector3(0,0,-12),"size":Vector3(2.0,2.8,2.4)},
                 {"shape":"ruin","pos":Vector3(0,0,11),"size":Vector3(3.0,2.4,2.0)}
+            ]
+        },
+        "vesper": {
+            "name":"Vesper • Arquipélago das Marés",
+            "difficulty":1.12,
+            "duration":170.0,
+            "goal":12,
+            "hazard":"correntes de maré",
+            "ground":Color("#376e77"),
+            "accent":Color("#59d8d2"),
+            "fog":Color("#527f91"),
+            "enemies":["bubble_jumper","wandering_coral","astral_jelly","pearl_crab","tide_spirit","abyssal_sentinel"],
+            "obstacles":[
+                {"shape":"coral","pos":Vector3(-12,0,-9),"size":Vector3(2.2,2.0,2.0)},
+                {"shape":"coral","pos":Vector3(11,0,-10),"size":Vector3(2.5,2.3,2.2)},
+                {"shape":"pier","pos":Vector3(-8,0,11),"size":Vector3(5.0,0.55,1.5)},
+                {"shape":"pier","pos":Vector3(8,0,12),"size":Vector3(4.0,0.55,1.5)},
+                {"shape":"rock","pos":Vector3(-14,0,5),"size":Vector3(2.4,1.4,2.0)},
+                {"shape":"coral","pos":Vector3(14,0,5),"size":Vector3(2.0,1.8,2.0)},
+                {"shape":"rock","pos":Vector3(0,0,-14),"size":Vector3(3.0,1.6,2.1)}
             ]
         }
     }

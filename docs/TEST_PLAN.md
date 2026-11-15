@@ -74,3 +74,12 @@ Este fluxo requer teste manual no Godot; nenhum job longo/emulador automático s
 - Bolsa: abrir em exploração/hub, conferir nomes e quantidades com o inventário persistido, obter um item e confirmar atualização; fechar e voltar sem alteração de saldo.
 
 - Câmera: usar botões de zoom para dentro/fora, conferir limites 14–32, trocar de mapa/reabrir save e verificar que a escala salva permanece; mover e combater nos extremos do zoom.
+
+
+## Contrato de conteúdo de Vesper (runner manual curto)
+
+- Conferir mapa Vesper, seis IDs de encontro, obstáculos e existência local de toda espécie/material de saque.
+- Abrir a expedição Vesper no jogo, verificar a enseada/cais/corais em blockout, spawn e saque offline.
+- Confirmar que o mapa continua sendo apenas uma expedição de combate: maré dinâmica, barco, subáreas, chefe e assets finais ainda não estão implementados.
+
+O runner permanece manual e não é iniciado por este trabalho.

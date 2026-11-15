@@ -36,6 +36,7 @@ func _init()->void:
     _test_save_slots()
     _test_virtual_joystick()
     _test_nimbara_vertical_slice_data_and_quest()
+    _test_vesper_region_data()
     _test_boss_telegraph()
     _test_static_field_slow()
     if failures.is_empty():
@@ -321,6 +322,22 @@ func _test_static_field_slow()->void:
     enemy.apply_slow(2.0,0.01)
     _expect(is_equal_approx(enemy.slow_factor,0.15),"Combat: slow factor must respect its safe lower bound")
     enemy.free()
+    content.free()
+
+func _test_vesper_region_data()->void:
+    var maps=MapScript.new()
+    var content=ContentScript.new()
+    var vesper:Dictionary=maps.get_map("vesper")
+    var enemies:Array=vesper.get("enemies",[])
+    _expect(str(vesper.get("name","")).begins_with("Vesper"),"Vesper: expedition map metadata missing")
+    _expect(enemies.size()==6,"Vesper: expected six distinct local encounter species")
+    _expect(not vesper.get("obstacles",[]).is_empty(),"Vesper: local route obstacles missing")
+    for enemy_id in enemies:
+        _expect(content.MONSTERS.has(enemy_id),"Vesper: encounter has no offline monster definition: "+str(enemy_id))
+        if content.MONSTERS.has(enemy_id):
+            for item_id in content.MONSTERS[enemy_id].get("loot",[]):
+                _expect(content.ITEMS.has(item_id),"Vesper: creature loot has no local item definition: "+str(item_id))
+    maps.free()
     content.free()
 
 func _test_boss_telegraph()->void:
