@@ -40,7 +40,7 @@ func _build()->void:
     title.add_theme_font_size_override("font_size",27)
     panel.add_child(title)
     var subtitle:=Label.new()
-    subtitle.text="O progresso fica neste dispositivo. Substituir um espaço exige confirmação."
+    subtitle.text="O progresso é local. Ao carregar, você retorna ao Observatório; substituir exige confirmação."
     subtitle.position=Vector2(32,62)
     subtitle.add_theme_font_size_override("font_size",15)
     panel.add_child(subtitle)
