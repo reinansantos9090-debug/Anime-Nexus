@@ -32,13 +32,17 @@ func reset() -> void:
     }
     state_changed.emit()
 
-func apply_loaded(loaded: Dictionary) -> void:
+func apply_loaded(loaded: Dictionary) -> bool:
+    var source_schema:=int(loaded.get("schema",1))
+    if source_schema>SCHEMA:return false
     reset()
     _merge_recursive(data, loaded)
+    data["schema"]=SCHEMA
     state_changed.emit()
     inventory_changed.emit()
     quest_changed.emit()
     story_changed.emit()
+    return true
 
 func _merge_recursive(target: Dictionary, source: Dictionary) -> void:
     for key in source.keys():

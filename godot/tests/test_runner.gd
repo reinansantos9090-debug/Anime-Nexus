@@ -138,6 +138,16 @@ func _test_save()->void:
     state.data["hunter"]["gold"]=2
     _expect(save.load_now(),"Save: could not reload save")
     _expect(int(state.data["hunter"]["gold"])==9876,"Save: corrupt primary did not recover the previous backup")
+    _expect(state.apply_loaded({"schema":4,"hunter":{"gold":444}}),"Save: supported old schema was rejected")
+    _expect(int(state.data["schema"])==int(state.SCHEMA) and int(state.data["hunter"]["gold"])==444,"Save: older schema did not migrate while preserving progress")
+    var future:=FileAccess.open("user://anime_nexus_test_save.json",FileAccess.WRITE)
+    if future:
+        future.store_string(JSON.stringify({"schema":999,"hunter":{"gold":999}}))
+        future.close()
+    else:
+        _expect(false,"Save: could not create future-schema recovery fixture")
+    _expect(save.load_now(),"Save: newer incompatible primary did not fall back to the compatible backup")
+    _expect(int(state.data["hunter"]["gold"])==9876,"Save: newer schema data was loaded over the supported backup")
     save.free()
     state.free()
     DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.json"))

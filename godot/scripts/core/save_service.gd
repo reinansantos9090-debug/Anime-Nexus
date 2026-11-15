@@ -73,8 +73,8 @@ func load_slot(slot:int)->bool:
 func slot_summary(slot:int)->Dictionary:
     if slot<0 or slot>=SLOT_COUNT:return {}
     var data:Dictionary=_read(str(slot_paths[slot]))
-    if data.is_empty():data=_read(str(slot_backup_paths[slot]))
-    if data.is_empty():return {"slot":slot,"has_save":false}
+    if not _schema_supported(data):data=_read(str(slot_backup_paths[slot]))
+    if not _schema_supported(data):return {"slot":slot,"has_save":false}
     var hunter:Dictionary=data.get("hunter",{})
     var story:Dictionary=data.get("story",{})
     return {
@@ -133,13 +133,16 @@ func load_now() -> bool:
     if game_state == null:
         return false
     var parsed := _read(storage_path)
-    if parsed.is_empty():
-        parsed = _read(backup_storage_path)
-    if parsed.is_empty():
-        return false
-    game_state.apply_loaded(parsed)
+    if not _schema_supported(parsed):parsed=_read(backup_storage_path)
+    if not _schema_supported(parsed):return false
+    if not game_state.apply_loaded(parsed):return false
     dirty = false
     return true
+
+func _schema_supported(data:Dictionary)->bool:
+    if data.is_empty():return false
+    var supported_schema:=int(game_state.data.get("schema",8)) if game_state else 8
+    return int(data.get("schema",1))<=supported_schema
 
 func _read(path: String) -> Dictionary:
     if not FileAccess.file_exists(path):
