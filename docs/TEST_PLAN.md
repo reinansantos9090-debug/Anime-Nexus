@@ -12,6 +12,7 @@
 - Introdução pessoal de Ren: acesso pelo terminal, ponto `ren_wind_chime`, objetivo de interação, item exclusivo `ren_sky_knot`, flag `ren_chose_to_stay` e leitura da flag pelo mundo após salvar e restaurar. A regressão curta correspondente está no runner manual e ainda não foi executada.
 - Introdução pessoal de Mira: acesso pelo terminal, ponto `mira_memory_prism`, objetivo de interação, item exclusivo `mira_silent_memory`, flag `mira_accepted_silence` e leitura da flag pelo mundo após salvar e restaurar. A regressão curta correspondente está no runner manual e ainda não foi executada.
 - Introdução pessoal de Yuna: acesso pelo terminal, ponto `yuna_lunar_seal`, objetivo de interação, item exclusivo `yuna_family_seal`, flag `yuna_family_memory_recovered` e leitura da flag após salvar/restaurar; regressão curta manual ainda não executada.
+- Introdução pessoal de Shin: acesso pelo terminal, ponto `shin_shadow_reflection`, item exclusivo `shin_veil_fragment`, flag `shin_shared_seraphine_memory` e leitura da flag após salvar/restaurar; regressão curta manual ainda não executada.
 - Crafting: verificar todos os materiais antes de debitar, débito único e rollback se criação falhar.
 - Progressão: XP em limiar exato/múltiplo, limites, migração e desbloqueios.
 

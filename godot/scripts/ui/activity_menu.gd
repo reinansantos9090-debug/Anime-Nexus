@@ -22,6 +22,7 @@ const ACTIONS := [
     ["ren_story","HISTÓRIA DE REN • O SOM QUE FICA","Ouvir a lembrança deixada numa antiga rota"],
     ["mira_story","HISTÓRIA DE MIRA • A LEMBRANÇA","Escutar um eco sem tentar transformá-lo"],
     ["yuna_story","HISTÓRIA DE YUNA • O SELO LUNAR","Recuperar uma lembrança dos guardiões da família"],
+    ["shin_story","HISTÓRIA DE SHIN • O REFLEXO","Enfrentar uma lembrança sem ficar sozinho"],
     ["saves","SALVAMENTOS","Gerenciar três espaços locais"],
     ["difficulty","DIFICULDADE • AVENTURA","Alternar o desafio da campanha offline"]
 ]

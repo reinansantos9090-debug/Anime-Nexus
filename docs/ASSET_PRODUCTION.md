@@ -198,6 +198,12 @@ GLB é formato de intercâmbio; preservar fonte editável em arquivo de criaçã
 
 
 
+## Reflexo Sombrio de Shin
+
+| Asset | Finalidade | Região/personagem | Descrição visual / paleta | Especificações | Materiais | Animações | Estado | Origem/licença |
+|---|---|---|---|---|---|---|---|---|
+| Reflexo Sombrio | Marco explorável da introdução pessoal adicional de Shin | Limite norte de Nimbara | Prisma grafite-violeta com aro fino; após dividir a lembrança, ganha brilho azul-pálido | Geometria procedural original no ponto `shin_shadow_reflection`, dimensionada para a câmera isométrica | Cor procedural, sem textura externa | Sem animação até o polish | Blockout integrado; reflexo dinâmico, modelo, material e áudio próprios pendentes | Geometria procedural original do projeto |
+
 ## Selo Lunar de Yuna
 
 | Asset | Finalidade | Região/personagem | Descrição visual / paleta | Especificações | Materiais | Animações | Estado | Origem/licença |

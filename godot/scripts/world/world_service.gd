@@ -124,6 +124,15 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
                 yuna_prism.scale=Vector3(0.30,0.95,0.30)
                 Factory.sphere(world_root,0.12,yuna_point+Vector3(-0.50,1.30,0),yuna_color)
                 Factory.sphere(world_root,0.12,yuna_point+Vector3(0.50,1.30,0),yuna_color)
+            if interaction_points.has("shin_shadow_reflection"):
+                var shin_point:Vector3=interaction_points["shin_shadow_reflection"]
+                var shin_color:=Color("#a8dcff") if _story_flag("shin_shared_seraphine_memory") else Color("#8c68c9")
+                var shadow_frame:=Factory.torus(world_root,0.72,0.84,shin_point+Vector3(0,0.08,0),shin_color)
+                shadow_frame.rotation.x=PI*0.5
+                var shadow_prism:=Factory.make_crystal(world_root,shin_point+Vector3(0,0.86,0),shin_color)
+                shadow_prism.scale=Vector3(0.45,1.24,0.32)
+                var shadow_echo:=Factory.torus(world_root,0.48,0.56,shin_point+Vector3(0,1.15,0),shin_color.lightened(0.18))
+                shadow_echo.rotation=Vector3(PI*0.5,0,0.42)
             for p in b.get("memory_echoes",[]):
                 _memory_echo(p)
         "verdant_frontier":

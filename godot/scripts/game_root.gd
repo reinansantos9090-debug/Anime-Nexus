@@ -586,6 +586,7 @@ func _run_operation(action_id:String)->void:
         "ren_story":_start_optional_quest("nimbara_side_05")
         "mira_story":_start_optional_quest("nimbara_side_06")
         "yuna_story":_start_optional_quest("nimbara_side_07")
+        "shin_story":_start_optional_quest("nimbara_side_08")
         "companion_order":_cycle_companion_order()
 
 func _open_inventory()->void:
@@ -1317,6 +1318,10 @@ func _quest_completed(id:String)->void:
         state.set_story_flag("yuna_family_memory_recovered",true)
         if hud:
             hud.set_mode("SELO LUNAR • A MEMÓRIA DA FAMÍLIA DE YUNA FOI RECUPERADA")
+    if id=="nimbara_side_08":
+        state.set_story_flag("shin_shared_seraphine_memory",true)
+        if hud:
+            hud.set_mode("ECO DE SERAPHINE • SHIN ESCOLHEU DIVIDIR A LEMBRANÇA COM A EQUIPE")
     if id=="epilogue_01":
         state.data["story"]["flags"]["nexus_campaign_epilogue_complete"]=true
         state.story_changed.emit()
