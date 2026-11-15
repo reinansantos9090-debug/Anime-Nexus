@@ -1,6 +1,6 @@
 # Missões e diálogos
 
-As seis campanhas regionais têm oito missões cada, o desfecho tem seis, o prólogo quatro e o epílogo duas: 60 missões estão ligadas ao fluxo offline. O runner Godot/GDExtension está no workflow manual e não foi executado nesta atualização; a CI curta não o substitui. Três secundárias estão integradas no protótipo: Sementes para Liora, Ecos no Lago e a pista pessoal de Kaien abaixo. As outras 45 secundárias desta lista permanecem planejadas. Puzzles, cenas, recompensas e eventos continuam em diferentes estados de implementação.
+As seis campanhas regionais têm oito missões cada, o desfecho tem seis, o prólogo quatro e o epílogo duas: 60 missões estão ligadas ao fluxo offline. O runner Godot/GDExtension está no workflow manual e não foi executado nesta atualização; a CI curta não o substitui. Uma missão pessoal da lista está integrada: SQ-K-1, a pista de Kaien descrita abaixo; as outras 47 da lista permanecem planejadas. Além dela, duas tarefas adicionais de Nimbara — Sementes para Liora e Ecos no Lago — estão jogáveis. Puzzles, cenas, recompensas e eventos continuam em diferentes estados de implementação.
 
 ## Campanha principal — 60 missões
 
