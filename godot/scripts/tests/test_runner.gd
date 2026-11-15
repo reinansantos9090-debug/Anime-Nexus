@@ -50,6 +50,7 @@ func _init()->void:
     _test_umbral_campaign_chain()
     _test_nexus_region_data()
     _test_nexus_final_campaign_chain()
+    _test_prologue_and_epilogue_routes()
     _test_regional_boss_catalog()
     _test_boss_telegraph()
     _test_static_field_slow()
@@ -611,6 +612,33 @@ func _test_nexus_final_campaign_chain()->void:
             _expect(maps.maps["nexus_core"].has("resonance_anchor"),"Final campaign: central anchor has no map position")
         if index<expected.size()-1:
             _expect(str(quest.get("next",""))==expected[index+1],"Final campaign: broken quest chain")
+    content.free()
+    maps.free()
+
+func _test_prologue_and_epilogue_routes()->void:
+    var content=ContentScript.new()
+    var maps=MapScript.new()
+    maps._ready()
+    var expected:Array=["prologue_01","prologue_02","prologue_03","prologue_04","nimbara_01"]
+    for index in range(expected.size()):
+        var found:Dictionary={}
+        for row in content.QUESTS:
+            if str(row.get("id",""))==expected[index]:
+                found=row
+                break
+        _expect(not found.is_empty(),"Prologue: missing linked mission %s"%expected[index])
+        if index<expected.size()-1 and not found.is_empty():
+            _expect(str(found.get("next",""))==expected[index+1],"Prologue: broken next link from %s"%expected[index])
+    _expect(str(content.QUESTS[0].get("id",""))=="prologue_01","Prologue: initial new-game objective must begin with story")
+    _expect(str(content.BOSSES.get("prism_primordial",{}).get("name",""))=="Prisma Primordial","Epilogue: secret boss is not cataloged")
+    _expect(maps.maps.get("nimbara",{}).get("interaction_points",{}).has("prologue_resonator"),"Prologue: Nimbara resonator interaction point missing")
+    _expect(maps.maps.get("nexus_core",{}).get("interaction_points",{}).has("observatory_return"),"Epilogue: return beacon interaction point missing")
+    var epilogue_rows:Array=[]
+    for row in content.QUESTS:
+        if str(row.get("id","")) in ["epilogue_01","epilogue_02"]:
+            epilogue_rows.append(row)
+    _expect(epilogue_rows.size()==2,"Epilogue: both playable missions must be cataloged")
+    _expect(str(epilogue_rows[0].get("next",""))=="epilogue_02","Epilogue: return mission must lead into the horizon challenge")
     content.free()
     maps.free()
 

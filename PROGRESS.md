@@ -11,11 +11,11 @@ Branch de desenvolvimento atual: `dev/anime-nexus-vertical-slice`.
 - Fluxo inicial da slice conectado no Godot: avatar blockout de Kaien, Manoplas Fulgor, três habilidades, mapa blockout de Nimbara, missão, chefe Cérvido de Cristal e interação de proximidade com a Âncora.
 - Câmera ortográfica diagonal e HUD simplificado para a campanha inicial; joystick analógico mantém intensidade gradual.
 - Portal de desafio roteia ao chefe catalogado da região persistida e retorna ao Observatório ou à Âncora conforme a missão. Modelos reutilizados continuam blockout.
-- As seis cadeias regionais estão ligadas à campanha final: oito missões offline por região, chefe de catálogo e Âncora local; Ferrúmia inclui o Colosso de Aço-Coral, Ivern o Monarca da Nevasca e Umbral o Arquivista do Espelho. O desfecho tem seis missões e enfrenta o Arquivo Zero antes da Âncora central. Faltam 4 missões do prólogo e 2 do epílogo; cenas, puzzles e arte final continuam pendentes.
+- As seis cadeias regionais, as quatro missões jogáveis do prólogo e as duas do epílogo estão ligadas à campanha local (60 missões); o pós-jogo inclui o RIFT do Prisma Primordial. A abertura fecha o primeiro objetivo, o Portal Central prepara a rota, Nimbara registra a expedição e a Âncora inicia o capítulo 1. Mapas, chefes e interações ainda usam blockouts; cinemáticas, puzzles, arte final, áudio e validação manual continuam pendentes.
 - Ataques em área do chefe agora exibem um círculo de aviso no chão antes do dano; a janela de aviso e a ausência de dano imediato estão cobertas por teste headless.
 - Núcleo C++ `AnimeNexusCombatCore` integrado ao ataque básico e à evolução por XP; cálculo de dano/crítico, reações de elementos e subida de nível passaram no Godot 4.7.2 local.
-- CI está sendo ampliado para compilar a extensão no Linux e no Android arm64 antes dos testes/exportação. APK com C++ não será considerado validado até essa CI passar.
-- Próxima validação: instalar o APK exportado e conferir imagem/toque em aparelho; validar a leitura dos telegraphs em tela/dispositivo e trocar blockouts por arte final.
+- A CI automática curta valida o host Android Kotlin. O workflow Godot/GDExtension C++ Android e a exportação APK continuam manuais, conforme a regra do repositório, e não foram acionados.
+- Próximas etapas: validar manualmente o fluxo de prólogo/epílogo no runner Godot e em aparelho quando o usuário disparar o workflow; produzir assets finais de personagens, chefes e mapas e substituir blockouts sem rotular protótipos como arte final.
 
 ## Validação executada
 

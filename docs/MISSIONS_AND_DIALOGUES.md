@@ -1,8 +1,10 @@
 # Missões e diálogos
 
-As seis campanhas regionais têm oito missões cada e o desfecho tem seis: 54 missões conectadas ao fluxo offline. As quatro missões jogáveis do prólogo e as duas do epílogo ainda estão planejadas, assim como as 45 secundárias. O runner manual e a validação touch das cadeias integradas ainda aguardam execução. As tabelas documentam o escopo completo; puzzles, cenas, recompensas e eventos citados nelas não estão todos implementados.
+As seis campanhas regionais têm oito missões cada, o desfecho tem seis, o prólogo quatro e o epílogo duas: 60 missões estão ligadas ao fluxo offline. O runner Godot/GDExtension está no workflow manual e não foi executado nesta atualização; a CI curta não o substitui. As 48 missões secundárias listadas ainda não estão integradas. Puzzles, cenas, recompensas e eventos continuam em diferentes estados de implementação.
 
 ## Campanha principal — 60 missões
+
+O prólogo e o epílogo agora possuem objetivos conectados ao fluxo local: a cena de abertura fecha a primeira missão, o Portal Central inicia a expedição, a entrada em Nimbara inicia a missão 3 e a interação na Âncora inicia o capítulo 1. Após o Coração, um sinal local retorna ao Observatório e a última missão abre o RIFT opcional do Prisma Primordial. Modelos e apresentação permanecem blockouts.
 
 ### Prólogo — O Primeiro Fragmento (4)
 

@@ -273,12 +273,15 @@ func _enter_hq()->void:
     activity_progress=0
     activity_goal=0
     world.build_hq()
-    hud.set_interaction_visible(false)
+    var active_quests:Array=state.data.get("quests",{}).get("active",[])
+    hud.set_interaction_visible("prologue_02" in active_quests)
     player.position=Vector3(0,0.1,6)
     _set_companion_combat(false)
     for companion in companions:
         if is_instance_valid(companion):companion.reset_formation()
-    if bool(state.data["story"]["flags"].get("nexus_core_slice_complete",false)):
+    if bool(state.data["story"]["flags"].get("nexus_campaign_epilogue_complete",false)):
+        hud.set_mode("ALÉM DO HORIZONTE • EXPEDIÇÕES E RIFT SECRETO DISPONÍVEIS")
+    elif bool(state.data["story"]["flags"].get("nexus_core_slice_complete",false)):
         hud.set_mode("CORAÇÃO DO NEXO ESTABILIZADO • EXPEDIÇÕES LIVRES")
     elif bool(state.data["story"]["flags"].get("nimbara_slice_complete",false)):
         hud.set_mode("OBSERVATÓRIO DE ÍRIS • ÂNCORAS EM RESSONÂNCIA")
@@ -326,7 +329,8 @@ func _enter_expedition()->void:
     _spawn_wave(0 if anchor_return else mini(16,perf.max_enemies()))
     var has_nimbara_interaction:= "nimbara_06" in state.data["quests"]["active"] or "nimbara_08" in state.data["quests"]["active"] or "nimbara_side_02" in state.data["quests"]["active"]
     var has_regional_anchor:bool=anchor_return
-    hud.set_interaction_visible((map_id=="nimbara" and has_nimbara_interaction) or has_regional_anchor)
+    var has_mapped_interaction:=_has_mapped_interaction(map_id)
+    hud.set_interaction_visible((map_id=="nimbara" and has_nimbara_interaction) or has_regional_anchor or has_mapped_interaction)
     hud.set_mode("ÂNCORA • APROXIME-SE PARA ESTABILIZAR" if anchor_return else "EXPEDIÇÃO • %s • 0/%d"%[maps.get_map(map_id)["name"],activity_goal])
 
 func _active_anchor_quest(region_filter:="")->String:
@@ -337,9 +341,27 @@ func _active_anchor_quest(region_filter:="")->String:
         return str(active_id)
     return ""
 
+func _has_mapped_interaction(map_id:String)->bool:
+    var map_data:Dictionary=maps.get_map(map_id)
+    var points:Dictionary=map_data.get("interaction_points",{})
+    for active_id in state.data.get("quests",{}).get("active",[]):
+        var quest:Dictionary=quests.get_quest(str(active_id))
+        if str(quest.get("type",""))=="interact" and str(quest.get("map",""))==map_id and points.has(str(quest.get("object",""))):
+            return true
+    return false
+
 func _interact()->void:
+    var active:Array=state.data.get("quests",{}).get("active",[])
+    if mode=="HQ":
+        if "prologue_02" not in active:return
+        if player.position.distance_to(Vector3(0,0,0))>4.0:
+            hud.set_mode("PORTAL CENTRAL • APROXIME-SE PARA PREPARAR A EXPEDIÇÃO")
+            return
+        quests.add_interaction("observatory_portal")
+        hud.set_interaction_visible(false)
+        audio.level_up()
+        return
     if mode!="EXPEDITION":return
-    var active:Array=state.data["quests"].get("active",[])
     var active_anchor_quest:=_active_anchor_quest()
     if not active_anchor_quest.is_empty():
         var anchor_quest:Dictionary=quests.get_quest(active_anchor_quest)
@@ -349,6 +371,21 @@ func _interact()->void:
             hud.set_mode("ÂNCORA • APROXIME-SE DO CRISTAL NA REGIÃO")
             return
         quests.add_interaction(str(anchor_quest.get("object","resonance_anchor")))
+        hud.set_interaction_visible(false)
+        audio.level_up()
+        return
+    var region_id:=str(portal_service.destination)
+    var interaction_points:Dictionary=maps.get_map(region_id).get("interaction_points",{})
+    for active_id in active:
+        var interaction_quest:Dictionary=quests.get_quest(str(active_id))
+        var object_id:=str(interaction_quest.get("object",""))
+        if str(interaction_quest.get("type",""))!="interact" or str(interaction_quest.get("map",""))!=region_id or not interaction_points.has(object_id):
+            continue
+        var interaction_position:Vector3=interaction_points[object_id]
+        if player.position.distance_to(interaction_position)>3.2:
+            hud.set_mode("INTERAÇÃO • APROXIME-SE DO SINAL MARCADO")
+            return
+        quests.add_interaction(object_id)
         hud.set_interaction_visible(false)
         audio.level_up()
         return
@@ -389,6 +426,11 @@ func _enter_rift()->void:
         hud.set_mode("NÚCLEO DO NEXO • A CAMPANHA AINDA NÃO DESBLOQUEOU ESTA REGIÃO")
         return
     var boss_id:=str(content.REGIONAL_BOSSES.get(region_id,"crystal_stag"))
+    for active_id in active_quests:
+        var active_quest:Dictionary=quests.get_quest(str(active_id))
+        if str(active_quest.get("map",""))==region_id and str(active_quest.get("type",""))=="boss":
+            boss_id=str(active_quest.get("boss",boss_id))
+            break
     if not content.BOSSES.has(boss_id):
         hud.set_mode("RIFT • CONFIGURAÇÃO DE CHEFE INDISPONÍVEL")
         return
@@ -1209,6 +1251,7 @@ func _quest_started(id:String)->void:
     if q.is_empty():return
     var map_id:=str(q.get("map",""))
     if map_id.is_empty() or id.begins_with(map_id+"_side_"):return
+    if id=="prologue_02":hud.set_interaction_visible(true)
     var line:=str(q.get("start_dialogue",""))
     if line.is_empty():return
     call_deferred("_show_local_quest_dialogue",str(q.get("title",id)),str(q.get("speaker","Kaien Arashi")),line)
@@ -1224,6 +1267,13 @@ func _quest_completed(id:String)->void:
             hud.set_mode("OBJETIVO CONCLUÍDO • "+str(q.get("title",id)))
     if id.begins_with("chapter_") or id.begins_with("boss_"):
         _story()
+    if id=="epilogue_01":
+        call_deferred("_enter_hq")
+    if id=="epilogue_02":
+        state.data["story"]["flags"]["nexus_campaign_epilogue_complete"]=true
+        state.story_changed.emit()
+        save.save_now()
+        hud.set_mode("ALÉM DO HORIZONTE • PRISMA PRIMORDIAL SUPERADO")
     if str(q.get("object","")).ends_with("_anchor"):
         var region_id:=str(q.get("map",""))
         if region_id.is_empty():return
@@ -1308,6 +1358,8 @@ func _story()->void:
             cutscene.hide_cutscene()
         return
     if not story.has_next_line():
+        if "prologue_01" in state.data.get("quests",{}).get("active",[]):
+            quests.complete("prologue_01")
         if cutscene and cutscene.is_active():cutscene.hide_cutscene()
         hud.set_mode("HISTÓRIA • CENA CONCLUÍDA")
         if not local_dialogue_queue.is_empty():call_deferred("_present_next_local_dialogue")

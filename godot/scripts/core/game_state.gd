@@ -22,7 +22,7 @@ func reset() -> void:
         "loadout": {"weapon":"fulgor_gauntlets","ability_1":"lightning_step","ability_2":"sky_chain","ability_3":"static_field","core_slots":["damage","cooldown","dodge"]},
         "party": {"companions":["akari_solen","ren_aozora"],"command":"auto"},
         "inventory": {"aether_core":8,"slime_gel":12,"plasma_fiber":4,"scrap_plate":5,"power_cell":3,"oak_branch":8,"stone":6,"herb":10},
-        "quests": {"active":["nimbara_01"],"progress":{},"completed":[]},
+        "quests": {"active":["prologue_01"],"progress":{},"completed":[]},
         "story": {"chapter":1,"scene":0,"flags":{"tutorial_complete":false,"rooftop_unlocked":true},"journal":[]},
         "world": {"map_id":"nimbara","day_clock":0.0,"completed_expeditions":0,"completed_rifts":0,"nexus_core_unlocked":false},
         "wardrobe": {"style":"kaien_arashi","unlocked":["kaien_arashi"],"rides":[],"emotes":["wave"]},

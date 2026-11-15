@@ -115,6 +115,8 @@ func _make_nexus_bridge(accent:Color)->void:
         var shard:=Factory.make_crystal(world_root,p+Vector3(0,0.15,0),accent.lightened(0.1))
         shard.scale=Vector3(1.6,1.8,1.6)
     Factory.torus(world_root,4.0,4.2,Vector3(0,0.18,0),accent.darkened(0.1))
+    Factory.make_crystal(world_root,Vector3(0,0.15,-4.5),Color("#82f4e4"))
+    Factory.torus(world_root,0.62,0.76,Vector3(0,0.15,-4.5),Color("#82f4e4"))
 
 func _make_umbral_gallery(accent:Color)->void:
     # Mirror panels are static blockout props; no reflection or geometry shift is simulated.

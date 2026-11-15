@@ -12,6 +12,7 @@ func _ready() -> void:
             "duration":180.0,
             "goal":4,
             "hazard":"raízes da memória",
+            "interaction_points":{"prologue_resonator":Vector3(0,0,-8.5)},
             "ground":Color("#376a59"),
             "accent":Color("#63ead0"),
             "fog":Color("#557f7c"),
@@ -124,7 +125,7 @@ func _ready() -> void:
         },
         "nexus_core": {
             "name":"Núcleo do Nexo • Ponte dos Fragmentos",
-            "difficulty":1.85,"duration":200.0,"goal":18,"hazard":"ondas de estase","resonance_anchor":Vector3(0,0,-8.5),
+            "difficulty":1.85,"duration":200.0,"goal":18,"hazard":"ondas de estase","resonance_anchor":Vector3(0,0,-8.5),"interaction_points":{"observatory_return":Vector3(0,0,-4.5)},
             "ground":Color("#343d63"),"accent":Color("#c4a3ff"),"fog":Color("#69739f"),
             "enemies":["memory_warden","tide_echo","gear_echo","frost_echo","root_echo","hour_echo"],
             "obstacles":[
