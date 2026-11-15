@@ -15,6 +15,10 @@ void AnimeNexusCombatCore::_bind_methods() {
             &AnimeNexusCombatCore::resolve_elemental_reaction);
     ClassDB::bind_method(D_METHOD("advance_experience", "hunter", "progression", "amount"),
             &AnimeNexusCombatCore::advance_experience);
+    ClassDB::bind_method(D_METHOD("companion_decision", "owner_distance", "enemy_distance", "owner_hp_ratio"),
+            &AnimeNexusCombatCore::companion_decision);
+    ClassDB::bind_method(D_METHOD("companion_damage", "base_damage", "player_level", "role_multiplier"),
+            &AnimeNexusCombatCore::companion_damage);
 }
 
 Dictionary AnimeNexusCombatCore::calculate_damage(double weapon_damage, int character_level,
@@ -98,6 +102,35 @@ Dictionary AnimeNexusCombatCore::resolve_elemental_reaction(const String &elemen
     }
 
     return reaction;
+}
+
+Dictionary AnimeNexusCombatCore::companion_decision(double owner_distance, double enemy_distance,
+        double owner_hp_ratio) const {
+    const double safe_owner_distance = std::max(0.0, owner_distance);
+    const double safe_enemy_distance = enemy_distance;
+    const double safe_owner_hp_ratio = std::clamp(owner_hp_ratio, 0.0, 1.0);
+    Dictionary result;
+    result["state"] = "follow";
+    result["speed_multiplier"] = 1.0;
+    if (safe_owner_distance > 16.0) {
+        result["state"] = "regroup";
+        result["speed_multiplier"] = 1.8;
+    } else if (safe_owner_hp_ratio <= 0.20) {
+        result["state"] = "guard";
+        result["speed_multiplier"] = 1.2;
+    } else if (safe_enemy_distance >= 0.0 && safe_enemy_distance <= 5.2) {
+        result["state"] = "attack";
+    }
+    return result;
+}
+
+double AnimeNexusCombatCore::companion_damage(double base_damage, int player_level,
+        double role_multiplier) const {
+    const double safe_base_damage = std::max(0.0, base_damage);
+    const int safe_level = std::max(1, player_level);
+    const double safe_role_multiplier = std::clamp(role_multiplier, 0.5, 2.0);
+    return safe_base_damage * (1.0 + static_cast<double>(safe_level - 1) * 0.045)
+            * safe_role_multiplier;
 }
 
 Dictionary AnimeNexusCombatCore::advance_experience(const Dictionary &hunter,

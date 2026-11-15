@@ -6,6 +6,7 @@ const ContentScript=preload("res://scripts/core/content_database.gd")
 const PerfScript=preload("res://scripts/core/performance_service.gd")
 const WorldScript=preload("res://scripts/world/world_service.gd")
 const EnemyScript=preload("res://scripts/gameplay/enemy_agent.gd")
+const CompanionScript=preload("res://scripts/gameplay/companion_agent.gd")
 const BossScript=preload("res://scripts/gameplay/boss_agent.gd")
 const QuestScript=preload("res://scripts/gameplay/quest_service.gd")
 const StoryScript=preload("res://scripts/gameplay/story_service.gd")
@@ -57,6 +58,7 @@ var save_slots_menu:CanvasLayer
 var player:Node3D
 var camera:Camera3D
 var enemies:Array[Node3D]=[]
+var companions:Array[Node3D]=[]
 var boss:Node3D
 var shots:Array[Node3D]=[]
 var mode:="HQ"
@@ -105,6 +107,7 @@ func _ready()->void:
     player=hunter_scene.instantiate() if hunter_scene else HunterAvatar.new()
     player.name="Hunter";add_child(player)
     _set_player()
+    _spawn_companions()
 
     camera=Camera3D.new()
     camera.projection=Camera3D.PROJECTION_ORTHOGONAL
@@ -139,6 +142,23 @@ func _ready()->void:
     hud.set_mode("OBSERVATÓRIO DE ÍRIS • PORTAL CENTRAL")
     if int(state.data["story"].get("chapter",1))==1 and int(state.data["story"].get("scene",0))==0:
         _story()
+
+func _spawn_companions()->void:
+    var roster:Array=[
+        {"id":"akari_solen","name":"Akari","element":"fire","role":"assault","body":Color("#9e3940"),"accent":Color("#ffb34d"),"offset":Vector3(-2.0,0.0,2.4)},
+        {"id":"ren_aozora","name":"Ren","element":"wind","role":"controller","body":Color("#3b7770"),"accent":Color("#75e7d0"),"offset":Vector3(2.0,0.0,2.4)}
+    ]
+    for data in roster:
+        var companion:Node3D=CompanionScript.new()
+        add_child(companion)
+        companion.configure(player,combat,state,str(data["id"]),str(data["name"]),str(data["element"]),
+            str(data["role"]),data["body"],data["accent"],data["offset"])
+        companions.append(companion)
+
+func _set_companion_combat(active:bool)->void:
+    for companion in companions:
+        if is_instance_valid(companion):
+            companion.set_combat_active(active)
 
 func _set_player()->void:
     if not is_instance_valid(player):return
@@ -175,6 +195,9 @@ func _enter_hq()->void:
     world.build_hq()
     hud.set_interaction_visible(false)
     player.position=Vector3(0,0.1,6)
+    _set_companion_combat(false)
+    for companion in companions:
+        if is_instance_valid(companion):companion.reset_formation()
     hud.set_mode("PRÓLOGO DA SLICE CONCLUÍDO • NOVOS CAPÍTULOS EM PRODUÇÃO" if bool(state.data["story"]["flags"].get("nimbara_slice_complete",false)) else "OBSERVATÓRIO DE ÍRIS • PORTAL CENTRAL")
 
 func _enter_expedition()->void:
@@ -197,6 +220,9 @@ func _enter_expedition()->void:
     activity_goal=0 if anchor_return else maps.activity_goal(map_id)
     activity_progress=0
     player.position=Vector3(0,0.1,6)
+    for companion in companions:
+        if is_instance_valid(companion):companion.reset_formation()
+    _set_companion_combat(true)
     _spawn_wave(0 if anchor_return else mini(16,perf.max_enemies()))
     quests.add_map(map_id)
     hud.set_interaction_visible(map_id=="nimbara" and "nimbara_03" in state.data["quests"]["active"])
@@ -230,6 +256,7 @@ func _enter_rift()->void:
     activity_remaining=0.0
     activity_progress=0
     activity_goal=1
+    _set_companion_combat(true)
     _spawn_wave(mini(4,perf.max_enemies()) if first_nimbara_boss else perf.max_enemies())
     var ids:Array=content.BOSSES.keys()
     ids.sort()
@@ -245,6 +272,7 @@ func _enter_versus()->void:
     activity_remaining=75.0
     activity_goal=8
     activity_progress=0
+    _set_companion_combat(true)
     _spawn_wave(mini(8,perf.max_enemies()))
     hud.set_mode("VERSUS • SIMULAÇÃO OFFLINE")
 

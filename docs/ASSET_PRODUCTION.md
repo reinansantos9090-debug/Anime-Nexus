@@ -5,8 +5,8 @@
 | ID | Finalidade e associação | Descrição visual / paleta | Especificação / materiais | Animações exigidas | Estado / origem |
 |---|---|---|---|---|---|
 | CH-KAIEN | Protagonista Kaien, slice e campanha | Jovem anime; azul-marinho/ciano/âmbar; casaco assimétrico e manoplas | glTF/GLB, rig humanoide, 12–20k tris LOD0 / 5–8k LOD1; 1K albedo/normal/ORM atlas | idle, run, combo 3, dodge, 3 skills, hit, victory, supreme | Blockout procedural integrado; arte final planejada; original |
-| CH-AKARI | Akari, combate de chama | cobre/vermelho/ouro, lenço distintivo | mesmo pipeline humanoide modular; peças de lenço separadas | idle/run, combo, 3 skills, esquiva, hit, suprema | Planejado; original |
-| CH-REN | Ren, vento | prata/turquesa/verde, ornamentos flutuantes | rig humanoide leve, acessórios com bones secundários | idle/run, combo, salto, vento, esquiva, suprema | Planejado; original |
+| CH-AKARI | Akari, companheira de combate e protagonista | cobre/vermelho/ouro, lenço distintivo | runtime atual usa blockout humanoide procedural colorido; pipeline final humanoide modular e lenço separado | idle/run, combo, 3 skills, esquiva, hit, suprema | Blockout de companheira integrado; modelo e animações finais planejados; original |
+| CH-REN | Ren, companheiro de controle do vento e protagonista | prata/turquesa/verde, ornamentos flutuantes | runtime atual usa blockout humanoide procedural colorido; rig final leve e acessórios com bones secundários | idle/run, combo, salto, vento, esquiva, suprema | Blockout de companheiro integrado; modelo e animações finais planejados; original |
 | CH-MIRA | Mira, gelo | lilás/azul-pérola, prismas geométricos | rig humanoide; adornos transparentes separados | idle/run, combo, barreira, gelo, hit, suprema | Planejado; original |
 | CH-YUNA | Yuna, lunar | violeta/branco/azul-noite, estrelas orbitais | rig humanoide; órbitas sem simulação física cara | idle/run, combo, cura, escudo, suprema, reação | Planejado; original |
 | CH-SHIN | Shin, sombra | grafite/preto/violeta, tecido distorcido | rig humanoide; material dissolve controlável | idle/run, combo, duplicata, teleporte, hit, suprema | Planejado; original |

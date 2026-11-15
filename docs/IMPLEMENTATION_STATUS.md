@@ -18,7 +18,7 @@ Data da auditoria: 15 nov. 2026, branch `dev/anime-nexus-vertical-slice`.
 | Combate e inimigos locais offline | Em desenvolvimento | combate da slice Godot tem ataques, habilidades, afinidades e reações locais; integração C++/Godot aguarda validação manual e APK Godot atual |
 | Joystick virtual analógico | Implementado (protótipo) | Godot HUD recebe toque/arraste, produz direção com deadzone e intensidade gradual; regra testada headless, toque em celular pendente |
 | Missão da slice | Em desenvolvimento | cadeia de missão, chefe e interação por proximidade da Âncora; regras de avanço testadas, fluxo de toque em aparelho pendente |
-| Companions com máquina de estados | Planejado | nenhum squad follow/combat completo observado no runtime Godot |
+| Companions com máquina de estados | Em desenvolvimento | Akari e Ren, blockouts procedurais, seguem Kaien, usam decisões C++ para follow/regroup/guard/attack e aplicam dano/controle offline; seleção, navegação de obstáculos, comportamento de chefe e modelos/animações finais pendentes; regressão de setup adicionada ao runner, aguarda execução Godot manual |
 | Campanha principal e secundárias | Planejado | story/quest catalogs Aetheria menores; não há 60+45 Anime Nexus |
 | Inventário/equipamentos | Implementado (protótipo) | inventário/wardrobe/crafting Aetheria; slots e catálogo alvo não integram |
 | Save offline | Em desenvolvimento | progresso local com backup e recuperação já existe; três espaços com carregar/salvar e confirmação de sobrescrita integrados ao menu; teste curto de isolamento entre slots e gravação temporária validada adicionado, aguarda execução Godot manual; migração entre versões permanece pendente |

@@ -19,6 +19,8 @@ public:
             double critical_chance, double critical_roll, double critical_multiplier = 1.75) const;
     Dictionary resolve_elemental_reaction(const String &element_a, const String &element_b) const;
     Dictionary advance_experience(const Dictionary &hunter, const Dictionary &progression, int64_t amount) const;
+    Dictionary companion_decision(double owner_distance, double enemy_distance, double owner_hp_ratio) const;
+    double companion_damage(double base_damage, int player_level, double role_multiplier) const;
 };
 
 } // namespace godot
