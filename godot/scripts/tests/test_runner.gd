@@ -209,9 +209,11 @@ func _test_save()->void:
     _expect(save.load_now(),"Save: could not reload save")
     _expect(int(state.data["hunter"]["gold"])==9876,"Save: corrupt primary did not recover the previous backup")
     _expect(is_equal_approx(float(state.data["hunter"].get("chaos_energy",0.0)),65.0),"Save: supreme meter was not persisted locally")
-    _expect(state.apply_loaded({"schema":4,"hunter":{"gold":444}}),"Save: supported old schema was rejected")
+    _expect(state.apply_loaded({"schema":4,"hunter":{"gold":444},"settings":"invalid","story":{"flags":[]}}),"Save: supported old schema was rejected")
     _expect(int(state.data["schema"])==8 and int(state.data["hunter"]["gold"])==444,"Save: older schema did not migrate while preserving progress")
     _expect(state.data["party"]["companions"].size()==2,"Save: migration did not restore the default local companion roster")
+    _expect(str(state.data["settings"]["difficulty"])=="adventure" and is_equal_approx(float(state.data["settings"]["camera_zoom"]),24.0),"Save: old schema did not receive current settings defaults")
+    _expect(state.data["story"]["flags"] is Dictionary and bool(state.data["story"]["flags"]["rooftop_unlocked"]),"Save: malformed legacy section replaced default story flags")
     var future:=FileAccess.open("user://anime_nexus_test_save.json",FileAccess.WRITE)
     if future:
         future.store_string(JSON.stringify({"schema":999,"hunter":{"gold":999}}))

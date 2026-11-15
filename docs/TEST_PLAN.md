@@ -138,3 +138,10 @@ Runner e export Godot continuam manuais; nenhum teste longo/emulador foi iniciad
 - Conferir o diálogo contextual de conclusão de cada etapa e persistência do progresso offline.
 
 Runner Godot permanece manual; nenhum teste longo/emulador foi iniciado.
+
+
+### Save local: migração de schema (runner manual)
+
+- Carregar um payload de schema 4 com progresso parcial e campos aninhados com tipos inválidos; confirmar upgrade para schema 8, preservação do ouro e preenchimento dos defaults atuais.
+- Confirmar que schema futuro é recusado sem substituir o save suportado nem permitir sobrescrita silenciosa.
+- Este cenário é curto, headless e manual; não requer emulador nem workflow longo.

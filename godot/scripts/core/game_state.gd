@@ -37,8 +37,11 @@ func reset() -> void:
 func apply_loaded(loaded: Dictionary) -> bool:
     var source_schema:=int(loaded.get("schema",1))
     if source_schema>SCHEMA:return false
+    var migrated:Dictionary=loaded.duplicate(true)
+    for target_schema in range(source_schema+1,SCHEMA+1):
+        _migrate_schema(migrated,target_schema)
     reset()
-    _merge_recursive(data, loaded)
+    _merge_recursive(data,migrated)
     data["schema"]=SCHEMA
     state_changed.emit()
     inventory_changed.emit()
@@ -46,12 +49,36 @@ func apply_loaded(loaded: Dictionary) -> bool:
     story_changed.emit()
     return true
 
+func _migrate_schema(save_data:Dictionary,target_schema:int)->void:
+    match target_schema:
+        5:
+            _ensure_section(save_data,"settings")
+            _ensure_section(save_data,"statistics")
+        6:
+            _ensure_section(save_data,"party")
+            _ensure_section(save_data,"world")
+        7:
+            _ensure_section(save_data,"story")
+            _ensure_section(save_data,"progression")
+        8:
+            _ensure_section(save_data,"inventory")
+            _ensure_section(save_data,"quests")
+            _ensure_section(save_data,"wardrobe")
+            _ensure_section(save_data,"cores")
+            _ensure_section(save_data,"events")
+            _ensure_section(save_data,"loot")
+
+func _ensure_section(save_data:Dictionary,id:String)->void:
+    if not save_data.get(id,{}) is Dictionary:
+        save_data[id]={}
+
 func _merge_recursive(target: Dictionary, source: Dictionary) -> void:
     for key in source.keys():
-        if target.get(key) is Dictionary and source[key] is Dictionary:
-            _merge_recursive(target[key], source[key])
-        else:
-            target[key] = source[key]
+        if target.get(key) is Dictionary:
+            if source[key] is Dictionary:
+                _merge_recursive(target[key],source[key])
+            continue
+        target[key]=source[key]
 
 func get_hunter() -> Dictionary:
     return data["hunter"]
