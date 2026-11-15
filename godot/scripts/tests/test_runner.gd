@@ -305,6 +305,9 @@ func _test_nimbara_vertical_slice_data_and_quest()->void:
     _expect(state.data["loadout"]["weapon"]=="fulgor_gauntlets","Slice: Kaien loadout mismatch")
     _expect(maps.get_map("nimbara")["name"].begins_with("Nimbara"),"Slice: Nimbara map data missing")
     _expect(content.COMPANIONS.size()==7 and content.COMPANIONS.has("yuna_tsukari"),"Slice: original ally roster or local support profile missing")
+    for ally_id in content.COMPANIONS.keys():
+        var ally:Dictionary=content.COMPANIONS[ally_id]
+        _expect(float(ally.get("skill_radius",0.0))>0.0 and float(ally.get("skill_cooldown",0.0))>0.0,"Slice: ally lacks an authored local skill profile: "+str(ally_id))
     _expect(content.MONSTERS.has("moss_hopper") and content.MONSTERS.has("leaf_spark"),"Slice: Nimbara creatures missing")
     _expect(content.BOSSES.has("crystal_stag"),"Slice: Cérvido de Cristal boss data missing")
     for ability_id in ["lightning_step","sky_chain","static_field"]:

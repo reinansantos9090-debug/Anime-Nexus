@@ -182,7 +182,11 @@ func _spawn_companions()->void:
         var companion:Node3D=CompanionScript.new()
         add_child(companion)
         companion.configure(player,combat,state,id,str(data["name"]),str(data["element"]),
-            str(data["role"]),data["body"],data["accent"],Vector3(2.0*side,0.0,2.4))
+            str(data["role"]),data["body"],data["accent"],Vector3(2.0*side,0.0,2.4),
+            float(data.get("skill_power",1.0)),float(data.get("skill_radius",4.0)),
+            float(data.get("skill_cooldown",9.0)),float(data.get("slow_duration",2.2)),
+            float(data.get("slow_factor",0.55)),float(data.get("support_heal",0.20)),
+            float(data.get("support_energy",12.0)),float(data.get("support_threshold",0.68)))
         companions.append(companion)
         index+=1
 

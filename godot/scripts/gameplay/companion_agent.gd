@@ -23,9 +23,19 @@ var state_name:="follow"
 var title_tag:Label3D
 var avoidance_prefer_left:=true
 var stalled_time:=0.0
+var skill_power:=1.0
+var skill_radius:=4.0
+var skill_cooldown_seconds:=9.0
+var slow_duration:=2.2
+var slow_factor:=0.55
+var support_heal_ratio:=0.20
+var support_energy_restore:=12.0
+var support_threshold:=0.68
 
 func configure(owner:Node3D,combat:Node,state:Node,id:String,title:String,element_id:String,role_id:String,
-        body:Color,accent:Color,offset:Vector3)->void:
+        body:Color,accent:Color,offset:Vector3,skill_power_value:=1.0,skill_radius_value:=4.0,
+        skill_cooldown_value:=9.0,slow_duration_value:=2.2,slow_factor_value:=0.55,
+        support_heal_value:=0.20,support_energy_value:=12.0,support_threshold_value:=0.68)->void:
     owner_actor=owner
     combat_service=combat
     game_state=state
@@ -36,6 +46,14 @@ func configure(owner:Node3D,combat:Node,state:Node,id:String,title:String,elemen
     body_color=body
     accent_color=accent
     formation_offset=offset
+    skill_power=skill_power_value
+    skill_radius=skill_radius_value
+    skill_cooldown_seconds=skill_cooldown_value
+    slow_duration=slow_duration_value
+    slow_factor=slow_factor_value
+    support_heal_ratio=support_heal_value
+    support_energy_restore=support_energy_value
+    support_threshold=support_threshold_value
     native_core=AnimeNexusCombatCore.new()
     name=id
     global_position=owner.global_position+offset
@@ -72,9 +90,9 @@ func _physics_process(delta:float)->void:
     var hp_ratio:=float(hunter.get("hp",1.0))/maxf(1.0,float(hunter.get("max_hp",1.0)))
     var decision:Dictionary=native_core.companion_decision(owner_distance,enemy_distance,hp_ratio,command)
     state_name=str(decision.get("state","follow"))
-    if combat_active and role=="support" and hp_ratio<=0.68 and skill_cooldown<=0.0:
+    if combat_active and role=="support" and hp_ratio<=support_threshold and skill_cooldown<=0.0:
         _support_owner()
-        skill_cooldown=15.0
+        skill_cooldown=skill_cooldown_seconds
     elif target and (state_name=="attack" or (state_name=="guard" and enemy_distance<=2.6)):
         _attack_target(target)
     else:
@@ -99,8 +117,8 @@ func _support_owner()->void:
     if not is_instance_valid(owner_actor) or game_state==null:return
     var hunter:Dictionary=game_state.get_hunter()
     var max_hp:=float(hunter.get("max_hp",1.0))
-    hunter["hp"]=minf(max_hp,float(hunter.get("hp",1.0))+max_hp*0.20)
-    hunter["energy"]=minf(float(hunter.get("max_energy",100.0)),float(hunter.get("energy",0.0))+12.0)
+    hunter["hp"]=minf(max_hp,float(hunter.get("hp",1.0))+max_hp*support_heal_ratio)
+    hunter["energy"]=minf(float(hunter.get("max_energy",100.0)),float(hunter.get("energy",0.0))+support_energy_restore)
     game_state.state_changed.emit()
     state_name="support"
 
@@ -111,7 +129,7 @@ func _attack_target(target:Node3D)->void:
     var nearby_count:=_count_targets(3.8)
     if skill_cooldown<=0.0 and nearby_count>=2:
         _use_resonance_skill(target.global_position)
-        skill_cooldown=9.0
+        skill_cooldown=skill_cooldown_seconds
     elif attack_cooldown<=0.0:
         var hunter:Dictionary=game_state.get_hunter() if game_state else {}
         var level:=int(hunter.get("level",1))
@@ -121,9 +139,9 @@ func _attack_target(target:Node3D)->void:
         attack_cooldown=1.45 if role=="assault" else 1.75
 
 func _use_resonance_skill(center:Vector3)->void:
-    var radius:=4.0
+    var radius:=skill_radius
     var hunter:Dictionary=game_state.get_hunter() if game_state else {}
-    var damage:=native_core.companion_damage(19.0,int(hunter.get("level",1)),1.0)
+    var damage:=native_core.companion_damage(19.0*skill_power,int(hunter.get("level",1)),1.0)
     var tree:=get_tree()
     if tree==null:return
     for candidate in tree.get_nodes_in_group("enemy_agents"):
@@ -133,7 +151,7 @@ func _use_resonance_skill(center:Vector3)->void:
         if enemy.global_position.distance_to(center)>radius:continue
         combat_service.hit(enemy,damage,false,element)
         if role=="controller" and enemy.has_method("apply_slow"):
-            enemy.apply_slow(2.2,0.55)
+            enemy.apply_slow(slow_duration,slow_factor)
 
 func _count_targets(radius:float)->int:
     var tree:=get_tree()

@@ -156,6 +156,6 @@ Runner Godot permanece manual; nenhum teste longo/emulador foi iniciado.
 
 ### Formação offline ampliada (runner/manual)
 
-- Confirmar no runner que os sete aliados têm dados locais e que o pulso de suporte de Yuna restaura vida e energia quando solicitado.
+- Confirmar no runner que os sete aliados têm perfis locais distintos de área/recarga e que o pulso de suporte de Yuna restaura vida e energia quando solicitado.
 - No Android, abrir Formação, rolar a lista até Eiko, escolher dois aliados, fechar e reabrir; conferir seleção persistida e limite de dois.
 - A validação de rolagem/touch é manual e curta; sem emulador ou job longo automático.

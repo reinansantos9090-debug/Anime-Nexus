@@ -3,13 +3,13 @@ extends Node
 ## runtime service; there are no disposable catalog rows or numbered filler.
 
 const COMPANIONS := {
-    "akari_solen":{"name":"Akari Solen","element":"fire","role":"assault","body":Color("#9e3940"),"accent":Color("#ffb34d")},
-    "ren_aozora":{"name":"Ren Aozora","element":"wind","role":"controller","body":Color("#3b7770"),"accent":Color("#75e7d0")},
-    "mira_yukari":{"name":"Mira Yukari","element":"ice","role":"controller","body":Color("#7279b7"),"accent":Color("#bcecff")},
-    "yuna_tsukari":{"name":"Yuna Tsukari","element":"moon","role":"support","body":Color("#514272"),"accent":Color("#e7d3ff")},
-    "shin_kuroki":{"name":"Shin Kuroki","element":"shadow","role":"controller","body":Color("#353047"),"accent":Color("#bd72e4")},
-    "haru_midori":{"name":"Haru Midori","element":"nature","role":"support","body":Color("#466c48"),"accent":Color("#a9df72")},
-    "eiko_aster":{"name":"Eiko Aster","element":"gravity","role":"controller","body":Color("#544c82"),"accent":Color("#ff9edc")}
+    "akari_solen":{"name":"Akari Solen","element":"fire","role":"assault","body":Color("#9e3940"),"accent":Color("#ffb34d"),"skill_power":1.25,"skill_radius":4.8,"skill_cooldown":8.5,"slow_duration":0,"slow_factor":1,"support_heal":0,"support_energy":0,"support_threshold":0},
+    "ren_aozora":{"name":"Ren Aozora","element":"wind","role":"controller","body":Color("#3b7770"),"accent":Color("#75e7d0"),"skill_power":0.95,"skill_radius":5.8,"skill_cooldown":8,"slow_duration":2.2,"slow_factor":0.55,"support_heal":0,"support_energy":0,"support_threshold":0},
+    "mira_yukari":{"name":"Mira Yukari","element":"ice","role":"controller","body":Color("#7279b7"),"accent":Color("#bcecff"),"skill_power":0.82,"skill_radius":4.2,"skill_cooldown":9.5,"slow_duration":3.5,"slow_factor":0.42,"support_heal":0,"support_energy":0,"support_threshold":0},
+    "yuna_tsukari":{"name":"Yuna Tsukari","element":"moon","role":"support","body":Color("#514272"),"accent":Color("#e7d3ff"),"skill_power":0.75,"skill_radius":3.8,"skill_cooldown":11,"slow_duration":0,"slow_factor":1,"support_heal":0.25,"support_energy":14,"support_threshold":0.7},
+    "shin_kuroki":{"name":"Shin Kuroki","element":"shadow","role":"controller","body":Color("#353047"),"accent":Color("#bd72e4"),"skill_power":1.35,"skill_radius":3.5,"skill_cooldown":7.5,"slow_duration":0,"slow_factor":1,"support_heal":0,"support_energy":0,"support_threshold":0},
+    "haru_midori":{"name":"Haru Midori","element":"nature","role":"support","body":Color("#466c48"),"accent":Color("#a9df72"),"skill_power":0.8,"skill_radius":4.4,"skill_cooldown":12,"slow_duration":0,"slow_factor":1,"support_heal":0.18,"support_energy":22,"support_threshold":0.78},
+    "eiko_aster":{"name":"Eiko Aster","element":"gravity","role":"controller","body":Color("#544c82"),"accent":Color("#ff9edc"),"skill_power":0.95,"skill_radius":6,"skill_cooldown":10,"slow_duration":1.4,"slow_factor":0.72,"support_heal":0,"support_energy":0,"support_threshold":0}
 }
 
 const TRANSFORMATIONS := {
