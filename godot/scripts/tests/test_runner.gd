@@ -649,6 +649,23 @@ func _test_prologue_and_epilogue_routes()->void:
     _expect(epilogue_rows.size()==2,"Epilogue: both playable missions must be cataloged")
     _expect(str(epilogue_rows[0].get("next",""))=="epilogue_02","Epilogue: return mission must lead into the horizon challenge")
     _expect(bool(epilogue_rows[1].get("optional",false)),"Epilogue: secret boss must not block free expedition selection")
+    var quest_core:=AnimeNexusQuestCore.new()
+    var quest_state:Dictionary={"active":["prologue_01"],"completed":[],"progress":{}}
+    var prologue_steps:Array=[
+        ["complete","prologue_01","prologue_02"],
+        ["interact","observatory_portal","prologue_03"],
+        ["map","nimbara","prologue_04"],
+        ["interact","prologue_resonator","nimbara_01"]
+    ]
+    for step in prologue_steps:
+        var result:Dictionary=quest_core.apply_event(quest_state,content.QUESTS,str(step[0]),str(step[1]),1)
+        quest_state=result.get("quests",{})
+        _expect(bool(result.get("changed",false)),"Prologue: objective did not advance for %s"%str(step[1]))
+        _expect(str(quest_state.get("active",[])[0])==str(step[2]),"Prologue: next objective mismatch after %s"%str(step[1]))
+    var optional_state:Dictionary={"active":["epilogue_02"],"completed":[],"progress":{}}
+    var secret_result:Dictionary=quest_core.apply_event(optional_state,content.QUESTS,"boss","prism_primordial",1)
+    _expect("epilogue_02" in secret_result.get("quests",{}).get("completed",[]),"Epilogue: secret Prism boss completion was not recorded")
+    quest_core.free()
     content.free()
     maps.free()
 
