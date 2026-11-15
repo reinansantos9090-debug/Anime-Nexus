@@ -92,6 +92,12 @@ const MONSTERS := {
     "void_glider":{"name":"Planador do Vazio","hp":230.0,"damage":44.0,"speed":3.6,"xp":175,"tier":5,"behavior":"flying","loot":["void_membrane","sky_fragment"]},
     "storm_caster":{"name":"Conjurador da Tempestade","hp":205.0,"damage":52.0,"speed":2.0,"xp":190,"tier":5,"behavior":"ranged","loot":["storm_core","prism_fragment"]},
     "chrono_knight":{"name":"Cavaleiro Crono","hp":360.0,"damage":62.0,"speed":2.1,"xp":240,"tier":6,"behavior":"controller","loot":["chrono_gear","gravity_shard"]},
+    "prism_drone":{"element":"light","name":"Drone Prismático","hp":132.0,"damage":31.0,"speed":2.5,"xp":108,"tier":3,"behavior":"turret","loot":["arc_coil","prism_glass"]},
+    "living_gear":{"element":"gravity","name":"Engrenagem Viva","hp":105.0,"damage":20.0,"speed":4.6,"xp":82,"tier":3,"behavior":"swarm","loot":["gear_teeth","arc_coil"]},
+    "copper_sentinel":{"element":"thunder","name":"Sentinela de Cobre","hp":275.0,"damage":34.0,"speed":1.5,"xp":152,"tier":4,"behavior":"shielded","loot":["copper_plate","gear_teeth"]},
+    "unstable_automaton":{"element":"thunder","name":"Autômato Instável","hp":208.0,"damage":39.0,"speed":2.8,"xp":174,"tier":4,"behavior":"controller","loot":["arc_coil","unstable_core"]},
+    "magnetic_guardian":{"element":"gravity","name":"Guardião Magnético","hp":385.0,"damage":48.0,"speed":1.25,"xp":226,"tier":5,"behavior":"guardian","loot":["magnet_core","copper_plate"]},
+    "mechanical_core":{"element":"light","name":"Núcleo Mecânico","hp":192.0,"damage":24.0,"speed":1.9,"xp":164,"tier":4,"behavior":"healer","loot":["unstable_core","gear_teeth"]},
     "aurelio_crystal":{"element":"light","name":"Cristal Errante","hp":126.0,"damage":22.0,"speed":2.9,"xp":88,"tier":3,"behavior":"orbit","loot":["hourglass_sand","sun_glass"]},
     "sun_disk_scarab":{"element":"fire","name":"Escaravelho Solar","hp":198.0,"damage":31.0,"speed":3.3,"xp":132,"tier":4,"behavior":"charger","loot":["solar_chitin","hourglass_sand"]},
     "mirage_duplicator":{"element":"shadow","name":"Miragem Duplicadora","hp":148.0,"damage":29.0,"speed":4.0,"xp":121,"tier":4,"behavior":"stealth","loot":["mirage_thread","sun_glass"]},
@@ -126,7 +132,8 @@ const BIOMES := {
     "rust_canyons":{"name":"Cânions de Sucata","ground":Color("#8a5d50"),"accent":Color("#ffc36a"),"fog":Color("#9d7970")},
     "sky_ruins":{"name":"Ruínas do Céu","ground":Color("#6178b1"),"accent":Color("#e0f7ff"),"fog":Color("#b4c9ff")},
     "vesper":{"name":"Vesper • Arquipélago das Marés","ground":Color("#376e77"),"accent":Color("#59d8d2"),"fog":Color("#527f91")},
-    "aurelio":{"name":"Aurélio • Deserto das Horas","ground":Color("#b78555"),"accent":Color("#ffd17e"),"fog":Color("#d2a487")}
+    "aurelio":{"name":"Aurélio • Deserto das Horas","ground":Color("#b78555"),"accent":Color("#ffd17e"),"fog":Color("#d2a487")},
+    "ferrumia":{"name":"Ferrúmia • Cidade das Engrenagens","ground":Color("#594c6d"),"accent":Color("#ff8bc7"),"fog":Color("#927b9f")}
 }
 
 const QUESTS := [
@@ -200,6 +207,11 @@ const ITEMS := {
     "rift_hide":{"name":"Pele da Fenda","value":37},"gravity_shard":{"name":"Estilhaço Gravitacional","value":43},
     "void_membrane":{"name":"Membrana do Vazio","value":48},"storm_core":{"name":"Núcleo de Tempestade","value":50},
     "chrono_gear":{"name":"Engrenagem Crono","value":58},
+    "arc_coil":{"name":"Bobina de Arco","value":30},
+    "prism_glass":{"name":"Vidro Prismático","value":28},
+    "gear_teeth":{"name":"Dentes de Engrenagem","value":18},
+    "copper_plate":{"name":"Placa de Cobre","value":24},
+    "unstable_core":{"name":"Núcleo Instável","value":39},
     "hourglass_sand":{"name":"Areia de Ampulheta","value":23},
     "sun_glass":{"name":"Vidro Solar","value":28},
     "solar_chitin":{"name":"Quitina Solar","value":31},

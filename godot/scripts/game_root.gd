@@ -723,12 +723,49 @@ func _attach_enemy_visual(e:Node3D,behavior:String,index:int)->void:
         e.attach_visual(_make_vesper_enemy_visual(e,str(e.monster_id)))
     elif str(e.monster_id).begins_with("aurelio_") or e.monster_id in ["sun_disk_scarab","mirage_duplicator","dune_watch","hourglass_wisp","oasis_guardian"]:
         e.attach_visual(_make_aurelio_enemy_visual(e,str(e.monster_id)))
+    elif str(e.monster_id).begins_with("prism_") or e.monster_id in ["living_gear","copper_sentinel","unstable_automaton","magnetic_guardian","mechanical_core"]:
+        e.attach_visual(_make_ferrumia_enemy_visual(e,str(e.monster_id)))
     elif behavior in ["flying","orbit"]:e.attach_visual(Factory.make_moth(e,base))
     elif behavior in ["guardian","shielded","knockback"]:e.attach_visual(Factory.make_golem(e,base,Color("#e9fcff")))
     elif behavior in ["berserker","crusher"]:e.attach_visual(Factory.make_colossus(e,base,Color("#ffd86b")))
     elif behavior in ["sniper","ranged","turret"]:e.attach_visual(Factory.make_crystal_monster(e,base))
     elif behavior in ["assassin","stealth","teleporter"]:e.attach_visual(Factory.make_hound(e,base))
     else:e.attach_visual(Factory.make_slime(e,base))
+
+func _make_ferrumia_enemy_visual(parent:Node3D,monster_id:String)->Node3D:
+    var visual:=Node3D.new()
+    parent.add_child(visual)
+    match monster_id:
+        "prism_drone":
+            Factory.box(visual,Vector3(0.92,0.44,0.74),Vector3(0,1.05,0),Color("#66547b"))
+            Factory.make_crystal(visual,Vector3(0,1.5,0),Color("#67e3f5"))
+            for side in [-1.0,1.0]:Factory.torus(visual,0.22,0.30,Vector3(side*0.68,1.05,0),Color("#ff8bc7"))
+        "living_gear":
+            var ring:=Factory.torus(visual,0.33,0.52,Vector3(0,0.78,0),Color("#bd8663"))
+            ring.rotation.x=0.0
+            for i in range(6):
+                var angle:=TAU*float(i)/6.0
+                var tooth:=Factory.box(visual,Vector3(0.27,0.32,0.3),Vector3(cos(angle)*0.57,0.78,sin(angle)*0.57),Color("#f4bc72"))
+                tooth.rotation.y=-angle
+            Factory.sphere(visual,0.2,Vector3(0,0.82,0),Color("#dc77bc"))
+        "copper_sentinel":
+            Factory.make_golem(visual,Color("#936650"),Color("#75ddf4"))
+            Factory.box(visual,Vector3(1.7,0.92,0.26),Vector3(0,1.15,-0.64),Color("#d19263"))
+        "unstable_automaton":
+            Factory.make_crystal_monster(visual,Color("#68547a"))
+            Factory.sphere(visual,0.24,Vector3(0,1.85,0),Color("#ff7fc4"))
+            Factory.torus(visual,0.5,0.59,Vector3(0,0.9,0),Color("#68daf4"))
+        "magnetic_guardian":
+            Factory.make_colossus(visual,Color("#5b506c"),Color("#ff8bc7"))
+            Factory.torus(visual,0.82,0.95,Vector3(0,1.35,0),Color("#63dff1"))
+        "mechanical_core":
+            var core:=Factory.sphere(visual,0.50,Vector3(0,1.15,0),Color("#f18bbd"))
+            core.scale=Vector3(1.0,0.82,0.9)
+            for i in range(4):
+                var blade:=Factory.box(visual,Vector3(0.18,0.75,0.20),Vector3(0,1.16,-0.64),Color("#9c879e"))
+                blade.rotation.y=TAU*float(i)/4.0
+            Factory.sphere(visual,0.15,Vector3(0,1.18,-0.42),Color("#e6fcff"))
+    return visual
 
 func _make_aurelio_enemy_visual(parent:Node3D,monster_id:String)->Node3D:
     var visual:=Node3D.new()

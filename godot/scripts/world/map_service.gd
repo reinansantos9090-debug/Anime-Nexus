@@ -1,5 +1,5 @@
 extends Node
-## Eight offline expedition maps. Each biome owns its encounter pool,
+## Nine offline expedition maps. Each biome owns its encounter pool,
 ## difficulty, obstacle layout and environmental hazard.
 
 var maps: Dictionary = {}
@@ -120,6 +120,26 @@ func _ready() -> void:
                 {"shape":"ruin","pos":Vector3(10,0,9),"size":Vector3(2.2,3.7,2.2)},
                 {"shape":"ruin","pos":Vector3(0,0,-12),"size":Vector3(2.0,2.8,2.4)},
                 {"shape":"ruin","pos":Vector3(0,0,11),"size":Vector3(3.0,2.4,2.0)}
+            ]
+        },
+        "ferrumia": {
+            "name":"Ferrúmia • Cidade das Engrenagens",
+            "difficulty":1.28,
+            "duration":180.0,
+            "goal":14,
+            "hazard":"pulsos magnéticos de trilho",
+            "ground":Color("#594c6d"),
+            "accent":Color("#ff8bc7"),
+            "fog":Color("#927b9f"),
+            "enemies":["prism_drone","living_gear","copper_sentinel","unstable_automaton","magnetic_guardian","mechanical_core"],
+            "obstacles":[
+                {"shape":"scrap","pos":Vector3(-13,0,-9),"size":Vector3(2.6,2.2,2.1)},
+                {"shape":"gear","pos":Vector3(10,0,-10),"size":Vector3(2.6,0.6,2.6)},
+                {"shape":"gear","pos":Vector3(-10,0,8),"size":Vector3(2.0,0.55,2.0)},
+                {"shape":"scrap","pos":Vector3(13,0,8),"size":Vector3(2.8,2.4,2.2)},
+                {"shape":"ruin","pos":Vector3(0,0,-15),"size":Vector3(2.4,4.0,2.4)},
+                {"shape":"gear","pos":Vector3(0,0,13),"size":Vector3(2.4,0.65,2.4)},
+                {"shape":"scrap","pos":Vector3(-2,0,-2),"size":Vector3(2.4,1.8,2.0)}
             ]
         },
         "aurelio": {

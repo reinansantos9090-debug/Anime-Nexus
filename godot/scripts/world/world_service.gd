@@ -87,10 +87,36 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
         "sky_ruins":
             for p in [Vector3(-18,0,-15),Vector3(17,0,-15),Vector3(-17,0,15),Vector3(18,0,15)]:
                 _ruin_pillar(p,accent)
+        "ferrumia":
+            _make_ferrumia_tracks(accent)
         "aurelio":
             _make_aurelio_ruins(accent,ground)
         "vesper":
             _make_vesper_cove(accent,ground)
+
+func _make_ferrumia_tracks(accent:Color)->void:
+    # Static rails and tower pieces suggest the industrial district; they do not move.
+    for z in [-8.0,0.0,8.0]:
+        Factory.box(world_root,Vector3(38,0.16,0.42),Vector3(0,0.08,z),Color("#353341"))
+        for x in range(-17,18,4):
+            Factory.box(world_root,Vector3(1.3,0.22,1.4),Vector3(float(x),0.18,z),Color("#827264"))
+    for p in [Vector3(-18,0,-16),Vector3(18,0,-16),Vector3(-18,0,16),Vector3(18,0,16)]:
+        Factory.box(world_root,Vector3(2.8,4.2,2.8),p+Vector3(0,2.1,0),Color("#65566d"))
+        Factory.box(world_root,Vector3(3.4,0.22,3.4),p+Vector3(0,4.25,0),accent.darkened(0.18))
+        Factory.sphere(world_root,0.35,p+Vector3(0,3.1,0),Color("#64d8f2"))
+    _make_ferrumia_gear(Vector3(0,0,12),accent,Vector3(2.3,0.6,2.3))
+
+func _make_ferrumia_gear(pos:Vector3,accent:Color,size:Vector3)->void:
+    var gear:=Node3D.new()
+    gear.position=pos+Vector3(0,0.22,0)
+    world_root.add_child(gear)
+    var ring:=Factory.torus(gear,size.x*0.25,size.x*0.42,Vector3.ZERO,Color("#b77961"))
+    ring.rotation.x=PI*0.5
+    for i in range(8):
+        var angle:=TAU*float(i)/8.0
+        var tooth:=Factory.box(gear,Vector3(0.34,0.48,0.36),Vector3(cos(angle)*size.x*0.46,0.02,sin(angle)*size.z*0.46),accent)
+        tooth.rotation.y=-angle
+    Factory.cylinder(gear,0.16,0.22,0.32,Vector3(0,0.05,0),Color("#4b4155"))
 
 func _make_aurelio_ruins(accent:Color,ground:Color)->void:
     # Desert ornaments are blockout landmarks; no temporal puzzle or moving platform is implied.
@@ -168,6 +194,8 @@ func _make_obstacle(obstacle:Dictionary,accent:Color)->void:
             _cactus(pos,accent,maxf(1.0,size.y/1.9))
         "scrap":
             _scrap_stack(pos,accent,size)
+        "gear":
+            _make_ferrumia_gear(pos,accent,size)
         "sandstone":
             _aurelio_pillar(pos,accent,size)
         "pier":

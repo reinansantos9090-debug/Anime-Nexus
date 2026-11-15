@@ -1,6 +1,6 @@
 # Mundos e criaturas
 
-Esta tabela permanece a especificação de longo prazo. A build atual ainda é um protótipo: Nimbara continua sendo a missão vertical slice, e a lista de expedições inclui mapas de combate compactos. Aurélio e Vesper agora têm expedições blockout com fauna local; nenhum desses mapas equivale às regiões completas de exploração previstas abaixo.
+Esta tabela permanece a especificação de longo prazo. A build atual ainda é um protótipo: Nimbara continua sendo a missão vertical slice, e a lista de expedições inclui mapas de combate compactos. Aurélio, Ferrúmia e Vesper agora têm expedições blockout com fauna local; nenhum desses mapas equivale às regiões completas de exploração previstas abaixo.
 
 | Região / identidade | Subáreas e mecânicas de exploração | Criaturas comuns/especiais | Chefe e encontro |
 |---|---|---|---|
@@ -21,6 +21,10 @@ Cada espécie precisa de locomotion/pathing, telegraph, hitbox, reação, recupe
 
 Doze masmorras alvo devem variar rota e objetivo: fuga de raízes, sala de espelhos, corrida de plataforma, investigação sem combate, escolta, arena de ondas, quebra-cabeça temporal, barco em maré, máquina sob pressão, subida de ventos, memória em dupla e combate final cronometrado. Portais de desafio usam modificadores configuráveis offline. Evento local é escolhido ao entrar ou após marco de jogo e não expira por ausência.
 
+
+## Estado runtime de Ferrúmia
+
+Ferrúmia tem expedição selecionável com paleta, seis criaturas e saque local. O blockout usa trilhos estáticos desenhados no piso, torres de cobre e engrenagens geométricas, além de sete obstáculos que afetam a rota. Não existem elevadores, plataformas móveis, máquinas acionáveis, navegação por trilho, chefe ou subáreas. As seis criaturas recebem silhuetas procedurais próprias, mas ainda sem rigs/animações de produção.
 
 ## Estado runtime de Aurélio
 

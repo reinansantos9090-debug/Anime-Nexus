@@ -92,3 +92,12 @@ O runner permanece manual e não é iniciado por este trabalho.
 - Validar em aparelho quando disponível que os adornos permanecem leves e legíveis; não declarar puzzle temporal, plataforma móvel ou chefe concluído.
 
 O runner Godot segue manual; nenhum teste longo ou emulador será disparado automaticamente.
+
+
+## Contrato de conteúdo de Ferrúmia (runner manual curto)
+
+- Conferir mapa, seis encontros, obstáculos e resolução local de todos os itens de saque.
+- Abrir a expedição e confirmar os trilhos estáticos, torres, engrenagens e blockouts durante o combate offline.
+- Não considerar elevadores, trilhos funcionais, máquinas interativas ou chefe implementados.
+
+O runner segue manual; nenhum teste longo/emulador automático foi adicionado ou iniciado.

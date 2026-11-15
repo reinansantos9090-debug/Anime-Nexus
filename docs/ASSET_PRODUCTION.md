@@ -28,7 +28,7 @@
 | EN-NIMBARA | 6 inimigos da floresta | musgo, faísca foliar, mariposa, besouro, cipó e guardião | cada rig 4–18k tris, materiais por espécie | locomoção, ataque, reação, recuo, derrota | Quatro inimigos com meshes/IA blockout integrados; faltam dois e os assets finais; original |
 | EN-AURELIO | 6 inimigos do deserto | cristal, escaravelho, miragem, vigia, ampulheta e guardião | mesma faixa modular, silhuetas distintas | movimento, ataque, telegraph, retorno | Dados/saques offline e seis silhuetas procedurais de blockout integrados; rigs, animações e modelos finais pendentes; original |
 | EN-VESPER | 6 inimigos costeiros | bolha, coral, água-viva, caranguejo, onda e sentinela | rigs pequenos, água não exige transparência em toda peça | ricochete, onda, guarda, mergulho | Planejado; original |
-| EN-FERRUMIA | 6 inimigos mecânicos | drone, engrenagem, sentinela, autômato, magnético e núcleo | peças reutilizáveis em atlas sem reutilizar silhueta completa | patrulha, tiro, montagem, stagger | Planejado; original |
+| EN-FERRUMIA | 6 inimigos mecânicos | drone, engrenagem, sentinela, autômato, magnético e núcleo | peças reutilizáveis em atlas sem reutilizar silhueta completa | patrulha, tiro, montagem, stagger | Dados/saques offline e seis silhuetas procedurais blockout integrados; IA/rigs/animações finais pendentes; original |
 | EN-IVERN | 6 inimigos de geada | floco, raposa, cristal, nevasca, guardião e sentinela | rig de criatura e partículas limitadas | pulo, névoa, ataque vertical, retorno | Planejado; original |
 | EN-UMBRAL | 6 inimigos de reflexo | eco, borboleta, espelho, sombra, ilusão e vigia | mesh leve; dissolve/duplicata por shader | invisibilidade curta e leitura de pista | Planejado; original |
 | EN-NEXO | ecos de cada região | variações narrativas locais dos inimigos aprovados | combinações de material e comportamento; não só troca de cor | ataques combinados e reações próprias | Planejado; original |
@@ -36,7 +36,7 @@
 | ENV-NIMBARA | floresta e três subáreas | folhagem verde, bioluminescência turquesa/violeta | kits de árvore, raiz, ruína, lago e trilha; atlas 2K por região | vento/folha/água em ciclos baratos | Blockout da clareira com trilha, árvores, raízes, cristais e Âncora; subáreas e arte final planejadas; original |
 | ENV-AURELIO | deserto/templo/oásis | duna dourada, pedra coral, céu violeta | módulos de ruína e plataforma; terreno com rota | poeira, mecanismo, faixa de calor | Expedição blockout selecionável com marcos de arenito, cristas decorativas e fragmentos do templo; puzzles temporais, plataformas e arte final pendentes; original |
 | ENV-VESPER | porto/ilhas/caverna | água cobalto, coral, pontes de luz | kit de costa, cavernas, skiff e farol | maré, água, barco e ponte | Blockout costeiro procedural com enseadas, cais e corais acessível como expedição; maré interativa, subáreas e arte final pendentes; original |
-| ENV-FERRUMIA | cidade/trilhos/torre | cobre, magenta, azul elétrico | kit modular, plataformas, elevadores e cabos | trilhos/elevadores e máquinas | Planejado; original |
+| ENV-FERRUMIA | cidade/trilhos/torre | cobre, magenta, azul elétrico | kit modular, plataformas, elevadores e cabos | trilhos/elevadores e máquinas | Expedição blockout com trilhos estáticos, quatro torres e engrenagens decorativas; elevadores, máquinas interativas, subáreas e arte final pendentes; original |
 | ENV-IVERN | vale/templo/picos | neve pérola, aurora lilás/dourada | terreno, cristais e pontes; material neve mobile | neve leve, corrente de vento e aurora | Planejado; original |
 | ENV-UMBRAL | jardim/galeria/palácio | violeta profundo, rosa, prata | módulos duplicáveis com variantes de rota | transição de geometria discreta | Planejado; original |
 | ENV-NUCLEO | ponte/salão/coração | mistura de paletas sem perder legibilidade | kit modular com pontos de âncora e arenas boss | transições de fase e fragmentos | Planejado; original |
@@ -151,3 +151,15 @@ GLB é formato de intercâmbio; preservar fonte editável em arquivo de criaçã
 | Cais do Porto da Lua | Marcos visuais e obstáculos da rota | Vesper | Tábuas de madeira azul-marinho/coral e postes | 2 cais modulares, meshes simples; sem veículo ou travessia aquática | Materiais foscos mobile | Sem animação | Blockout integrado; barco, interação e arte final pendentes | Geometria procedural original do projeto |
 | Corais da Enseada | Silhuetas de navegação e cobertura visual | Vesper | Núcleo coral com galhos em coral e turquesa | Grupos pequenos de cilindros/esferas low-poly | Materiais opacos estilizados | Sem animação | Blockout integrado; assets finais pendentes | Geometria procedural original do projeto |
 | Seis criaturas de Vesper | Identificar encontros distintos à distância | Vesper | Bolha ciano, coral ramificado, água-viva azul/lilás, caranguejo perolado, espírito turquesa e sentinela marinho | Malhas procedurais leves; sem rig ou esqueleto no blockout | Materiais opacos estilizados; pontos de cor por espécie | IA usa comportamentos existentes; clips de animação ainda ausentes | Seis silhuetas de blockout integradas; modelos rigados, telegraphs e animações finais pendentes | Código e geometria originais do projeto; sem recursos comerciais |
+
+
+## Criaturas blockout de Ferrúmia
+
+| Asset | Papel / desenho / paleta | Região | Estado e origem |
+|---|---|---|---|
+| EN-FER-DRONE | Drone Prismático; corpo compacto grafite com núcleo prismático ciano e aros magenta | Ferrúmia | Dados e silhueta de blockout integrados; rig, ataque telegráfico e arte final pendentes; original |
+| EN-FER-ENGRENAGEM | Engrenagem Viva; aro de cobre com dentes dourados e núcleo rosado | Ferrúmia | Dados e silhueta de blockout integrados; movimento animado, rig e arte final pendentes; original |
+| EN-FER-SENTINELA | Sentinela de Cobre; guardião robusto com placa frontal e olhos ciano | Ferrúmia | Dados e silhueta de blockout integrados; rig, quebra de defesa e arte final pendentes; original |
+| EN-FER-AUTOMATO | Autômato Instável; torso geométrico violeta com núcleo suspenso | Ferrúmia | Dados e silhueta de blockout integrados; estados alternados, rig e arte final pendentes; original |
+| EN-FER-MAGNETICO | Guardião Magnético; silhueta grande com anel orbital ciano | Ferrúmia | Dados e silhueta de blockout integrados; puxão, rig e arte final pendentes; original |
+| EN-FER-NUCLEO | Núcleo Mecânico; esfera rosa envolvida por lâminas de metal | Ferrúmia | Dados e silhueta de blockout integrados; invocação, rig e arte final pendentes; original |

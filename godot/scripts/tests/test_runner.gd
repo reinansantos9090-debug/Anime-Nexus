@@ -38,6 +38,7 @@ func _init()->void:
     _test_nimbara_vertical_slice_data_and_quest()
     _test_vesper_region_data()
     _test_aurelio_region_data()
+    _test_ferrumia_region_data()
     _test_boss_telegraph()
     _test_static_field_slow()
     if failures.is_empty():
@@ -353,6 +354,21 @@ func _test_aurelio_region_data()->void:
         if content.MONSTERS.has(enemy_id):
             for item_id in content.MONSTERS[enemy_id].get("loot",[]):
                 _expect(content.ITEMS.has(item_id),"Aurélio: local loot item missing: "+str(item_id))
+    maps.free()
+    content.free()
+
+func _test_ferrumia_region_data()->void:
+    var maps=MapScript.new()
+    var content=ContentScript.new()
+    var ferrumia:Dictionary=maps.get_map("ferrumia")
+    var enemies:Array=ferrumia.get("enemies",[])
+    _expect(str(ferrumia.get("name","")).begins_with("Ferrúmia"),"Ferrúmia: expedition map metadata missing")
+    _expect(enemies.size()==6,"Ferrúmia: expected six local encounter species")
+    for enemy_id in enemies:
+        _expect(content.MONSTERS.has(enemy_id),"Ferrúmia: local monster definition missing: "+str(enemy_id))
+        if content.MONSTERS.has(enemy_id):
+            for item_id in content.MONSTERS[enemy_id].get("loot",[]):
+                _expect(content.ITEMS.has(item_id),"Ferrúmia: local loot item missing: "+str(item_id))
     maps.free()
     content.free()
 
