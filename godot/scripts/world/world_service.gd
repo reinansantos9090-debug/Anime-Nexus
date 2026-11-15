@@ -61,6 +61,18 @@ func build_biome(id: String) -> void:
     portal=Factory.make_portal(world_root,Vector3(0,0,0),b.get("accent",Color("#5bdcff")))
     _make_hazard_markers(id,b.get("accent",Color.WHITE))
 
+func _story_flag(flag_id:String)->bool:
+    if not is_instance_valid(root):return false
+    var game_state:Variant=root.get("state")
+    if not game_state is Node:return false
+    var save_data:Variant=game_state.get("data")
+    if not save_data is Dictionary:return false
+    var story_data:Variant=save_data.get("story",{})
+    if not story_data is Dictionary:return false
+    var flags:Variant=story_data.get("flags",{})
+    if not flags is Dictionary:return false
+    return bool(flags.get(flag_id,false))
+
 func _make_biome_decor(id:String,b:Dictionary)->void:
     var accent:Color=b.get("accent",Color.WHITE)
     var ground:Color=b.get("ground",Color("#4ea66f"))
@@ -77,10 +89,11 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
             var interaction_points:Dictionary=b.get("interaction_points",{})
             if interaction_points.has("akari_flame_bloom"):
                 var ember_point:Vector3=interaction_points["akari_flame_bloom"]
-                _memory_bloom(ember_point,Color("#ff8b59"))
-                var ember_ring:=Factory.torus(world_root,0.48,0.57,ember_point+Vector3(0,0.06,0),Color("#ff9a61"))
+                var ember_color:=Color("#ffd27a") if _story_flag("akari_flame_stabilized") else Color("#ff8b59")
+                _memory_bloom(ember_point,ember_color)
+                var ember_ring:=Factory.torus(world_root,0.48,0.57,ember_point+Vector3(0,0.06,0),ember_color)
                 ember_ring.rotation.x=PI*0.5
-                var ember_marker:=Factory.make_crystal(world_root,ember_point+Vector3(0,0.62,0),Color("#ff9a61"))
+                var ember_marker:=Factory.make_crystal(world_root,ember_point+Vector3(0,0.62,0),ember_color.lightened(0.08))
                 ember_marker.scale=Vector3(0.34,0.34,0.34)
             for p in b.get("memory_echoes",[]):
                 _memory_echo(p)
