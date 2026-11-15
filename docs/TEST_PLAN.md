@@ -74,6 +74,7 @@ Este fluxo requer teste manual no Godot; nenhum job longo/emulador automático s
 - Suprema Tempestade de Safira (runner manual curto): carga parcial, limite em 100, bloqueio abaixo de 100 e consumo ao ativar. No jogo, ganhar carga com ataques/derrotas, tocar quando cheia, confirmar bônus por 10 s e expiração; confirmar também persistência do medidor no save local.
 
 - HUD horizontal: tocar Arsenal e percorrer somente instrumentos desbloqueados; usar Gadget sem estoque sem alterar inventário; conferir Bolsa e Visuais. Confirmar separação entre os quatro botões e joystick/ataque em 1280×720 e em aparelho.
+- Central de operações: conferir lista rolável de ações em duas colunas, acesso aos botões após o fim da área visível e botão Fechar separado; a estrutura tem uma checagem curta no runner manual, mas o gesto e a leitura em tela touch ainda dependem de validação em aparelho.
 
 - Bolsa: abrir em exploração/hub, conferir nomes e quantidades com o inventário persistido, obter um item e confirmar atualização; fechar e voltar sem alteração de saldo.
 

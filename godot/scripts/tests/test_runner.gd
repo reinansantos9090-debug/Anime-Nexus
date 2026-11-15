@@ -985,6 +985,8 @@ func _test_mira_memory_prism_quest()->void:
     _expect(menu_file!=null,"Mira story: operations menu source should be readable")
     if menu_file:
         _expect(menu_file.get_as_text().contains('["mira_story"'),"Mira story: menu entry missing")
+        _expect(menu_file.get_as_text().contains("ScrollContainer.new()"),"Operations menu: action list must remain scrollable")
+        _expect(menu_file.get_as_text().contains("GridContainer.new()"),"Operations menu: scroll layout must keep two columns")
         menu_file.close()
     var root_file:=FileAccess.open("res://scripts/game_root.gd",FileAccess.READ)
     _expect(root_file!=null,"Mira story: game root action is not readable")

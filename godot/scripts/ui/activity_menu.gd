@@ -57,12 +57,26 @@ func _build() -> void:
     subtitle.add_theme_font_size_override("font_size",15)
     panel.add_child(subtitle)
 
+    var actions_scroll:=ScrollContainer.new()
+    actions_scroll.position=Vector2(24,100)
+    actions_scroll.size=Vector2(732,492)
+    actions_scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+    actions_scroll.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_AUTO
+    panel.add_child(actions_scroll)
+
+    var actions_grid:=GridContainer.new()
+    actions_grid.columns=2
+    actions_grid.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+    actions_grid.add_theme_constant_override("h_separation",14)
+    actions_grid.add_theme_constant_override("v_separation",8)
+    actions_scroll.add_child(actions_grid)
+
     for i in range(ACTIONS.size()):
         var data = ACTIONS[i]
         var b := Button.new()
         b.text = str(data[1]) + "\n" + str(data[2])
-        b.position = Vector2(32 + (i % 2) * 360, 108 + int(i / 2) * 72)
-        b.size = Vector2(338, 64)
+        b.custom_minimum_size = Vector2(338,70)
+        b.size_flags_horizontal=Control.SIZE_EXPAND_FILL
         b.add_theme_font_size_override("font_size",15)
         var normal := StyleBoxFlat.new()
         normal.bg_color = Color("#162235ee")
@@ -76,7 +90,7 @@ func _build() -> void:
         b.add_theme_stylebox_override("pressed", hover)
         action_buttons[str(data[0])]=b
         b.pressed.connect(_choose.bind(str(data[0])))
-        panel.add_child(b)
+        actions_grid.add_child(b)
 
     var close := Button.new()
     close.text = "FECHAR"
