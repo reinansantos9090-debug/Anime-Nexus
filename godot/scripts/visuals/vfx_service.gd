@@ -74,15 +74,70 @@ func telegraph_circle(parent:Node3D,pos:Vector3,radius:float,duration:float,colo
 
 func reaction_feedback(parent:Node3D,pos:Vector3,reaction_id:String,radius:float)->void:
     var color:=Color("#a9eaff")
+    var title:="RESSONÂNCIA!"
     match reaction_id:
-        "conductive_chain":color=Color("#7ceaff")
-        "ember_storm":color=Color("#ff9a55")
-        "frost_mist":color=Color("#a7e8ff")
-        "lunar_bloom":color=Color("#d6b4ff")
-        "prism_echo":color=Color("#ff8fe7")
-        "resonance_singularity":color=Color("#a88bff")
+        "conductive_chain":
+            color=Color("#7ceaff")
+            title="CONDUÇÃO!"
+        "ember_storm":
+            color=Color("#ff9a55")
+            title="TORMENTA DE BRASAS!"
+        "frost_mist":
+            color=Color("#a7e8ff")
+            title="NÉVOA GLACIAL!"
+        "lunar_bloom":
+            color=Color("#d6b4ff")
+            title="FLOR LUNAR!"
+        "prism_echo":
+            color=Color("#ff8fe7")
+            title="ECO PRISMÁTICO!"
+        "resonance_singularity":
+            color=Color("#a88bff")
+            title="SINGULARIDADE!"
     ring(parent,pos,maxf(0.65,minf(radius,3.2)),color,0.32)
     burst(parent,pos+Vector3(0,0.7,0),color,8.0)
+    var label:=Label3D.new()
+    label.text=title
+    label.font_size=20
+    label.outline_size=5
+    label.modulate=color
+    label.position=pos+Vector3(0,1.7,0)
+    parent.add_child(label)
+    var label_tween:=create_tween()
+    label_tween.set_parallel(true)
+    label_tween.tween_property(label,"position",label.position+Vector3(0,0.8,0),0.7)
+    label_tween.tween_property(label,"modulate:a",0.0,0.7)
+    label_tween.set_parallel(false)
+    label_tween.tween_callback(label.queue_free)
+    if reaction_id=="frost_mist":
+        _reaction_mist(parent,pos,radius,color)
+
+func _reaction_mist(parent:Node3D,pos:Vector3,radius:float,color:Color)->void:
+    var cloud:=MeshInstance3D.new()
+    var mesh:=SphereMesh.new()
+    mesh.radius=0.5
+    mesh.height=1.0
+    mesh.radial_segments=12
+    mesh.rings=6
+    var material:=StandardMaterial3D.new()
+    material.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
+    material.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA
+    material.cull_mode=BaseMaterial3D.CULL_DISABLED
+    material.albedo_color=Color(color.r,color.g,color.b,0.14)
+    material.emission_enabled=true
+    material.emission=color
+    material.emission_energy_multiplier=0.35
+    mesh.material=material
+    cloud.mesh=mesh
+    cloud.position=pos+Vector3(0,0.7,0)
+    cloud.scale=Vector3(maxf(1.2,radius*2.0),1.4,maxf(1.2,radius*2.0))
+    parent.add_child(cloud)
+    var mist_tween:=create_tween()
+    mist_tween.set_parallel(true)
+    mist_tween.tween_property(material,"albedo_color:a",0.0,0.8)
+    mist_tween.tween_property(cloud,"scale",cloud.scale*1.08,0.8)
+    mist_tween.set_parallel(false)
+    mist_tween.tween_callback(cloud.queue_free)
 
 func death(parent:Node3D,pos:Vector3,color:=Color("#9ea7b8"))->void:
     burst(parent,pos+Vector3(0,0.8,0),color,20.0)
