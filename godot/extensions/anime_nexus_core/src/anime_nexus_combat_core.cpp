@@ -19,6 +19,8 @@ void AnimeNexusCombatCore::_bind_methods() {
             &AnimeNexusCombatCore::companion_decision);
     ClassDB::bind_method(D_METHOD("companion_damage", "base_damage", "player_level", "role_multiplier"),
             &AnimeNexusCombatCore::companion_damage);
+    ClassDB::bind_method(D_METHOD("companion_avoidance_turn", "forward_blocked", "left_blocked",
+            "right_blocked", "prefer_left"), &AnimeNexusCombatCore::companion_avoidance_turn);
 }
 
 Dictionary AnimeNexusCombatCore::calculate_damage(double weapon_damage, int character_level,

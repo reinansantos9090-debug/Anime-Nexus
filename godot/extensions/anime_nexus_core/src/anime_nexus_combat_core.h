@@ -21,6 +21,8 @@ public:
     Dictionary advance_experience(const Dictionary &hunter, const Dictionary &progression, int64_t amount) const;
     Dictionary companion_decision(double owner_distance, double enemy_distance, double owner_hp_ratio) const;
     double companion_damage(double base_damage, int player_level, double role_multiplier) const;
+    double companion_avoidance_turn(bool forward_blocked, bool left_blocked, bool right_blocked,
+            bool prefer_left) const;
 };
 
 } // namespace godot

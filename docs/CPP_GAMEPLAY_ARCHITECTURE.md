@@ -10,7 +10,7 @@ GDScript faz a composição de cenas e conecta eventos/controles com os serviço
 
 | Linguagem | Uso no projeto |
 |---|---|
-| C++17 | Regras de combate, reações elementais e futura lógica de progressão, missões, IA e persistência. |
+| C++17 | Regras de combate, reações elementais, progressão já migrada parcialmente e decisões locais de estado/dano/desvio de companheiros. Missões e demais domínios continuam migrando. |
 | GDScript | Montagem de cenas, sinais, UI e ponte curta para os nós do motor; sem regras duplicadas. |
 | Godot Shader Language | Materiais/shaders estilizados no renderer Mobile. |
 | Java/Kotlin | Plugin Android apenas quando uma API nativa do sistema exigir uma ponte. O app Kotlin legado continua isolado. |
@@ -24,6 +24,8 @@ GDScript faz a composição de cenas e conecta eventos/controles com os serviço
 - `calculate_damage`: aplica nível, bônus, chance de crítico e multiplicador com limites seguros; devolve dano e indicador de crítico.
 - `resolve_elemental_reaction`: tabela determinística e sem dependência de ordem entre pares, com ID, multiplicador, raio e estado resultante.
 - `advance_experience`: aplica carry-over, curva de requisitos, ponto de habilidade e crescimento de atributos ao subir de nível.
+
+O núcleo de companheiros acrescenta `companion_decision` e `companion_damage`, com critérios determinísticos de seguir, reagrupar, proteger e atacar. A navegação de curta distância também é decidida no C++ por `companion_avoidance_turn`: a camada de cena fornece três sondagens de colisão locais e o núcleo escolhe um desvio lateral estável. GDScript executa o raycast e aplica o movimento; se o companheiro continuar bloqueado por dois segundos e já estiver afastado, ele retorna à formação para evitar ficar preso. Isso é steering local de protótipo, não navegação global por navmesh; mapas com obstáculos complexos ainda exigem validação e evolução do sistema.
 
 `AnimeNexusQuestCore` é registrado na mesma biblioteca e expõe `start_quest` e `apply_event`: confere os tipos de objetivos, incrementa progresso, impede reabertura/conclusão duplicada, desbloqueia a próxima missão e calcula XP/materiais. `quest_service.gd` traduz interações do mundo em eventos e atualiza sinais/recompensas.
 

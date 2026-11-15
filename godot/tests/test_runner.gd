@@ -94,6 +94,10 @@ func _test_native_combat_core()->void:
     _expect(str(regroup["state"])=="regroup","C++ companion: leash recovery decision mismatch")
     _expect(str(guard["state"])=="guard","C++ companion: low-health guard decision mismatch")
     _expect(is_equal_approx(core.companion_damage(10.0,3,1.2),13.08),"C++ companion: role/level damage formula mismatch")
+    _expect(is_equal_approx(core.companion_avoidance_turn(false,false,false,true),0.0),"C++ companion: clear path should not steer")
+    _expect(core.companion_avoidance_turn(true,false,true,true)>0.0,"C++ companion: blocked left/right policy mismatch")
+    _expect(core.companion_avoidance_turn(true,true,false,false)<0.0,"C++ companion: open right path should steer right")
+    _expect(core.companion_avoidance_turn(true,true,true,true)>1.0,"C++ companion: fully blocked escape turn mismatch")
     var hunter:Dictionary={"level":1,"xp":0,"xp_to_next":120,"hp":140,"max_hp":140,"max_energy":100.0}
     var progression:Dictionary={"skill_points":0}
     var level_result:Dictionary=core.advance_experience(hunter,progression,300)

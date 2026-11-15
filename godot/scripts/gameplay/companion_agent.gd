@@ -21,6 +21,8 @@ var skill_cooldown:=0.0
 var move_speed:=4.1
 var state_name:="follow"
 var title_tag:Label3D
+var avoidance_prefer_left:=true
+var stalled_time:=0.0
 
 func configure(owner:Node3D,combat:Node,state:Node,id:String,title:String,element_id:String,role_id:String,
         body:Color,accent:Color,offset:Vector3)->void:
@@ -39,6 +41,7 @@ func configure(owner:Node3D,combat:Node,state:Node,id:String,title:String,elemen
     global_position=owner.global_position+offset
     Factory.make_hunter(self,body_color,accent_color,Color("#edc19c"))
     title_tag=Label3D.new()
+    set_physics_process(true)
     title_tag.text=display_name
     title_tag.font_size=18
     title_tag.outline_size=5
@@ -52,7 +55,7 @@ func reset_formation()->void:
     if is_instance_valid(owner_actor):
         global_position=owner_actor.global_position+formation_offset
 
-func _process(delta:float)->void:
+func _physics_process(delta:float)->void:
     if not is_instance_valid(owner_actor):return
     attack_cooldown=maxf(0.0,attack_cooldown-delta)
     skill_cooldown=maxf(0.0,skill_cooldown-delta)
@@ -137,10 +140,41 @@ func _follow_owner(delta:float,speed_multiplier:float)->void:
     var direction:=destination-global_position
     direction.y=0.0
     var distance:=direction.length()
-    if distance<=0.38:return
+    if distance<=0.38:
+        stalled_time=0.0
+        return
     direction/=distance
+    var forward_blocked:=_ray_blocked(direction,1.35)
+    var steering:float=0.0
+    if forward_blocked:
+        var left_direction:=direction.rotated(Vector3.UP,0.95)
+        var right_direction:=direction.rotated(Vector3.UP,-0.95)
+        var left_blocked:=_ray_blocked(left_direction,1.15)
+        var right_blocked:=_ray_blocked(right_direction,1.15)
+        steering=native_core.companion_avoidance_turn(
+            true,left_blocked,right_blocked,avoidance_prefer_left)
+        avoidance_prefer_left=not avoidance_prefer_left
+    if absf(steering)>0.001:
+        direction=direction.rotated(Vector3.UP,steering).normalized()
+    var before:=global_position
     global_position+=direction*move_speed*speed_multiplier*delta
+    if forward_blocked and global_position.distance_to(before)<delta*0.12:
+        stalled_time+=delta
+        if stalled_time>=2.0 and global_position.distance_to(owner_actor.global_position)>5.0:
+            reset_formation()
+            stalled_time=0.0
+    else:
+        stalled_time=0.0
     look_at(global_position+direction,Vector3.UP)
+
+func _ray_blocked(direction:Vector3,distance:float)->bool:
+    var world:=get_world_3d()
+    if world==null or not is_instance_valid(owner_actor):return false
+    var origin:=global_position+Vector3.UP*0.62
+    var query:=PhysicsRayQueryParameters3D.create(origin,origin+direction.normalized()*distance)
+    query.exclude=[get_rid(),owner_actor.get_rid()]
+    query.collide_with_areas=false
+    return not world.direct_space_state.intersect_ray(query).is_empty()
 
 func info()->Dictionary:
     return {"id":companion_id,"name":display_name,"element":element,"role":role,"state":state_name}
