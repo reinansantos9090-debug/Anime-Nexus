@@ -152,3 +152,10 @@ Runner Godot permanece manual; nenhum teste longo/emulador foi iniciado.
 - Avançar as oito linhas do prólogo e confirmar que a cena termina sem repetir texto placeholder e que todas as falas ficam no diário local.
 - Encadear conclusão e início de missão enquanto uma fala ainda está aberta; confirmar que os diálogos de Nimbara aparecem um de cada vez, sem substituir uns aos outros.
 - Fluxo curto, manual, sem emulador e sem job longo.
+
+
+### Formação offline ampliada (runner/manual)
+
+- Confirmar no runner que os sete aliados têm dados locais e que o pulso de suporte de Yuna restaura vida e energia quando solicitado.
+- No Android, abrir Formação, rolar a lista até Eiko, escolher dois aliados, fechar e reabrir; conferir seleção persistida e limite de dois.
+- A validação de rolagem/touch é manual e curta; sem emulador ou job longo automático.

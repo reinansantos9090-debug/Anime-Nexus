@@ -4,7 +4,12 @@ extends Node
 
 const COMPANIONS := {
     "akari_solen":{"name":"Akari Solen","element":"fire","role":"assault","body":Color("#9e3940"),"accent":Color("#ffb34d")},
-    "ren_aozora":{"name":"Ren Aozora","element":"wind","role":"controller","body":Color("#3b7770"),"accent":Color("#75e7d0")}
+    "ren_aozora":{"name":"Ren Aozora","element":"wind","role":"controller","body":Color("#3b7770"),"accent":Color("#75e7d0")},
+    "mira_yukari":{"name":"Mira Yukari","element":"ice","role":"controller","body":Color("#7279b7"),"accent":Color("#bcecff")},
+    "yuna_tsukari":{"name":"Yuna Tsukari","element":"moon","role":"support","body":Color("#514272"),"accent":Color("#e7d3ff")},
+    "shin_kuroki":{"name":"Shin Kuroki","element":"shadow","role":"controller","body":Color("#353047"),"accent":Color("#bd72e4")},
+    "haru_midori":{"name":"Haru Midori","element":"nature","role":"support","body":Color("#466c48"),"accent":Color("#a9df72")},
+    "eiko_aster":{"name":"Eiko Aster","element":"gravity","role":"controller","body":Color("#544c82"),"accent":Color("#ff9edc")}
 }
 
 const TRANSFORMATIONS := {

@@ -30,8 +30,8 @@ func _build()->void:
     shade.color=Color(0.01,0.02,0.05,0.84)
     root.add_child(shade)
     var panel:=Panel.new()
-    panel.position=Vector2(225,100)
-    panel.size=Vector2(830,500)
+    panel.position=Vector2(225,76)
+    panel.size=Vector2(830,560)
     root.add_child(panel)
     var title:=Label.new()
     title.text="FORMAÇÃO • ATÉ DOIS COMPANHEIROS"
@@ -39,38 +39,51 @@ func _build()->void:
     title.add_theme_font_size_override("font_size",26)
     panel.add_child(title)
     var subtitle:=Label.new()
-    subtitle.text="Akari e Ren são os aliados jogáveis nesta slice. A seleção fica salva offline."
+    subtitle.text="Escolha até dois aliados. Formação, papel e elemento ficam salvos offline."
     subtitle.position=Vector2(32,64)
     subtitle.add_theme_font_size_override("font_size",15)
     panel.add_child(subtitle)
+    var list:=ScrollContainer.new()
+    list.position=Vector2(24,105)
+    list.size=Vector2(780,320)
+    list.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+    panel.add_child(list)
+    var rows:=VBoxContainer.new()
+    rows.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+    rows.add_theme_constant_override("separation",5)
+    list.add_child(rows)
+    var list:=ScrollContainer.new()
+    list.position=Vector2(24,105)
+    list.size=Vector2(780,320)
+    list.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+    panel.add_child(list)
+    var rows:=VBoxContainer.new()
+    rows.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+    rows.add_theme_constant_override("separation",5)
+    list.add_child(rows)
     var ids:Array=[]
     if content_database:
         ids=content_database.COMPANIONS.keys()
         ids.sort()
-    for index in range(ids.size()):
-        var id:=str(ids[index])
+    for value in ids:
+        var id:=str(value)
         var data:Dictionary=content_database.COMPANIONS[id]
-        var card:=Panel.new()
-        card.position=Vector2(28,112+index*112)
-        card.size=Vector2(770,88)
-        panel.add_child(card)
         var check:=CheckBox.new()
-        var role_name:="Controle" if str(data.get("role",""))=="controller" else "Ataque"
+        var role_name:="Controle" if str(data.get("role",""))=="controller" else ("Suporte" if str(data.get("role",""))=="support" else "Ataque")
         check.text="%s • %s • %s"%(str(data.get("name",id)),str(data.get("element","")).to_upper(),role_name)
-        check.position=Vector2(18,19)
-        check.size=Vector2(720,52)
+        check.custom_minimum_size=Vector2(750,48)
         check.add_theme_font_size_override("font_size",19)
         check.toggled.connect(_toggle_companion.bind(id))
-        card.add_child(check)
+        rows.add_child(check)
         selection_boxes[id]=check
     status_label=Label.new()
-    status_label.position=Vector2(30,350)
+    status_label.position=Vector2(30,432)
     status_label.size=Vector2(550,40)
     status_label.add_theme_font_size_override("font_size",15)
     panel.add_child(status_label)
     var close_button:=Button.new()
     close_button.text="FECHAR"
-    close_button.position=Vector2(620,420)
+    close_button.position=Vector2(620,493)
     close_button.size=Vector2(170,44)
     close_button.pressed.connect(hide_menu)
     panel.add_child(close_button)

@@ -154,6 +154,16 @@ func _test_companion_agent_setup()->void:
     _expect(str(companion.info().get("role",""))=="assault","Companion: assault role was not configured")
     _expect(companion.title_tag.text=="Akari","Companion: visible identity tag missing")
     companion.free()
+    state.data["hunter"]["hp"]=50.0
+    state.data["hunter"]["energy"]=10.0
+    var support=CompanionScript.new()
+    support.configure(owner,combat,state,"yuna_tsukari","Yuna","moon","support",
+        Color("#514272"),Color("#e7d3ff"),Vector3(2,0,2))
+    support._support_owner()
+    _expect(is_equal_approx(float(state.data["hunter"]["hp"]),78.0),"Companion: local support pulse did not restore health")
+    _expect(is_equal_approx(float(state.data["hunter"]["energy"]),22.0),"Companion: support pulse did not restore energy")
+    _expect(str(support.info().get("state",""))=="support","Companion: support action state missing")
+    support.free()
     combat.free()
     owner.free()
     state.free()
@@ -294,6 +304,7 @@ func _test_nimbara_vertical_slice_data_and_quest()->void:
     _expect(state.data["hunter"]["name"]=="Kaien Arashi","Slice: default playable character must be Kaien")
     _expect(state.data["loadout"]["weapon"]=="fulgor_gauntlets","Slice: Kaien loadout mismatch")
     _expect(maps.get_map("nimbara")["name"].begins_with("Nimbara"),"Slice: Nimbara map data missing")
+    _expect(content.COMPANIONS.size()==7 and content.COMPANIONS.has("yuna_tsukari"),"Slice: original ally roster or local support profile missing")
     _expect(content.MONSTERS.has("moss_hopper") and content.MONSTERS.has("leaf_spark"),"Slice: Nimbara creatures missing")
     _expect(content.BOSSES.has("crystal_stag"),"Slice: Cérvido de Cristal boss data missing")
     for ability_id in ["lightning_step","sky_chain","static_field"]:

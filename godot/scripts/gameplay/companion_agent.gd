@@ -72,7 +72,10 @@ func _physics_process(delta:float)->void:
     var hp_ratio:=float(hunter.get("hp",1.0))/maxf(1.0,float(hunter.get("max_hp",1.0)))
     var decision:Dictionary=native_core.companion_decision(owner_distance,enemy_distance,hp_ratio,command)
     state_name=str(decision.get("state","follow"))
-    if target and (state_name=="attack" or (state_name=="guard" and enemy_distance<=2.6)):
+    if combat_active and role=="support" and hp_ratio<=0.68 and skill_cooldown<=0.0:
+        _support_owner()
+        skill_cooldown=15.0
+    elif target and (state_name=="attack" or (state_name=="guard" and enemy_distance<=2.6)):
         _attack_target(target)
     else:
         _follow_owner(delta,float(decision.get("speed_multiplier",1.0)))
@@ -91,6 +94,15 @@ func _nearest_target(radius:float)->Node3D:
             nearest=enemy
             best_distance=distance
     return nearest
+
+func _support_owner()->void:
+    if not is_instance_valid(owner_actor) or game_state==null:return
+    var hunter:Dictionary=game_state.get_hunter()
+    var max_hp:=float(hunter.get("max_hp",1.0))
+    hunter["hp"]=minf(max_hp,float(hunter.get("hp",1.0))+max_hp*0.20)
+    hunter["energy"]=minf(float(hunter.get("max_energy",100.0)),float(hunter.get("energy",0.0))+12.0)
+    game_state.state_changed.emit()
+    state_name="support"
 
 func _attack_target(target:Node3D)->void:
     var direction:=target.global_position-global_position
