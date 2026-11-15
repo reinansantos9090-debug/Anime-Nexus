@@ -228,7 +228,7 @@ func _enter_expedition()->void:
     var ids:Array=maps.maps.keys()
     ids.sort()
     var map_id:=str(ids[portal_step%ids.size()])
-    if int(state.data["world"].get("completed_expeditions",0))==0 or "nimbara_03" in state.data["quests"]["active"] or "nimbara_side_01" in state.data["quests"]["active"]:
+    if int(state.data["world"].get("completed_expeditions",0))==0 or "nimbara_03" in state.data["quests"]["active"] or "nimbara_side_01" in state.data["quests"]["active"] or "nimbara_side_02" in state.data["quests"]["active"]:
         map_id="nimbara"
     portal_service.enter_expedition(map_id)
     state.data["world"]["map_id"]=map_id
@@ -244,18 +244,40 @@ func _enter_expedition()->void:
     _set_companion_combat(true)
     _spawn_wave(0 if anchor_return else mini(16,perf.max_enemies()))
     quests.add_map(map_id)
-    hud.set_interaction_visible(map_id=="nimbara" and "nimbara_03" in state.data["quests"]["active"])
+    var has_nimbara_interaction:= "nimbara_03" in state.data["quests"]["active"] or "nimbara_side_02" in state.data["quests"]["active"]
+    hud.set_interaction_visible(map_id=="nimbara" and has_nimbara_interaction)
     hud.set_mode("NIMBARA • APROXIME-SE DA ÂNCORA" if anchor_return else "EXPEDIÇÃO • %s • 0/%d"%[maps.get_map(map_id)["name"],activity_goal])
 
 func _interact()->void:
-    if mode!="EXPEDITION" or "nimbara_03" not in state.data["quests"]["active"]:return
-    var anchor_position:=Vector3(0,0,-8.5)
-    if player.position.distance_to(anchor_position)>3.2:
-        hud.set_mode("ÂNCORA • APROXIME-SE DO CRISTAL NO CENTRO DA CLAREIRA")
+    if mode!="EXPEDITION":return
+    var active:Array=state.data["quests"].get("active",[])
+    if "nimbara_03" in active:
+        var anchor_position:=Vector3(0,0,-8.5)
+        if player.position.distance_to(anchor_position)>3.2:
+            hud.set_mode("ÂNCORA • APROXIME-SE DO CRISTAL NO CENTRO DA CLAREIRA")
+            return
+        quests.add_interaction("resonance_anchor")
+        hud.set_interaction_visible(false)
+        audio.level_up()
         return
-    quests.add_interaction("resonance_anchor")
-    hud.set_interaction_visible(false)
-    audio.level_up()
+    if "nimbara_side_02" in active and str(portal_service.destination)=="nimbara":
+        var positions:Array=maps.get_map("nimbara").get("memory_echoes",[])
+        for index in range(positions.size()):
+            var marker_position:Vector3=positions[index]
+            if player.position.distance_to(marker_position)>3.0:continue
+            var flag_id:="nimbara_memory_echo_"+str(index+1)
+            if bool(state.data["story"]["flags"].get(flag_id,false)):
+                hud.set_mode("ECO DE MEMÓRIA • ESTE FRAGMENTO JÁ FOI SINCRONIZADO")
+                return
+            state.set_story_flag(flag_id,true)
+            quests.add_interaction("memory_echo")
+            audio.level_up()
+            var progress:=int(state.data["quests"]["progress"].get("nimbara_side_02",0))
+            hud.set_mode("ECO DE MEMÓRIA • %d/3"%progress)
+            if "nimbara_side_02" not in state.data["quests"]["active"]:
+                hud.set_interaction_visible(false)
+            return
+        hud.set_mode("ECO DE MEMÓRIA • APROXIME-SE DE UM CRISTAL PÁLIDO")
 
 func _enter_rift()->void:
     if "nimbara_01" in state.data["quests"]["active"]:
@@ -295,27 +317,31 @@ func _enter_versus()->void:
 func _side_dialogue_closed()->void:
     side_dialogue_active=false
 
-func _show_side_quest_dialogue(speaker:String,line:String)->void:
+func _show_local_quest_dialogue(title:String,speaker:String,line:String)->void:
     if cutscene==null or not is_instance_valid(cutscene):return
     side_dialogue_active=true
-    cutscene.show_line("NIMBARA • SEMENTES PARA LIORA",speaker,line)
+    cutscene.show_line("MISSÃO • "+title,speaker,line)
 
-func _start_nimbara_side_quest()->void:
+func _start_optional_quest(quest_id:String)->void:
     if mode!="HQ":
         hud.set_mode("MISSÕES SECUNDÁRIAS • CONSULTE NO OBSERVATÓRIO")
         return
     if cutscene and cutscene.is_active():
         hud.set_mode("DIÁLOGO • TERMINE A CENA ATUAL")
         return
-    const quest_id:="nimbara_side_01"
     var completed:Array=state.data["quests"].get("completed",[])
     var active:Array=state.data["quests"].get("active",[])
+    for active_id in active:
+        var active_name:=str(active_id)
+        if active_name.begins_with("nimbara_side_") and active_name!=quest_id:
+            hud.set_mode("MISSÃO • CONCLUA A SECUNDÁRIA ATIVA PRIMEIRO")
+            return
     var quest:Dictionary=quests.get_quest(quest_id)
     if quest_id in completed:
-        _show_side_quest_dialogue("Liora",str(quest.get("completion_dialogue","A clareira agradece.")))
+        _show_local_quest_dialogue(str(quest.get("title",quest_id)),str(quest.get("speaker","Liora")),str(quest.get("completion_dialogue","A clareira agradece.")))
         return
     if quest_id not in active:quests.start(quest_id)
-    _show_side_quest_dialogue("Liora",str(quest.get("start_dialogue","Ajude a clareira.")))
+    _show_local_quest_dialogue(str(quest.get("title",quest_id)),str(quest.get("speaker","Liora")),str(quest.get("start_dialogue","Ajude a clareira.")))
 
 func _cycle_companion_order()->void:
     var order:Array=["auto","follow","retreat"]
@@ -391,7 +417,8 @@ func _run_operation(action_id:String)->void:
         "difficulty":_cycle_difficulty()
         "companions":
             if companion_roster_menu:companion_roster_menu.show_menu()
-        "side_quest":_start_nimbara_side_quest()
+        "side_quest":_start_optional_quest("nimbara_side_01")
+        "memory_quest":_start_optional_quest("nimbara_side_02")
         "companion_order":_cycle_companion_order()
 
 func _cycle_weapon()->void:
@@ -705,8 +732,8 @@ func _boss_down(b:Node3D,x:int)->void:
 func _quest_completed(id:String)->void:
     var q:Dictionary=quests.get_quest(id)
     if not q.is_empty():
-        if id=="nimbara_side_01":
-            call_deferred("_show_side_quest_dialogue","Liora",str(q.get("completion_dialogue","A clareira agradece.")))
+        if id.begins_with("nimbara_side_"):
+            call_deferred("_show_local_quest_dialogue",str(q.get("title",id)),str(q.get("speaker","Liora")),str(q.get("completion_dialogue","A clareira agradece.")))
         else:
             hud.set_mode("OBJETIVO CONCLUÍDO • "+str(q.get("title",id)))
     if id.begins_with("chapter_") or id.begins_with("boss_"):

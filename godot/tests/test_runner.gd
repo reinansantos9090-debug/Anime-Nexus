@@ -268,6 +268,7 @@ func _test_nimbara_vertical_slice_data_and_quest()->void:
     _expect(state.data["hunter"]["name"]=="Kaien Arashi","Slice: default playable character must be Kaien")
     _expect(state.data["loadout"]["weapon"]=="fulgor_gauntlets","Slice: Kaien loadout mismatch")
     _expect(maps.get_map("nimbara")["name"].begins_with("Nimbara"),"Slice: Nimbara map data missing")
+    _expect(maps.get_map("nimbara").get("memory_echoes",[]).size()==3,"Slice: Nimbara memory echoes are not configured")
     _expect(content.MONSTERS.has("moss_hopper") and content.MONSTERS.has("leaf_spark"),"Slice: Nimbara creatures missing")
     _expect(content.BOSSES.has("crystal_stag"),"Slice: Cérvido de Cristal boss data missing")
     for ability_id in ["lightning_step","sky_chain","static_field"]:
@@ -293,6 +294,9 @@ func _test_nimbara_vertical_slice_data_and_quest()->void:
     quests.start("nimbara_side_01")
     for i in range(4):quests.add_collect("nimbara_pollen")
     _expect("nimbara_side_01" in state.data["quests"]["completed"],"Slice: real pollen collection did not complete Liora’s side mission")
+    quests.start("nimbara_side_02")
+    for i in range(3):quests.add_interaction("memory_echo")
+    _expect("nimbara_side_02" in state.data["quests"]["completed"],"Slice: synchronizing three memory echoes did not complete the exploration mission")
     state.free()
     content.free()
     maps.free()

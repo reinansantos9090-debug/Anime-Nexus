@@ -16,6 +16,7 @@ func _ready() -> void:
             "accent":Color("#63ead0"),
             "fog":Color("#557f7c"),
             "enemies":["moss_hopper","leaf_spark","crystal_stagling","root_guardian"],
+            "memory_echoes":[Vector3(-6,0,10),Vector3(6,0,10),Vector3(0,0,17)],
             "obstacles":[
                 {"shape":"tree","pos":Vector3(-10,0,-9),"size":Vector3(1.6,4.5,1.6)},
                 {"shape":"tree","pos":Vector3(10,0,-10),"size":Vector3(1.5,4.1,1.5)},

@@ -14,7 +14,8 @@ const ACTIONS := [
     ["history","DIÁLOGOS","Continuar o prólogo de Kaien"],
     ["companions","COMPANHEIROS","Escolher até dois aliados offline"],
     ["companion_order","ORDEM • AUTO","Alternar entre combate, seguir e recuar"],
-    ["side_quest","MISSÃO SECUNDÁRIA • NIMBARA","Ajudar Liora a recuperar o pólen da clareira"],
+    ["side_quest","MISSÃO • SEMENTES PARA LIORA","Recolher pólen real deixado pelas criaturas"],
+    ["memory_quest","MISSÃO • ECOS NO LAGO","Encontrar três ecos de memória escondidos"],
     ["saves","SALVAMENTOS","Gerenciar três espaços locais"],
     ["difficulty","DIFICULDADE • AVENTURA","Alternar o desafio da campanha offline"]
 ]

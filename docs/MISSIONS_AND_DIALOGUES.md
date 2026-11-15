@@ -1,6 +1,6 @@
 # Missões e diálogos
 
-As missões da campanha e as entradas não marcadas na seção final são **Planejadas**, não conteúdo já integrado. Objetivos são condições verificáveis; cada recompensa é offline. Falas curtas abaixo são falas de contexto principal e precisam de diálogo roteado com retorno de estado. A missão secundária Sementes para Liora está integrada na slice e aguarda validação manual.
+As missões da campanha e as entradas não marcadas na seção final são **Planejadas**, não conteúdo já integrado. Objetivos são condições verificáveis; cada recompensa é offline. Falas curtas abaixo são falas de contexto principal e precisam de diálogo roteado com retorno de estado. As missões secundárias Sementes para Liora e Ecos no Lago estão integradas na slice e aguardam validação manual.
 
 ## Campanha principal — 60 missões
 
@@ -172,3 +172,6 @@ Cada missão usa ID estável, pré-requisitos, objetivo serializável, condiçã
 ## Missão secundária integrada na slice
 
 **Sementes para Liora** — disponível no terminal do Observatório após o início da partida. Liora pede quatro unidades de Pólen de Nimbara; cada item efetivamente recebido do saque de criaturas da floresta avança a missão, que concede 180 XP e duas Flores da Memória. Ao iniciar, Liora explica que os brotos perderam a memória da estação; ao concluir, agradece e comenta que a clareira pode florescer novamente. Progresso e recompensa usam a fila offline e o salvamento local. O runner Godot contém uma regressão curta para o objetivo collect; aguarda execução manual.
+
+
+**Ecos no Lago** — na margem do Lago das Memórias, Liora pede para sincronizar três ecos de memória distintos. Cada cristal tem uma posição e uma flag persistida própria; a mesma estação não pode contar duas vezes. O objetivo é avançado pelo evento `interact` do núcleo C++ e concede 220 XP, três Flores da Memória e dois Fragmentos de Ressonância. A conversa e o layout dos marcadores são originais; a interação visual aguarda validação manual.

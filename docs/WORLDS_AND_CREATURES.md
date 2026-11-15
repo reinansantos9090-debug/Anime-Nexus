@@ -20,3 +20,8 @@ Cada espécie precisa de locomotion/pathing, telegraph, hitbox, reação, recupe
 ## Masmorras e eventos
 
 Doze masmorras alvo devem variar rota e objetivo: fuga de raízes, sala de espelhos, corrida de plataforma, investigação sem combate, escolta, arena de ondas, quebra-cabeça temporal, barco em maré, máquina sob pressão, subida de ventos, memória em dupla e combate final cronometrado. Portais de desafio usam modificadores configuráveis offline. Evento local é escolhido ao entrar ou após marco de jogo e não expira por ausência.
+
+
+## Interações de exploração integradas
+
+Nimbara tem um pequeno lago estilizado e declara três posições fixas de ecos de memória junto à margem em `map_service.gd`. O world builder renderiza marcadores ciano discretos. A missão Ecos no Lago permite sincronizar cada cristal quando Kaien está a até 3 unidades; o ID individual fica salvo em `story.flags`, impedindo contagem duplicada após sair/recarregar.

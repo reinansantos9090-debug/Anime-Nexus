@@ -132,3 +132,8 @@ GLB é formato de intercâmbio; preservar fonte editável em arquivo de criaçã
 | Nome | Finalidade | Região | Descrição / paleta | Especificação | Materiais e animações | Estado | Origem / licença |
 |---|---|---|---|---|---|---|---|
 | `godot/shaders/biome_ground.gdshader` | Variação estilizada do solo sem textura externa | Biomas atuais; cores recebidas do catálogo de mapa | Ruído orgânico em duas escalas, bandas diffuse toon suaves; combina a cor de solo local com 28% da cor de acento | Shader spatial de baixo custo por material de piso; coordenadas em mundo evitam repetição visível entre blocos | Material rough, sem textura e sem animação; luz principal do ambiente | Em desenvolvimento; revisão visual e perfil mobile pendentes | Código original do projeto, sem dependências de arte proprietária |
+
+
+| `Memory Echo Marker` | Ponto interativo de exploração | Clareira de Nimbara | Cristal pálido ciano com halo turquesa e brilho orbital discreto | Nó leve com cristal, torus e esfera de acento; uma instância em cada uma das três posições do mapa | Materiais estilizados do projeto; sem animação até validação de custo | Blockout visual integrado | Geometria procedural original, criada no projeto |
+
+| `Nimbara Memory Lake` | Ponto de interesse e referência para a missão Ecos no Lago | Nimbara | Poça oval azul-petróleo com anéis de margem turquesa, escala pequena para mobile | Esfera achatada e dois torus com poucos vértices | Material toon procedural; sem transparência nem animação | Blockout visual integrado | Geometria procedural original, criada no projeto |

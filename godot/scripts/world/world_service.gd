@@ -62,6 +62,7 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
     var ground:Color=b.get("ground",Color("#4ea66f"))
     match id:
         "nimbara":
+            _make_memory_lake()
             for p in [Vector3(-20,0,-18),Vector3(20,0,-18),Vector3(-21,0,18),Vector3(20,0,19)]:
                 _tree(p,accent,Color("#493c3e"),4.8)
             for i in range(7):
@@ -69,6 +70,8 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
                 Factory.make_crystal(world_root,Vector3(x,0.05,-16.0 if i%2==0 else 16.0),accent.lerp(Color("#c084fc"),float(i%3)*0.22))
             for p in [Vector3(-8,0,13),Vector3(-5,0,14),Vector3(-2,0,13),Vector3(7,0,-15)]:
                 _memory_bloom(p,accent)
+            for p in b.get("memory_echoes",[]):
+                _memory_echo(p)
         "verdant_frontier":
             for p in [Vector3(-18,0,-18),Vector3(18,0,-17),Vector3(-19,0,17),Vector3(17,0,18)]:
                 _tree(p,accent,ground)
@@ -84,6 +87,20 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
         "sky_ruins":
             for p in [Vector3(-18,0,-15),Vector3(17,0,-15),Vector3(-17,0,15),Vector3(18,0,15)]:
                 _ruin_pillar(p,accent)
+
+func _make_memory_lake()->void:
+    var surface:=Factory.sphere(world_root,1.0,Vector3(0,0.06,13),Color("#347f97"))
+    surface.scale=Vector3(5.3,0.045,3.6)
+    Factory.torus(world_root,2.9,3.02,Vector3(0,0.09,13),Color("#57d6c7"))
+    Factory.torus(world_root,1.55,1.62,Vector3(0,0.10,13),Color("#75e5d5"))
+
+func _memory_echo(pos:Vector3)->void:
+    var marker:=Node3D.new()
+    marker.position=pos
+    world_root.add_child(marker)
+    Factory.make_crystal(marker,Vector3(0,0.9,0),Color("#c6fff8"))
+    Factory.torus(marker,0.25,0.36,Vector3(0,0.18,0),Color("#68f5e6"))
+    Factory.sphere(marker,0.12,Vector3(0,1.8,0),Color("#f0fffd"))
 
 func _make_obstacle(obstacle:Dictionary,accent:Color)->void:
     var kind:=str(obstacle.get("shape","rock"))
