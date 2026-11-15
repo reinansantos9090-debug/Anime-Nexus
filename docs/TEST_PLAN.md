@@ -163,5 +163,5 @@ Runner Godot permanece manual; nenhum teste longo/emulador foi iniciado.
 
 ### Blockouts de aliados (revisão visual manual)
 
-- Na câmera de gameplay, conferir se lenço/chamas da Akari, aro/vane do Ren, prismas da Mira, aro lunar da Yuna, manto do Shin, folhas do Haru e anéis da Eiko oscilam/giram com leveza e mantêm silhuetas legíveis sem se sobrepor ao HUD.
+- Na câmera de gameplay, conferir se lenço/chamas da Akari, aro/vane do Ren, prismas da Mira, aro/cristais orbitais da Yuna, manto do Shin, folhas do Haru e anéis da Eiko oscilam/giram com leveza e mantêm silhuetas legíveis sem se sobrepor ao HUD.
 - São adereços procedurais simples de blockout com movimento de idle; a revisão confirma legibilidade, não substitui rig, animação nem arte final.

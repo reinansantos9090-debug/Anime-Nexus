@@ -113,9 +113,9 @@ static func make_companion(parent:Node3D,companion_id:String,body_color:Color,ac
             var lunar_ring:=torus(root,0.39,0.46,Vector3(0,1.65,0),accent)
             lunar_ring.add_to_group("companion_orbit")
             var lunar_left:=sphere(root,0.15,Vector3(-0.66,2.02,0),accent)
-            lunar_left.add_to_group("companion_orbit")
+            lunar_left.add_to_group("companion_orbit_point")
             var lunar_right:=sphere(root,0.15,Vector3(0.66,2.02,0),accent)
-            lunar_right.add_to_group("companion_orbit")
+            lunar_right.add_to_group("companion_orbit_point")
         "shin_kuroki":
             var cloak_left:=box(root,Vector3(0.38,1.22,0.18),Vector3(-0.46,1.12,0.27),body_color.darkened(0.22))
             cloak_left.rotation.z=0.10

@@ -33,6 +33,7 @@ var support_energy_restore:=12.0
 var support_threshold:=0.68
 var presentation_time:=0.0
 var orbit_accessories:Array[Node3D]=[]
+var orbit_point_accessories:Array[Node3D]=[]
 var sway_accessories:Array[Node3D]=[]
 
 func configure(owner:Node3D,combat:Node,state:Node,id:String,title:String,element_id:String,role_id:String,
@@ -63,6 +64,7 @@ func configure(owner:Node3D,combat:Node,state:Node,id:String,title:String,elemen
     var visual_root:Node3D=Factory.make_companion(self,companion_id,body_color,accent_color,Color("#edc19c"))
     for accessory in visual_root.get_children():
         if accessory.is_in_group("companion_orbit"):orbit_accessories.append(accessory)
+        elif accessory.is_in_group("companion_orbit_point"):orbit_point_accessories.append(accessory)
         elif accessory.is_in_group("companion_sway"):sway_accessories.append(accessory)
     title_tag=Label3D.new()
     set_physics_process(true)
@@ -84,6 +86,11 @@ func _process(delta:float)->void:
     for index in orbit_accessories.size():
         if is_instance_valid(orbit_accessories[index]):
             orbit_accessories[index].rotate_y(delta*(0.75+float(index)*0.14))
+    for index in orbit_point_accessories.size():
+        if is_instance_valid(orbit_point_accessories[index]):
+            var phase:=PI if index%2==0 else 0.0
+            var angle:=presentation_time*1.25+phase
+            orbit_point_accessories[index].position=Vector3(cos(angle)*0.66,2.02+sin(angle)*0.10,0.0)
     for index in sway_accessories.size():
         if is_instance_valid(sway_accessories[index]):
             sway_accessories[index].rotation.z+=sin(presentation_time*1.8+float(index))*delta*0.22
