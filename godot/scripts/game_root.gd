@@ -223,15 +223,12 @@ func _enter_hq()->void:
     hud.set_mode("PRÓLOGO DA SLICE CONCLUÍDO • NOVOS CAPÍTULOS EM PRODUÇÃO" if bool(state.data["story"]["flags"].get("nimbara_slice_complete",false)) else "OBSERVATÓRIO DE ÍRIS • PORTAL CENTRAL")
 
 func _enter_expedition()->void:
-    if bool(state.data["story"]["flags"].get("nimbara_slice_complete",false)):
-        hud.set_mode("PRÓLOGO DA SLICE CONCLUÍDO • NOVOS CAPÍTULOS EM PRODUÇÃO")
-        return
     mode="EXPEDITION"
     portal_step=(portal_step+1)%maps.maps.size()
     var ids:Array=maps.maps.keys()
     ids.sort()
     var map_id:=str(ids[portal_step%ids.size()])
-    if int(state.data["world"].get("completed_expeditions",0))==0 or "nimbara_03" in state.data["quests"]["active"]:
+    if int(state.data["world"].get("completed_expeditions",0))==0 or "nimbara_03" in state.data["quests"]["active"] or "nimbara_side_01" in state.data["quests"]["active"]:
         map_id="nimbara"
     portal_service.enter_expedition(map_id)
     state.data["world"]["map_id"]=map_id
@@ -266,9 +263,6 @@ func _enter_rift()->void:
         return
     if "nimbara_03" in state.data["quests"]["active"]:
         hud.set_mode("MISSÃO • INTERAJA COM A ÂNCORA DE RESSONÂNCIA")
-        return
-    if bool(state.data["story"]["flags"].get("nimbara_slice_complete",false)):
-        hud.set_mode("PRÓLOGO DA SLICE CONCLUÍDO • NOVOS CAPÍTULOS EM PRODUÇÃO")
         return
     mode="RIFT"
     var first_nimbara_boss:bool="nimbara_02" in state.data["quests"]["active"]
