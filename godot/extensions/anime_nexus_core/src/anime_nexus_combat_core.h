@@ -29,6 +29,8 @@ public:
     Dictionary resolve_loot(const Array &loot_table, int monster_tier, const String &monster_id,
             const String &map_id, int character_level, double event_multiplier, double rarity_roll,
             double rare_bonus_roll, int item_index_a, int item_index_b) const;
+    Dictionary apply_craft(const Dictionary &inventory, const Dictionary &cost,
+            const Dictionary &results) const;
 };
 
 } // namespace godot

@@ -27,6 +27,8 @@ void AnimeNexusCombatCore::_bind_methods() {
     ClassDB::bind_method(D_METHOD("resolve_loot", "loot_table", "monster_tier", "monster_id", "map_id",
             "character_level", "event_multiplier", "rarity_roll", "rare_bonus_roll", "item_index_a", "item_index_b"),
             &AnimeNexusCombatCore::resolve_loot);
+    ClassDB::bind_method(D_METHOD("apply_craft", "inventory", "cost", "results"),
+            &AnimeNexusCombatCore::apply_craft);
 }
 
 Dictionary AnimeNexusCombatCore::calculate_damage(double weapon_damage, int character_level,
@@ -237,6 +239,79 @@ Dictionary AnimeNexusCombatCore::resolve_loot(const Array &loot_table, int monst
     result["monster"] = monster_id;
     result["map"] = map_id;
     return result;
+}
+
+Dictionary AnimeNexusCombatCore::apply_craft(const Dictionary &inventory, const Dictionary &cost,
+        const Dictionary &results) const {
+    Dictionary unchanged = inventory.duplicate(true);
+    Dictionary outcome;
+    outcome["success"] = false;
+    outcome["inventory"] = unchanged;
+    outcome["reason"] = "invalid";
+    const Array cost_keys = cost.keys();
+    const Array result_keys = results.keys();
+
+    for (int64_t i = 0; i < cost_keys.size(); ++i) {
+        const String item_id = String(cost_keys[i]);
+        const Variant amount_value = cost.get(item_id, 0);
+        if (amount_value.get_type() != Variant::INT) {
+            outcome["reason"] = "invalid_cost";
+            return outcome;
+        }
+        const int64_t amount = static_cast<int64_t>(amount_value);
+        if (amount < 0) {
+            outcome["reason"] = "invalid_cost";
+            return outcome;
+        }
+        const Variant current_value = inventory.get(item_id, 0);
+        if (current_value.get_type() != Variant::INT
+                || static_cast<int64_t>(current_value) < amount) {
+            outcome["reason"] = "insufficient_materials";
+            return outcome;
+        }
+    }
+    for (int64_t i = 0; i < result_keys.size(); ++i) {
+        const String item_id = String(result_keys[i]);
+        const Variant amount_value = results.get(item_id, 0);
+        if (amount_value.get_type() != Variant::INT || static_cast<int64_t>(amount_value) < 0) {
+            outcome["reason"] = "invalid_result";
+            return outcome;
+        }
+        const Variant current_value = inventory.get(item_id, 0);
+        if (current_value.get_type() != Variant::INT) {
+            outcome["reason"] = "invalid_inventory";
+            return outcome;
+        }
+        int64_t current = static_cast<int64_t>(current_value);
+        for (int64_t j = 0; j < cost_keys.size(); ++j) {
+            if (String(cost_keys[j]) == item_id) {
+                current -= static_cast<int64_t>(cost.get(item_id, 0));
+                break;
+            }
+        }
+        const int64_t amount = static_cast<int64_t>(amount_value);
+        if (current > std::numeric_limits<int64_t>::max() - amount) {
+            outcome["reason"] = "inventory_overflow";
+            return outcome;
+        }
+    }
+
+    Dictionary updated = inventory.duplicate(true);
+    for (int64_t i = 0; i < cost_keys.size(); ++i) {
+        const String item_id = String(cost_keys[i]);
+        const int64_t amount = static_cast<int64_t>(cost.get(item_id, 0));
+        updated[item_id] = static_cast<int64_t>(updated.get(item_id, 0)) - amount;
+    }
+    for (int64_t i = 0; i < result_keys.size(); ++i) {
+        const String item_id = String(result_keys[i]);
+        const int64_t amount = static_cast<int64_t>(results.get(item_id, 0));
+        updated[item_id] = static_cast<int64_t>(updated.get(item_id, 0)) + amount;
+    }
+
+    outcome["success"] = true;
+    outcome["inventory"] = updated;
+    outcome["reason"] = "ok";
+    return outcome;
 }
 
 Dictionary AnimeNexusCombatCore::advance_experience(const Dictionary &hunter,

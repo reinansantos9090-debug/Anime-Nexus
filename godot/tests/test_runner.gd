@@ -16,6 +16,7 @@ const MapScript=preload("res://scripts/world/map_service.gd")
 const WorldScript=preload("res://scripts/world/world_service.gd")
 const SkillTreeScript=preload("res://scripts/gameplay/skill_tree_service.gd")
 const QuestScript=preload("res://scripts/gameplay/quest_service.gd")
+const InventoryScript=preload("res://scripts/gameplay/inventory_service.gd")
 const StoryScript=preload("res://scripts/gameplay/story_service.gd")
 
 var failures:Array[String]=[]
@@ -30,6 +31,7 @@ func _init()->void:
     _test_companion_agent_setup()
     _test_elemental_reaction_runtime()
     _test_loot()
+    _test_crafting_atomicity()
     _test_save()
     _test_save_slots()
     _test_virtual_joystick()
@@ -92,6 +94,11 @@ func _test_native_combat_core()->void:
     var epic_drop:Dictionary=core.resolve_loot(["nimbara_pollen","resonance_shard"],2,"moss_hopper","nimbara",1,1.0,0.98,0.9,0,1)
     var fallback_drop:Dictionary=core.resolve_loot([],1,"unknown","nimbara",1,1.0,0.0,0.9,0,0)
     _expect(str(common_drop["rarity"])=="common" and int(common_drop["gold"])==20,"C++ loot: common rarity/value mismatch")
+    var inventory_input:Dictionary={"oak_branch":8,"stone":6}
+    var failed_craft:Dictionary=core.apply_craft(inventory_input,{"oak_branch":3,"stone":99},{"memory_bloom":2})
+    var successful_craft:Dictionary=core.apply_craft(inventory_input,{"oak_branch":2,"stone":1},{"memory_bloom":2})
+    _expect(not bool(failed_craft["success"]) and failed_craft["inventory"]==inventory_input,"C++ crafting: failure must preserve the full input inventory")
+    _expect(bool(successful_craft["success"]) and int(successful_craft["inventory"]["oak_branch"])==6,"C++ crafting: successful atomic transaction mismatch")
     _expect(int(rare_drop["items"]["nimbara_pollen"])==2,"C++ loot: rare bonus quantity mismatch")
     _expect(epic_drop["items"].size()==2 and int(epic_drop["items"]["resonance_shard"])==2,"C++ loot: epic double-drop mismatch")
     _expect(str(fallback_drop["items"].keys()[0])=="aether_core","C++ loot: empty table fallback mismatch")
@@ -170,6 +177,22 @@ func _test_loot()->void:
     _expect(not str(drop.get("rarity","")).is_empty(),"Loot: missing rarity")
     _expect(int(drop.get("gold",0))>0,"Loot: missing gold")
     _expect(not drop.get("items",{}).is_empty(),"Loot: missing item")
+
+func _test_crafting_atomicity()->void:
+    var state=StateScript.new()
+    state.reset()
+    var inventory=InventoryScript.new()
+    inventory.setup(state)
+    var before:Dictionary=state.get_inventory().duplicate(true)
+    var impossible:Dictionary={"requires":{"oak_branch":3,"stone":99},"result":{"memory_bloom":2}}
+    _expect(not inventory.craft(impossible),"Crafting: insufficient materials must fail")
+    _expect(state.get_inventory()==before,"Crafting: failed craft must leave every item unchanged")
+    var valid:Dictionary={"requires":{"oak_branch":2,"stone":1},"result":{"memory_bloom":2}}
+    _expect(inventory.craft(valid),"Crafting: valid recipe was rejected")
+    _expect(int(state.get_inventory()["oak_branch"])==6 and int(state.get_inventory()["stone"])==5,"Crafting: consumed material totals mismatch")
+    _expect(int(state.get_inventory()["memory_bloom"])==2,"Crafting: result was not granted atomically")
+    inventory.free()
+    state.free()
 
 func _test_save()->void:
     var state=StateScript.new()

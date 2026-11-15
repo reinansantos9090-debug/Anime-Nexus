@@ -25,6 +25,8 @@ GDScript faz a composição de cenas e conecta eventos/controles com os serviço
 - `resolve_elemental_reaction`: tabela determinística e sem dependência de ordem entre pares, com ID, multiplicador, raio e estado resultante.
 - `advance_experience`: aplica carry-over, curva de requisitos, ponto de habilidade e crescimento de atributos ao subir de nível.
 
+A criação também passou por `apply_craft`: C++ confere todos os custos, impede quantidades inválidas/overflow e devolve uma nova cópia do inventário só quando todo o débito e a concessão podem ser aplicados. GDScript troca a referência e emite um único estado de inventário, sem sequência de débitos parciais.
+
 A economia de drops também passou para `resolve_loot`: C++ escolhe raridade, quantidade por raridade, item dentro da tabela, bônus de nível/evento e ouro. GDScript fornece somente os números aleatórios locais e aplica a saída ao inventário; não mantém uma segunda tabela de probabilidades. Uma regressão determinística cobre as raridades e a tabela vazia.
 
 A dificuldade também é definida pela função C++ `difficulty_profile`, que retorna IDs estáveis e multiplicadores de vida, dano e recompensa para Casual, Aventura e Desafio; a preferência é salva localmente. A camada de integração aplica os multiplicadores ao configurar inimigos e chefes, enquanto a velocidade base do mundo continua separada do perfil.

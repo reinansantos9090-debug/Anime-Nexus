@@ -2,9 +2,11 @@ extends Node
 signal changed
 
 var game_state:Node
+var native_core:AnimeNexusCombatCore
 
 func setup(state:Node)->void:
     game_state=state
+    native_core=AnimeNexusCombatCore.new()
     if game_state and not game_state.inventory_changed.is_connected(_emit):
         game_state.inventory_changed.connect(_emit)
 
@@ -21,12 +23,14 @@ func has_cost(cost:Dictionary)->bool:
     return true
 
 func craft(recipe:Dictionary)->bool:
+    if game_state==null or native_core==null:return false
     var cost:Dictionary=recipe.get("requires",{})
-    if not has_cost(cost):return false
-    for item in cost.keys():
-        game_state.remove_item(str(item),int(cost[item]))
-    for item in recipe.get("result",{}).keys():
-        game_state.add_item(str(item),int(recipe["result"][item]))
+    var results:Dictionary=recipe.get("result",{})
+    var outcome:Dictionary=native_core.apply_craft(game_state.get_inventory(),cost,results)
+    if not bool(outcome.get("success",false)):return false
+    game_state.data["inventory"]=outcome["inventory"]
+    game_state.inventory_changed.emit()
+    game_state.state_changed.emit()
     return true
 
 func craft_by_id(id:String,database:Node)->bool:
