@@ -80,12 +80,11 @@ jobs:
           git clone --filter=blob:none https://github.com/godotengine/godot-cpp.git "$extension_dir/godot-cpp"
           git -C "$extension_dir/godot-cpp" checkout 507ed9d840c01a3c5b2a39af8bb4000bfac30bf5
 
-      - name: Build C++ combat extension for Linux tests and Android
+      - name: Build C++ combat extension for Android
         shell: bash
         run: |
           set -euo pipefail
           cd godot/extensions/anime_nexus_core
-          scons platform=linux target=template_release arch=x86_64 -j"$(nproc)"
           scons platform=android target=template_debug arch=arm64 -j"$(nproc)"
           scons platform=android target=template_release arch=arm64 -j"$(nproc)"
 
