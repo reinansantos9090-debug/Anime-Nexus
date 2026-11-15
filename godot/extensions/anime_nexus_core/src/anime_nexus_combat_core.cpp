@@ -21,6 +21,8 @@ void AnimeNexusCombatCore::_bind_methods() {
             &AnimeNexusCombatCore::companion_damage);
     ClassDB::bind_method(D_METHOD("companion_avoidance_turn", "forward_blocked", "left_blocked",
             "right_blocked", "prefer_left"), &AnimeNexusCombatCore::companion_avoidance_turn);
+    ClassDB::bind_method(D_METHOD("difficulty_profile", "difficulty_id"),
+            &AnimeNexusCombatCore::difficulty_profile);
 }
 
 Dictionary AnimeNexusCombatCore::calculate_damage(double weapon_damage, int character_level,
@@ -133,6 +135,31 @@ double AnimeNexusCombatCore::companion_damage(double base_damage, int player_lev
     const double safe_role_multiplier = std::clamp(role_multiplier, 0.5, 2.0);
     return safe_base_damage * (1.0 + static_cast<double>(safe_level - 1) * 0.045)
             * safe_role_multiplier;
+}
+
+Dictionary AnimeNexusCombatCore::difficulty_profile(const String &difficulty_id) const {
+    const String id = difficulty_id.to_lower();
+    Dictionary result;
+    if (id == "casual") {
+        result["id"] = "casual";
+        result["label"] = "Casual";
+        result["enemy_health_multiplier"] = 0.78;
+        result["enemy_damage_multiplier"] = 0.72;
+        result["reward_multiplier"] = 0.90;
+    } else if (id == "challenge") {
+        result["id"] = "challenge";
+        result["label"] = "Desafio";
+        result["enemy_health_multiplier"] = 1.42;
+        result["enemy_damage_multiplier"] = 1.32;
+        result["reward_multiplier"] = 1.35;
+    } else {
+        result["id"] = "adventure";
+        result["label"] = "Aventura";
+        result["enemy_health_multiplier"] = 1.0;
+        result["enemy_damage_multiplier"] = 1.0;
+        result["reward_multiplier"] = 1.0;
+    }
+    return result;
 }
 
 Dictionary AnimeNexusCombatCore::advance_experience(const Dictionary &hunter,

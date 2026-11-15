@@ -85,6 +85,14 @@ func _test_native_combat_core()->void:
     _expect(float(lunar["heal_ratio"])>0.0,"C++ combat: lunar-bloom healing policy missing")
     _expect(float(prism["splash_multiplier"])>0.0 and int(prism["max_targets"])>0,"C++ combat: prism-echo policy missing")
     _expect(str(singularity["id"])=="resonance_singularity" and float(singularity["pull_strength"])>0.0,"C++ combat: gravity combination policy missing")
+    var casual:Dictionary=core.difficulty_profile("casual")
+    var adventure:Dictionary=core.difficulty_profile("adventure")
+    var challenge:Dictionary=core.difficulty_profile("challenge")
+    var fallback:Dictionary=core.difficulty_profile("unknown")
+    _expect(float(casual["enemy_damage_multiplier"])<1.0 and float(casual["enemy_health_multiplier"])<1.0,"C++ difficulty: Casual should reduce enemy pressure")
+    _expect(is_equal_approx(float(adventure["reward_multiplier"]),1.0),"C++ difficulty: Aventura should be neutral")
+    _expect(float(challenge["reward_multiplier"])>1.0 and float(challenge["enemy_health_multiplier"])>1.0,"C++ difficulty: Desafio should increase risk and reward")
+    _expect(str(fallback["id"])=="adventure","C++ difficulty: unknown modes must safely fall back")
     var follow:Dictionary=core.companion_decision(4.0,-1.0,1.0)
     var attack:Dictionary=core.companion_decision(4.0,3.0,1.0)
     var regroup:Dictionary=core.companion_decision(18.0,1.0,1.0)
@@ -153,6 +161,8 @@ func _test_loot()->void:
 func _test_save()->void:
     var state=StateScript.new()
     state.reset()
+    _expect(str(state.data["settings"]["difficulty"])=="adventure","Save: default difficulty was not initialized")
+    state.data["settings"]["difficulty"]="casual"
     state.data["hunter"]["gold"]=9876
     var save=SaveScript.new()
     save.setup(state)
@@ -160,6 +170,7 @@ func _test_save()->void:
     _expect(save.save_now(),"Save: could not write save")
     _expect(not FileAccess.file_exists("user://anime_nexus_test_save.json.tmp"),"Save: temporary file was left after a successful write")
     state.data["hunter"]["gold"]=1
+    state.data["settings"]["difficulty"]="challenge"
     _expect(save.save_now(),"Save: could not rotate the previous valid save to backup")
     var damaged:=FileAccess.open("user://anime_nexus_test_save.json",FileAccess.WRITE)
     if damaged:
@@ -170,8 +181,10 @@ func _test_save()->void:
     state.data["hunter"]["gold"]=2
     _expect(save.load_now(),"Save: could not reload save")
     _expect(int(state.data["hunter"]["gold"])==9876,"Save: corrupt primary did not recover the previous backup")
+    _expect(str(state.data["settings"]["difficulty"])=="casual","Save: difficulty setting was not persisted")
     _expect(state.apply_loaded({"schema":4,"hunter":{"gold":444}}),"Save: supported old schema was rejected")
     _expect(int(state.data["schema"])==8 and int(state.data["hunter"]["gold"])==444,"Save: older schema did not migrate while preserving progress")
+    _expect(str(state.data["settings"]["difficulty"])=="adventure","Save: old schema did not receive the default difficulty")
     var future:=FileAccess.open("user://anime_nexus_test_save.json",FileAccess.WRITE)
     if future:
         future.store_string(JSON.stringify({"schema":999,"hunter":{"gold":999}}))

@@ -35,3 +35,13 @@
 - Sem aparelho Android ligado a este ambiente, FPS, toque real, instalação APK e qualidade visual ainda não foram verificados.
 - Godot 4.7.2 local carregou `AnimeNexusCombatCore`; GDExtension C++ Linux release compilou e o runner imprimiu `ANIME_NEXUS_TESTS: PASS`, incluindo dano, crítico, reações invertidas e XP acumulado. Restaram apenas avisos conhecidos de recursos em uso ao encerrar.
 - O build Android arm64 do núcleo C++ e a exportação do APK com a extensão são pendentes no CI novo; a validação local do APK é bloqueada pela ausência do Android SDK/NDK.
+
+
+## Validação manual curta da dificuldade
+
+- Executar o runner Godot existente apenas quando for manualmente disparado.
+- Conferir que os três perfis C++ retornam multiplicadores esperados e que um identificador desconhecido volta com segurança a Aventura.
+- Conferir que a escolha salva sobrevive ao recarregamento e que saves antigos recebem Aventura por padrão.
+- Entrar em expedição e observar vida/dano/XP de um inimigo e do chefe em cada perfil; conferir que trocar no meio da expedição é bloqueado.
+
+A verificação Godot/C++/APK continua no workflow manual; nenhum teste de emulador ou job longo será iniciado automaticamente.

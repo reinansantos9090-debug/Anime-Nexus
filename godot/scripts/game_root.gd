@@ -133,6 +133,7 @@ func _ready()->void:
     operations_menu=OperationsMenuScript.new()
     add_child(operations_menu)
     operations_menu.selected.connect(_run_operation)
+    operations_menu.set_difficulty(str(state.data.get("settings",{}).get("difficulty","adventure")))
     save_slots_menu=SaveSlotsMenuScript.new()
     add_child(save_slots_menu)
     save_slots_menu.setup(save,state)
@@ -294,6 +295,21 @@ func _enter_versus()->void:
     _spawn_wave(mini(8,perf.max_enemies()))
     hud.set_mode("VERSUS • SIMULAÇÃO OFFLINE")
 
+func _cycle_difficulty()->void:
+    if mode!="HQ":
+        hud.set_mode("DIFICULDADE • ALTERE NO OBSERVATÓRIO")
+        return
+    var order:Array=["casual","adventure","challenge"]
+    var current:=str(state.data.get("settings",{}).get("difficulty","adventure"))
+    var index:=order.find(current)
+    if index<0:index=1
+    var next_id:=str(order[(index+1)%order.size()])
+    state.data["settings"]["difficulty"]=next_id
+    state.state_changed.emit()
+    var profile:Dictionary=state.difficulty_profile()
+    operations_menu.set_difficulty(next_id)
+    hud.set_mode("DIFICULDADE • "+str(profile["label"])+" • PROGRESSO LOCAL")
+
 func _open_operations()->void:
     if operations_menu and not operations_menu.is_open():
         operations_menu.show_menu()
@@ -334,6 +350,7 @@ func _run_operation(action_id:String)->void:
         "history":_story()
         "saves":
             if save_slots_menu:save_slots_menu.show_menu()
+        "difficulty":_cycle_difficulty()
         "companions":
             if companion_roster_menu:companion_roster_menu.show_menu()
 
@@ -518,7 +535,7 @@ func _spawn_enemy(i:int,id:="")->void:
     add_child(e)
     e.position=_spawn_position(i)
     var scale:float=maps.difficulty(str(portal_service.destination))
-    e.configure(kind,player,content,scale)
+    e.configure(kind,player,content,scale,state.difficulty_profile())
     var behavior:=str(content.MONSTERS.get(kind,{}).get("behavior","melee"))
     _attach_enemy_visual(e,behavior,i)
     e.defeated.connect(_enemy_down)
@@ -556,7 +573,7 @@ func _spawn_boss(id:String)->void:
     add_child(b)
     b.position=player.position+Vector3(0,0,-10)
     var boss_map:="nimbara" if id=="crystal_stag" else "sky_ruins"
-    b.configure_boss(id,player,content,maps.difficulty(boss_map))
+    b.configure_boss(id,player,content,maps.difficulty(boss_map),state.difficulty_profile())
     if id=="crystal_stag":b.attach_visual(Factory.make_crystal_stag(b,Color("#416a80"),Color("#70f5dc")))
     else:b.attach_visual(Factory.make_colossus(b,Color("#7d5ce8"),Color("#ffd86b")))
     b.phase_changed.connect(func(p:int):

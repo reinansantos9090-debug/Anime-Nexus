@@ -6,13 +6,15 @@ signal closed
 
 var panel: Panel
 var root: Control
+var action_buttons:Dictionary={}
 
 const ACTIONS := [
     ["expedition","EXPEDIÇÃO • NIMBARA","Continuar a missão da Clareira Luminar"],
     ["rift","CHEFE • CÉRVIDO","Enfrentar o guardião da primeira Âncora"],
     ["history","DIÁLOGOS","Continuar o prólogo de Kaien"],
     ["companions","COMPANHEIROS","Escolher até dois aliados offline"],
-    ["saves","SALVAMENTOS","Gerenciar três espaços locais"]
+    ["saves","SALVAMENTOS","Gerenciar três espaços locais"],
+    ["difficulty","DIFICULDADE • AVENTURA","Alternar o desafio da campanha offline"]
 ]
 
 func _ready() -> void:
@@ -64,6 +66,7 @@ func _build() -> void:
         b.add_theme_stylebox_override("normal", normal)
         b.add_theme_stylebox_override("hover", hover)
         b.add_theme_stylebox_override("pressed", hover)
+        action_buttons[str(data[0])]=b
         b.pressed.connect(_choose.bind(str(data[0])))
         panel.add_child(b)
 
@@ -73,6 +76,12 @@ func _build() -> void:
     close.size = Vector2(195, 38)
     close.pressed.connect(hide_menu)
     panel.add_child(close)
+
+func set_difficulty(difficulty_id:String)->void:
+    if not action_buttons.has("difficulty"):return
+    var labels:Dictionary={"casual":"CASUAL","adventure":"AVENTURA","challenge":"DESAFIO"}
+    var label:=str(labels.get(difficulty_id,"AVENTURA"))
+    action_buttons["difficulty"].text="DIFICULDADE • "+label+"\nToque para alternar a campanha offline"
 
 func _choose(action_id: String) -> void:
     hide_menu()

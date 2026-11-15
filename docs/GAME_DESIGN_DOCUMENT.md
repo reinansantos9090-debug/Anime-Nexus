@@ -43,3 +43,8 @@ Três saves locais, backup e migração. Nenhuma conta/rede/serviço externo em 
 ## Critérios de entrega
 
 Uma feature precisa estar ligada a cena/fluxo, aceitar entrada, executar efeito real, emitir resultado observável, salvar quando aplicável e passar teste. Ícones, strings, arquivos de asset manifest e classes não provam que a experiência está implementada. O ponto atual da base ainda é Aetheria: Echoes; consulte `IMPLEMENTATION_STATUS.md`.
+
+
+## Dificuldade offline
+
+O Observatório oferece três perfis locais, que podem ser alternados antes de uma expedição: Casual (vida inimiga ×0,78, dano ×0,72, XP ×0,90), Aventura (×1,0) e Desafio (vida ×1,42, dano ×1,32, XP ×1,35). Os multiplicadores vêm do núcleo C++, ficam salvos na partida e valem para inimigos e chefes criados depois da escolha. A velocidade base e os padrões de ataque não são acelerados artificialmente pelo seletor. A configuração ainda está em desenvolvimento até a regressão do runner Godot e o balanceamento manual serem executados.

@@ -24,18 +24,24 @@ var slow_factor:=0.45
 var elemental_reaction_cooldown:=0.0
 var wander_timer:=0.0
 var difficulty:=1.0
+var health_multiplier:=1.0
+var damage_multiplier:=1.0
+var reward_multiplier:=1.0
 var visual:Node3D
 var rng:=RandomNumberGenerator.new()
 var base_speed:=2.0
 
-func configure(id:String,target_node:Node3D,database:Node,scale:=1.0)->void:
+func configure(id:String,target_node:Node3D,database:Node,scale:=1.0,profile:Dictionary={})->void:
     monster_id=id
     stats=database.MONSTERS.get(id,database.MONSTERS["aether_slime"])
     target=target_node
     difficulty=maxf(0.5,scale)
+    health_multiplier=clampf(float(profile.get("enemy_health_multiplier",1.0)),0.50,1.75)
+    damage_multiplier=clampf(float(profile.get("enemy_damage_multiplier",1.0)),0.50,1.50)
+    reward_multiplier=clampf(float(profile.get("reward_multiplier",1.0)),0.75,1.50)
     behavior=str(stats.get("behavior","melee"))
     add_to_group("enemy_agents")
-    max_hp=float(stats.get("hp",50.0))*difficulty
+    max_hp=float(stats.get("hp",50.0))*difficulty*health_multiplier
     hp=max_hp
     base_speed=float(stats.get("speed",2.0))
     rng.seed=abs(hash("%s:%s" % [id,get_instance_id()]))
@@ -116,7 +122,7 @@ func _ranged_behavior(delta:float,distance:float)->void:
         state=State.ATTACK
         if special_timer<=0.0:
             special_timer=2.2
-            projectile_requested.emit(global_position+Vector3(0,1.0,0),target.global_position,float(stats["damage"])*difficulty)
+            projectile_requested.emit(global_position+Vector3(0,1.0,0),target.global_position,float(stats["damage"])*difficulty*damage_multiplier)
         return
     if distance<5.0:
         _move_towards(global_position-target.global_position,_speed()*0.75,delta)
@@ -126,7 +132,7 @@ func _ranged_behavior(delta:float,distance:float)->void:
         state=State.ATTACK
     if special_timer<=0.0 and distance<22.0:
         special_timer=2.0 if behavior=="sniper" else 1.3
-        var damage:=float(stats["damage"])*difficulty*(1.35 if behavior=="sniper" else 1.0)
+        var damage:=float(stats["damage"])*difficulty*damage_multiplier*(1.35 if behavior=="sniper" else 1.0)
         projectile_requested.emit(global_position+Vector3(0,1.1,0),target.global_position,damage)
 
 func _mobile_behavior(delta:float,distance:float)->void:
@@ -161,7 +167,7 @@ func _support_behavior(delta:float,distance:float)->void:
 
 func _special_behavior(delta:float,distance:float)->void:
     if behavior=="bomber" and distance<2.7:
-        area_requested.emit(global_position,3.4,float(stats["damage"])*1.45)
+        area_requested.emit(global_position,3.4,float(stats["damage"])*difficulty*damage_multiplier*1.45)
         _melee_attack(0.7)
         return
     if distance<2.0:_melee_attack(1.0)
@@ -169,9 +175,9 @@ func _special_behavior(delta:float,distance:float)->void:
     if special_timer<=0.0:
         special_timer=3.0
         if behavior=="mine_layer":
-            area_requested.emit(target.global_position,2.1,float(stats["damage"])*0.75)
+            area_requested.emit(target.global_position,2.1,float(stats["damage"])*difficulty*damage_multiplier*0.75)
         elif behavior=="controller":
-            area_requested.emit(target.global_position,4.4,float(stats["damage"])*0.55)
+            area_requested.emit(target.global_position,4.4,float(stats["damage"])*difficulty*damage_multiplier*0.55)
 
 func _split_behavior(delta:float,distance:float)->void:
     if distance<2.0:_melee_attack(0.9)
@@ -181,9 +187,9 @@ func _melee_attack(multiplier:float)->void:
     if attack_timer>0.0:return
     attack_timer=1.20/maxf(0.65,difficulty)
     if target.has_method("take_enemy_damage"):
-        target.take_enemy_damage(float(stats.get("damage",5.0))*difficulty*multiplier)
+        target.take_enemy_damage(float(stats.get("damage",5.0))*difficulty*damage_multiplier*multiplier)
     if behavior=="knockback":
-        area_requested.emit(target.global_position,2.5,float(stats.get("damage",5.0))*0.5)
+        area_requested.emit(target.global_position,2.5,float(stats.get("damage",5.0))*difficulty*damage_multiplier*0.5)
 
 func _wander(delta:float)->void:
     if wander_timer<=0.0:wander_timer=rng.randf_range(1.0,2.5)
@@ -202,8 +208,8 @@ func take_damage(amount:float,critical:=false)->void:
         hp=0.0
         state=State.DEAD
         if behavior=="splitter":summon_requested.emit("aether_slime",2)
-        if behavior=="bomber":area_requested.emit(global_position,4.6,float(stats.get("damage",10.0))*1.65)
-        defeated.emit(self,int(round(float(stats.get("xp",10))*difficulty)))
+        if behavior=="bomber":area_requested.emit(global_position,4.6,float(stats.get("damage",10.0))*difficulty*damage_multiplier*1.65)
+        defeated.emit(self,int(round(float(stats.get("xp",10))*difficulty*reward_multiplier)))
 
 func elemental_affinity()->String:
     return str(stats.get("element","none"))

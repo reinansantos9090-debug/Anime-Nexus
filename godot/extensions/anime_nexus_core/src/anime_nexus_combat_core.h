@@ -23,6 +23,7 @@ public:
     double companion_damage(double base_damage, int player_level, double role_multiplier) const;
     double companion_avoidance_turn(bool forward_blocked, bool left_blocked, bool right_blocked,
             bool prefer_left) const;
+    Dictionary difficulty_profile(const String &difficulty_id) const;
 };
 
 } // namespace godot
