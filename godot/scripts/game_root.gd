@@ -7,6 +7,7 @@ const PerfScript=preload("res://scripts/core/performance_service.gd")
 const WorldScript=preload("res://scripts/world/world_service.gd")
 const EnemyScript=preload("res://scripts/gameplay/enemy_agent.gd")
 const CompanionScript=preload("res://scripts/gameplay/companion_agent.gd")
+const CompanionRosterMenuScript=preload("res://scripts/ui/companion_roster_menu.gd")
 const BossScript=preload("res://scripts/gameplay/boss_agent.gd")
 const QuestScript=preload("res://scripts/gameplay/quest_service.gd")
 const StoryScript=preload("res://scripts/gameplay/story_service.gd")
@@ -55,6 +56,7 @@ var portal_service:Node
 var director:Node
 var operations_menu:CanvasLayer
 var save_slots_menu:CanvasLayer
+var companion_roster_menu:CanvasLayer
 var player:Node3D
 var camera:Camera3D
 var enemies:Array[Node3D]=[]
@@ -135,6 +137,10 @@ func _ready()->void:
     add_child(save_slots_menu)
     save_slots_menu.setup(save,state)
     save_slots_menu.slot_loaded.connect(_on_save_slot_loaded)
+    companion_roster_menu=CompanionRosterMenuScript.new()
+    add_child(companion_roster_menu)
+    companion_roster_menu.setup(state,content)
+    companion_roster_menu.selection_changed.connect(_refresh_companions)
 
     world.build_hq()
     _apply_quality(perf.current())
@@ -144,16 +150,28 @@ func _ready()->void:
         _story()
 
 func _spawn_companions()->void:
-    var roster:Array=[
-        {"id":"akari_solen","name":"Akari","element":"fire","role":"assault","body":Color("#9e3940"),"accent":Color("#ffb34d"),"offset":Vector3(-2.0,0.0,2.4)},
-        {"id":"ren_aozora","name":"Ren","element":"wind","role":"controller","body":Color("#3b7770"),"accent":Color("#75e7d0"),"offset":Vector3(2.0,0.0,2.4)}
-    ]
-    for data in roster:
+    var selected:Array=state.data.get("party",{}).get("companions",[])
+    var index:=0
+    for companion_id in selected:
+        var id:=str(companion_id)
+        if not content.COMPANIONS.has(id) or index>=2:continue
+        var data:Dictionary=content.COMPANIONS[id]
+        var side:float=-1.0 if index==0 else 1.0
         var companion:Node3D=CompanionScript.new()
         add_child(companion)
-        companion.configure(player,combat,state,str(data["id"]),str(data["name"]),str(data["element"]),
-            str(data["role"]),data["body"],data["accent"],data["offset"])
+        companion.configure(player,combat,state,id,str(data["name"]),str(data["element"]),
+            str(data["role"]),data["body"],data["accent"],Vector3(2.0*side,0.0,2.4))
         companions.append(companion)
+        index+=1
+
+func _refresh_companions()->void:
+    for companion in companions:
+        if is_instance_valid(companion):
+            companion.set_combat_active(false)
+            companion.queue_free()
+    companions.clear()
+    _spawn_companions()
+    _set_companion_combat(mode!="HQ")
 
 func _set_companion_combat(active:bool)->void:
     for companion in companions:
@@ -281,6 +299,7 @@ func _open_operations()->void:
         operations_menu.show_menu()
 
 func _on_save_slot_loaded(slot_number:int)->void:
+    _refresh_companions()
     _enter_hq()
     hud.set_mode("ESPAÇO %d CARREGADO • OBSERVATÓRIO DE ÍRIS"%slot_number)
 
@@ -315,6 +334,8 @@ func _run_operation(action_id:String)->void:
         "history":_story()
         "saves":
             if save_slots_menu:save_slots_menu.show_menu()
+        "companions":
+            if companion_roster_menu:companion_roster_menu.show_menu()
 
 func _cycle_weapon()->void:
     var ids:Array=content.WEAPONS.keys()

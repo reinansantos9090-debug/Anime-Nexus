@@ -2,6 +2,11 @@ extends Node
 ## Authoritative offline content database. Every entry here is consumed by a
 ## runtime service; there are no disposable catalog rows or numbered filler.
 
+const COMPANIONS := {
+    "akari_solen":{"name":"Akari Solen","element":"fire","role":"assault","body":Color("#9e3940"),"accent":Color("#ffb34d")},
+    "ren_aozora":{"name":"Ren Aozora","element":"wind","role":"controller","body":Color("#3b7770"),"accent":Color("#75e7d0")}
+}
+
 const WEAPONS := {
     "fulgor_gauntlets":{"element":"thunder","name":"Manoplas Fulgor","damage":27.0,"rate":0.30,"range":4.2,"type":"melee","kit":"cone","abilities":["lightning_step","sky_chain","static_field"]},
     "volt_blades":{"element":"thunder","name":"Lâminas Voltáicas","damage":24.0,"rate":0.24,"range":3.4,"type":"melee","kit":"cone","abilities":["volt_dash","arc_burst"]},

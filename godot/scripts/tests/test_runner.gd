@@ -1,0 +1,301 @@
+extends SceneTree
+## Headless regression suite for the offline gameplay core.
+## Exit code 0 means all assertions passed.
+
+const StateScript=preload("res://scripts/core/game_state.gd")
+const CombatScript=preload("res://scripts/gameplay/combat_service.gd")
+const LootScript=preload("res://scripts/gameplay/loot_service.gd")
+const ContentScript=preload("res://scripts/core/content_database.gd")
+const SaveScript=preload("res://scripts/core/save_service.gd")
+const JoystickScript=preload("res://scripts/ui/virtual_joystick.gd")
+const GameRootScript=preload("res://scripts/game_root.gd")
+const EnemyScript=preload("res://scripts/gameplay/enemy_agent.gd")
+const CompanionScript=preload("res://scripts/gameplay/companion_agent.gd")
+const BossScript=preload("res://scripts/gameplay/boss_agent.gd")
+const MapScript=preload("res://scripts/world/map_service.gd")
+const WorldScript=preload("res://scripts/world/world_service.gd")
+const SkillTreeScript=preload("res://scripts/gameplay/skill_tree_service.gd")
+const QuestScript=preload("res://scripts/gameplay/quest_service.gd")
+
+var failures:Array[String]=[]
+
+func _init()->void:
+    var game_root=GameRootScript.new()
+    _expect(game_root!=null,"Runtime: main game root script must parse and instantiate")
+    if game_root:game_root.free()
+    _test_xp()
+    _test_damage()
+    _test_native_combat_core()
+    _test_companion_agent_setup()
+    _test_elemental_reaction_runtime()
+    _test_loot()
+    _test_save()
+    _test_save_slots()
+    _test_virtual_joystick()
+    _test_nimbara_vertical_slice_data_and_quest()
+    _test_boss_telegraph()
+    _test_static_field_slow()
+    if failures.is_empty():
+        print("ANIME_NEXUS_TESTS: PASS")
+        quit(0)
+    else:
+        for item in failures:push_error(item)
+        print("ANIME_NEXUS_TESTS: FAIL %d"%failures.size())
+        quit(1)
+
+func _expect(condition:bool,message:String)->void:
+    if not condition:failures.append(message)
+
+func _test_xp()->void:
+    var state=StateScript.new()
+    state.reset()
+    var before=int(state.data["hunter"]["level"])
+    state.add_xp(120)
+    _expect(int(state.data["hunter"]["level"])==before+1,"XP: level did not advance")
+    _expect(int(state.data["progression"]["skill_points"])==1,"XP: level did not award skill point")
+
+func _test_damage()->void:
+    var state=StateScript.new()
+    state.reset()
+    var combat=CombatScript.new()
+    combat.setup(state,null)
+    var damage:=combat.player_damage({"damage":100.0},1,0.0,0.0)
+    _expect(damage>=100.0 and damage<=175.0,"Damage: formula outside expected range")
+
+func _test_native_combat_core()->void:
+    var core=AnimeNexusCombatCore.new()
+    var normal:Dictionary=core.calculate_damage(100.0,1,0.2,0.5,0.7)
+    var critical:Dictionary=core.calculate_damage(100.0,3,0.2,0.5,0.2)
+    _expect(is_equal_approx(float(normal["amount"]),120.0),"C++ combat: normal damage formula mismatch")
+    _expect(not bool(normal["critical"]),"C++ combat: non-critical roll was marked critical")
+    _expect(absf(float(critical["amount"])-((100.0+5.0)*1.2*1.75))<0.001,"C++ combat: critical damage formula mismatch")
+    _expect(bool(critical["critical"]),"C++ combat: critical roll was not marked critical")
+    var chain:Dictionary=core.resolve_elemental_reaction("thunder","water")
+    _expect(str(chain["id"])=="conductive_chain" and float(chain["radius"])>0.0,"C++ combat: thunder/water reaction missing")
+    _expect(is_equal_approx(float(chain["splash_multiplier"]),0.35) and int(chain["max_targets"])==3,"C++ combat: conductive-chain policy mismatch")
+    var reverse:Dictionary=core.resolve_elemental_reaction("water","thunder")
+    _expect(str(reverse["id"])==str(chain["id"]),"C++ combat: reaction must be order-independent")
+    var ember:Dictionary=core.resolve_elemental_reaction("fire","wind")
+    var frost:Dictionary=core.resolve_elemental_reaction("ice","wind")
+    var lunar:Dictionary=core.resolve_elemental_reaction("moon","nature")
+    var prism:Dictionary=core.resolve_elemental_reaction("light","shadow")
+    var singularity:Dictionary=core.resolve_elemental_reaction("gravity","fire")
+    _expect(float(ember["splash_multiplier"])>0.0 and int(ember["max_targets"])>0,"C++ combat: ember-storm policy missing")
+    _expect(float(frost["slow_duration"])>0.0 and float(frost["slow_factor"])<1.0,"C++ combat: frost-mist policy missing")
+    _expect(float(lunar["heal_ratio"])>0.0,"C++ combat: lunar-bloom healing policy missing")
+    _expect(float(prism["splash_multiplier"])>0.0 and int(prism["max_targets"])>0,"C++ combat: prism-echo policy missing")
+    _expect(str(singularity["id"])=="resonance_singularity" and float(singularity["pull_strength"])>0.0,"C++ combat: gravity combination policy missing")
+    var follow:Dictionary=core.companion_decision(4.0,-1.0,1.0)
+    var attack:Dictionary=core.companion_decision(4.0,3.0,1.0)
+    var regroup:Dictionary=core.companion_decision(18.0,1.0,1.0)
+    var guard:Dictionary=core.companion_decision(4.0,1.0,0.15)
+    _expect(str(follow["state"])=="follow","C++ companion: follow decision mismatch")
+    _expect(str(attack["state"])=="attack","C++ companion: attack decision mismatch")
+    _expect(str(regroup["state"])=="regroup","C++ companion: leash recovery decision mismatch")
+    _expect(str(guard["state"])=="guard","C++ companion: low-health guard decision mismatch")
+    _expect(is_equal_approx(core.companion_damage(10.0,3,1.2),13.08),"C++ companion: role/level damage formula mismatch")
+    var hunter:Dictionary={"level":1,"xp":0,"xp_to_next":120,"hp":140,"max_hp":140,"max_energy":100.0}
+    var progression:Dictionary={"skill_points":0}
+    var level_result:Dictionary=core.advance_experience(hunter,progression,300)
+    _expect(int(level_result["level"])==3 and int(level_result["xp"])==25,"C++ progression: level carry-over mismatch")
+    _expect(int(level_result["levels_gained"])==2 and int(level_result["skill_points"])==2,"C++ progression: level reward mismatch")
+    _expect(int(level_result["hp"])==164 and is_equal_approx(float(level_result["max_energy"]),108.0),"C++ progression: level stat growth mismatch")
+    
+func _test_elemental_reaction_runtime()->void:
+    var state=StateScript.new()
+    state.reset()
+    var content=ContentScript.new()
+    var enemy=EnemyScript.new()
+    enemy.configure("aether_slime",null,content)
+    var combat=CombatScript.new()
+    combat.setup(state,null)
+    var result:Dictionary=combat.hit(enemy,10.0,false,"thunder")
+    _expect(str(result.get("reaction",{}).get("id",""))=="conductive_chain","Combat: thunder/water reaction did not trigger")
+    _expect(is_equal_approx(float(result.get("amount",0.0)),11.5),"Combat: elemental reaction multiplier was not applied")
+    _expect(is_equal_approx(enemy.hp,enemy.max_hp-11.5),"Combat: reaction damage did not reach the enemy")
+    enemy.free()
+    combat.free()
+    content.free()
+    state.free()
+
+func _test_companion_agent_setup()->void:
+    var state=StateScript.new()
+    state.reset()
+    var owner:=Node3D.new()
+    var combat=CombatScript.new()
+    combat.setup(state,null)
+    var companion=CompanionScript.new()
+    companion.configure(owner,combat,state,"akari_solen","Akari","fire","assault",
+        Color("#9e3940"),Color("#ffb34d"),Vector3(-2,0,2))
+    _expect(str(companion.info().get("element",""))=="fire","Companion: Akari element was not configured")
+    _expect(str(companion.info().get("role",""))=="assault","Companion: assault role was not configured")
+    _expect(companion.title_tag.text=="Akari","Companion: visible identity tag missing")
+    companion.free()
+    combat.free()
+    owner.free()
+    state.free()
+
+func _test_loot()->void:
+    var state=StateScript.new()
+    state.reset()
+    var content=ContentScript.new()
+    var loot=LootScript.new()
+    loot.setup(state,content)
+    var drop:Dictionary=loot.roll("aether_slime","verdant_frontier",1,1.0)
+    _expect(not str(drop.get("rarity","")).is_empty(),"Loot: missing rarity")
+    _expect(int(drop.get("gold",0))>0,"Loot: missing gold")
+    _expect(not drop.get("items",{}).is_empty(),"Loot: missing item")
+
+func _test_save()->void:
+    var state=StateScript.new()
+    state.reset()
+    state.data["hunter"]["gold"]=9876
+    var save=SaveScript.new()
+    save.setup(state)
+    save.configure_paths("user://anime_nexus_test_save.json","user://anime_nexus_test_save.bak.json")
+    _expect(save.save_now(),"Save: could not write save")
+    _expect(not FileAccess.file_exists("user://anime_nexus_test_save.json.tmp"),"Save: temporary file was left after a successful write")
+    state.data["hunter"]["gold"]=1
+    _expect(save.save_now(),"Save: could not rotate the previous valid save to backup")
+    var damaged:=FileAccess.open("user://anime_nexus_test_save.json",FileAccess.WRITE)
+    if damaged:
+        damaged.store_string("{ incomplete json")
+        damaged.close()
+    else:
+        _expect(false,"Save: could not create the corrupt-primary recovery fixture")
+    state.data["hunter"]["gold"]=2
+    _expect(save.load_now(),"Save: could not reload save")
+    _expect(int(state.data["hunter"]["gold"])==9876,"Save: corrupt primary did not recover the previous backup")
+    _expect(state.apply_loaded({"schema":4,"hunter":{"gold":444}}),"Save: supported old schema was rejected")
+    _expect(int(state.data["schema"])==8 and int(state.data["hunter"]["gold"])==444,"Save: older schema did not migrate while preserving progress")
+    _expect(state.data["party"]["companions"].size()==2,"Save: migration did not restore the default local companion roster")
+    var future:=FileAccess.open("user://anime_nexus_test_save.json",FileAccess.WRITE)
+    if future:
+        future.store_string(JSON.stringify({"schema":999,"hunter":{"gold":999}}))
+        future.close()
+    else:
+        _expect(false,"Save: could not create future-schema recovery fixture")
+    _expect(save.load_now(),"Save: newer incompatible primary did not fall back to the compatible backup")
+    _expect(int(state.data["hunter"]["gold"])==9876,"Save: newer schema data was loaded over the supported backup")
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.json"))
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.bak.json"))
+    var interrupted:=FileAccess.open("user://anime_nexus_test_save.json.tmp",FileAccess.WRITE)
+    if interrupted:
+        interrupted.store_string(JSON.stringify({"schema":8,"hunter":{"gold":333}}))
+        interrupted.close()
+    else:
+        _expect(false,"Save: could not create interrupted-write recovery fixture")
+    _expect(save.load_now(),"Save: completed temporary write was not recovered")
+    _expect(int(state.data["hunter"]["gold"])==333,"Save: temporary recovery loaded the wrong progress")
+    _expect(not FileAccess.file_exists("user://anime_nexus_test_save.json.tmp"),"Save: recovered temporary file was not finalized")
+    save.free()
+    state.free()
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.json"))
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.bak.json"))
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.json.tmp"))
+
+func _test_save_slots()->void:
+    var state=StateScript.new()
+    state.reset()
+    var save=SaveScript.new()
+    save.setup(state)
+    var paths:Array=["user://anime_nexus_test_slot_1.json","user://anime_nexus_test_slot_2.json","user://anime_nexus_test_slot_3.json"]
+    save.configure_slot_paths(paths)
+    state.data["hunter"]["gold"]=111
+    _expect(save.save_slot(0),"Save slots: could not write slot 1")
+    state.data["hunter"]["gold"]=222
+    _expect(save.save_slot(1),"Save slots: could not write slot 2")
+    state.data["hunter"]["gold"]=333
+    _expect(not bool(save.slot_summary(2).get("has_save",false)),"Save slots: empty slot 3 should remain empty")
+    _expect(save.load_slot(0),"Save slots: could not load slot 1")
+    _expect(int(state.data["hunter"]["gold"])==111,"Save slots: slot 1 data was overwritten by slot 2")
+    _expect(save.load_slot(1),"Save slots: could not load slot 2")
+    _expect(int(state.data["hunter"]["gold"])==222,"Save slots: slot 2 data mismatch")
+    var future_slot:=FileAccess.open(paths[2],FileAccess.WRITE)
+    if future_slot:
+        future_slot.store_string(JSON.stringify({"schema":999,"hunter":{"gold":999}}))
+        future_slot.close()
+    else:
+        _expect(false,"Save slots: could not create future-version slot")
+    _expect(bool(save.slot_summary(2).get("future_schema",false)),"Save slots: future-version slot was not detected")
+    _expect(not save.save_slot(2),"Save slots: overwrite of future-version save was allowed")
+    _expect(int(save._read(paths[2]).get("schema",0))==999,"Save slots: future-version save was overwritten")
+    save.free()
+    state.free()
+    for path in paths:
+        DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+        DirAccess.remove_absolute(ProjectSettings.globalize_path(str(path)+".bak"))
+        DirAccess.remove_absolute(ProjectSettings.globalize_path(str(path)+".tmp"))
+
+func _test_virtual_joystick()->void:
+    var stick=JoystickScript.new()
+    stick.size=Vector2(180,180)
+    stick._update_vector(Vector2(90,90))
+    _expect(stick.vector==Vector2.ZERO,"Joystick: center must be neutral")
+    stick._update_vector(Vector2(180,90))
+    _expect(stick.vector.x>0.99 and absf(stick.vector.y)<0.01,"Joystick: full horizontal input mismatch")
+    stick._update_vector(Vector2(0,0))
+    _expect(is_equal_approx(stick.vector.length(),1.0),"Joystick: diagonal input must clamp to unit length")
+    stick.free()
+
+func _test_nimbara_vertical_slice_data_and_quest()->void:
+    var state=StateScript.new()
+    state.reset()
+    var content=ContentScript.new()
+    var maps=MapScript.new()
+    maps._ready()
+    _expect(state.data["hunter"]["name"]=="Kaien Arashi","Slice: default playable character must be Kaien")
+    _expect(state.data["loadout"]["weapon"]=="fulgor_gauntlets","Slice: Kaien loadout mismatch")
+    _expect(maps.get_map("nimbara")["name"].begins_with("Nimbara"),"Slice: Nimbara map data missing")
+    _expect(content.MONSTERS.has("moss_hopper") and content.MONSTERS.has("leaf_spark"),"Slice: Nimbara creatures missing")
+    _expect(content.BOSSES.has("crystal_stag"),"Slice: Cérvido de Cristal boss data missing")
+    for ability_id in ["lightning_step","sky_chain","static_field"]:
+        _expect(content.ABILITIES.has(ability_id),"Slice: Kaien ability missing: "+ability_id)
+    var quests=QuestScript.new()
+    quests.setup(state,content)
+    quests.start("nimbara_01")
+    quests.start("nimbara_01")
+    _expect(state.data["quests"]["active"].count("nimbara_01")==1,"Slice: starting an active quest must not duplicate it")
+    for i in range(4):quests.add_kill("moss_hopper")
+    _expect("nimbara_01" in state.data["quests"]["completed"],"Slice: Nimbara mission did not complete at four kills")
+    _expect("nimbara_02" in state.data["quests"]["active"],"Slice: Cérvido mission did not unlock")
+    _expect(int(state.data["inventory"].get("nimbara_pollen",0))==3,"Slice: mission pollen reward was not granted")
+    var pollen_after_completion:int=int(state.data["inventory"].get("nimbara_pollen",0))
+    quests.add_kill("moss_hopper")
+    quests.start("nimbara_01")
+    _expect(int(state.data["inventory"].get("nimbara_pollen",0))==pollen_after_completion,"Slice: completed mission reward was duplicated")
+    quests.add_boss("crystal_stag")
+    _expect("nimbara_02" in state.data["quests"]["completed"],"Slice: boss mission did not complete")
+    _expect("nimbara_03" in state.data["quests"]["active"],"Slice: anchor mission did not unlock after boss")
+    quests.add_interaction("resonance_anchor")
+    _expect("nimbara_03" in state.data["quests"]["completed"],"Slice: anchor interaction did not complete the prologue")
+    state.free()
+    content.free()
+    maps.free()
+    quests.free()
+
+func _test_static_field_slow()->void:
+    var content=ContentScript.new()
+    var enemy=EnemyScript.new()
+    enemy.configure("moss_hopper",null,content)
+    var normal_speed:float=enemy._speed()
+    enemy.apply_slow(3.0,0.42)
+    _expect(enemy._speed()<normal_speed*0.45,"Combat: static-field slow did not reduce enemy movement")
+    enemy.apply_slow(2.0,0.01)
+    _expect(is_equal_approx(enemy.slow_factor,0.15),"Combat: slow factor must respect its safe lower bound")
+    enemy.free()
+    content.free()
+
+func _test_boss_telegraph()->void:
+    var boss=BossScript.new()
+    var warnings:Array=[]
+    var immediate_hits:Array=[]
+    boss.telegraph_requested.connect(func(center:Vector3,radius:float,damage:float,windup:float):
+        warnings.append({"center":center,"radius":radius,"windup":windup})
+    )
+    boss.area_requested.connect(func(_center:Vector3,_radius:float,_damage:float):immediate_hits.append(true))
+    boss._warn_area(Vector3(1,0,1),3.2,120.0,0.72)
+    _expect(warnings.size()==1,"Boss: area attack did not announce its warning telegraph")
+    _expect(float(warnings[0].get("windup",0.0))>=0.5,"Boss: area attack warning window is too short")
+    _expect(immediate_hits.is_empty(),"Boss: area attack dealt damage before the telegraph resolved")
+    boss.free()
