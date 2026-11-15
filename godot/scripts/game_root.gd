@@ -291,10 +291,15 @@ func _enter_expedition()->void:
         map_id=str(ids[portal_step%ids.size()])
     var required_map:=""
     for active_id in state.data["quests"].get("active",[]):
-        var active_quest:Dictionary=quests.get_quest(str(active_id))
-        if not str(active_quest.get("map","")).is_empty():
-            required_map=str(active_quest["map"])
+        if str(active_id).begins_with("nimbara_side_"):
+            required_map="nimbara"
             break
+    if required_map.is_empty():
+        for active_id in state.data["quests"].get("active",[]):
+            var active_quest:Dictionary=quests.get_quest(str(active_id))
+            if not str(active_quest.get("map","")).is_empty():
+                required_map=str(active_quest["map"])
+                break
     if not required_map.is_empty():map_id=required_map
     var nimbara_story_complete:=bool(state.data["story"]["flags"].get("nimbara_slice_complete",false))
     if not nimbara_story_complete and (int(state.data["world"].get("completed_expeditions",0))==0 or "nimbara_08" in state.data["quests"]["active"] or "nimbara_side_01" in state.data["quests"]["active"] or "nimbara_side_02" in state.data["quests"]["active"]):
@@ -360,7 +365,7 @@ func _enter_rift()->void:
     var active_quests:Array=state.data["quests"].get("active",[])
     for mission_id in ["nimbara_01","nimbara_02","nimbara_03","nimbara_04","nimbara_05","nimbara_06","aurelio_01","aurelio_02","aurelio_03","aurelio_04","aurelio_05","aurelio_06"]:
         if mission_id in active_quests:
-            hud.set_mode("MISSÃO • CONCLUA O OBJETIVO ATUAL DE NIMBARA")
+            hud.set_mode("MISSÃO • CONCLUA O OBJETIVO REGIONAL ATUAL")
             return
     if "nimbara_08" in active_quests or "aurelio_08" in active_quests:
         hud.set_mode("MISSÃO • INTERAJA COM A ÂNCORA DE RESSONÂNCIA")
