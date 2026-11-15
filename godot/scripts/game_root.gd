@@ -256,6 +256,7 @@ func _open_expedition_selection()->void:
             selected_expedition_map="nimbara"
             _enter_expedition()
             return
+        if bool(quest.get("optional",false)):continue
         if not str(quest.get("map","")).is_empty():
             _enter_expedition()
             return
@@ -282,8 +283,10 @@ func _enter_hq()->void:
     _set_companion_combat(false)
     for companion in companions:
         if is_instance_valid(companion):companion.reset_formation()
-    if bool(state.data["story"]["flags"].get("nexus_campaign_epilogue_complete",false)):
-        hud.set_mode("ALÉM DO HORIZONTE • EXPEDIÇÕES E RIFT SECRETO DISPONÍVEIS")
+    if bool(state.data["story"]["flags"].get("prism_primordial_defeated",false)):
+        hud.set_mode("PRISMA PRIMORDIAL SUPERADO • ROTAS PÓS-JOGO ABERTAS")
+    elif bool(state.data["story"]["flags"].get("nexus_campaign_epilogue_complete",false)):
+        hud.set_mode("CAMPANHA CONCLUÍDA • RIFT SECRETO DO PRISMA DISPONÍVEL")
     elif bool(state.data["story"]["flags"].get("nexus_core_slice_complete",false)):
         hud.set_mode("CORAÇÃO DO NEXO ESTABILIZADO • EXPEDIÇÕES LIVRES")
     elif bool(state.data["story"]["flags"].get("nimbara_slice_complete",false)):
@@ -308,6 +311,7 @@ func _enter_expedition()->void:
     if required_map.is_empty():
         for active_id in state.data["quests"].get("active",[]):
             var active_quest:Dictionary=quests.get_quest(str(active_id))
+            if bool(active_quest.get("optional",false)):continue
             if not str(active_quest.get("map","")).is_empty():
                 required_map=str(active_quest["map"])
                 break
@@ -1271,9 +1275,12 @@ func _quest_completed(id:String)->void:
     if id.begins_with("chapter_") or id.begins_with("boss_"):
         _story()
     if id=="epilogue_01":
+        state.data["story"]["flags"]["nexus_campaign_epilogue_complete"]=true
+        state.story_changed.emit()
+        save.save_now()
         call_deferred("_enter_hq")
     if id=="epilogue_02":
-        state.data["story"]["flags"]["nexus_campaign_epilogue_complete"]=true
+        state.data["story"]["flags"]["prism_primordial_defeated"]=true
         state.story_changed.emit()
         save.save_now()
         hud.set_mode("ALÉM DO HORIZONTE • PRISMA PRIMORDIAL SUPERADO")

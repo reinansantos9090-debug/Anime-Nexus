@@ -639,6 +639,7 @@ func _test_prologue_and_epilogue_routes()->void:
             epilogue_rows.append(row)
     _expect(epilogue_rows.size()==2,"Epilogue: both playable missions must be cataloged")
     _expect(str(epilogue_rows[0].get("next",""))=="epilogue_02","Epilogue: return mission must lead into the horizon challenge")
+    _expect(bool(epilogue_rows[1].get("optional",false)),"Epilogue: secret boss must not block free expedition selection")
     content.free()
     maps.free()
 
