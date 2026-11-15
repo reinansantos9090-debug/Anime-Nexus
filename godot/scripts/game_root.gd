@@ -159,7 +159,7 @@ func _ready()->void:
     workshop_menu.crafted.connect(_workshop_crafted)
     inventory_menu=InventoryMenuScript.new()
     add_child(inventory_menu)
-    inventory_menu.setup(content,inventory,state)
+    inventory_menu.setup(content,state)
 
     world.build_hq()
     _apply_quality(perf.current())

@@ -4,7 +4,6 @@ extends CanvasLayer
 signal closed
 
 var content_database:Node
-var inventory_service:Node
 var game_state:Node
 var root:Control
 var rows:VBoxContainer
@@ -15,12 +14,9 @@ func _ready()->void:
     _build()
     hide_menu()
 
-func setup(content:Node,inventory:Node,state:Node)->void:
+func setup(content:Node,state:Node)->void:
     content_database=content
-    inventory_service=inventory
     game_state=state
-    if inventory_service and not inventory_service.changed.is_connected(_refresh):
-        inventory_service.changed.connect(_refresh)
     if game_state and not game_state.state_changed.is_connected(_refresh):
         game_state.state_changed.connect(_refresh)
     _refresh()
@@ -63,7 +59,7 @@ func _build()->void:
     panel.add_child(close_button)
 
 func _refresh()->void:
-    if rows==null or inventory_service==null or game_state==null:return
+    if rows==null or game_state==null:return
     for child in rows.get_children():
         rows.remove_child(child)
         child.queue_free()
