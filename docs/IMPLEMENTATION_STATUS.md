@@ -71,4 +71,4 @@ A run `43410319631` é evidência histórica: passou o host Kotlin e o export Go
 Em Godot 4.6.3 local e 4.7.2 no CI: projeto/app identificados como Anime Nexus, orientação landscape, package ID próprio, save local separado, câmera ortográfica diagonal, avatar blockout de Kaien, Nimbara blockout, kit elétrico, quatro criaturas e chefe Cérvido de Cristal. A cadeia testada em regras é: derrotar quatro Musgos Saltadores → derrotar o Cérvido → aproximar-se e interagir com a Âncora. Ataques em área do chefe anunciam a região antes de aplicar dano. `ANIME_NEXUS_TESTS: PASS`, smoke run local sem erros de script, export Godot, testes Kotlin e APK do host passaram na run `43409376899`. Instalação, imagem e touchscreen em aparelho seguem pendentes.
 
 
-| Missões secundárias (45) | Planejado | ainda não há 45 missões secundárias originais conectadas à interface, progressão e save |
+| Missões secundárias | Em desenvolvimento | duas secundárias de Nimbara (pólen e ecos únicos) usam alvos/recompensas e save local; as 48 histórias pessoais listadas no documento narrativo ainda aguardam integração à interface, objetivos e progressão |
