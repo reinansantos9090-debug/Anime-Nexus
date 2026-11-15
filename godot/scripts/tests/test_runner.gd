@@ -43,6 +43,7 @@ func _init()->void:
     _test_vesper_campaign_chain()
     _test_aurelio_region_data()
     _test_ferrumia_region_data()
+    _test_ferrumia_campaign_chain()
     _test_ivern_region_data()
     _test_umbral_region_data()
     _test_nexus_region_data()
@@ -508,6 +509,45 @@ func _test_vesper_campaign_chain()->void:
         "Vesper campaign: wrong regional boss")
     _expect(str(content.CAMPAIGN_NEXT_QUEST.get("aurelio",""))=="vesper_01",
         "Vesper campaign: chapter must unlock after Aurelio")
+    content.free()
+    maps.free()
+
+func _test_ferrumia_campaign_chain()->void:
+    var content=ContentScript.new()
+    var maps=MapScript.new()
+    maps._ready()
+    var expected:Array=["ferrumia_01","ferrumia_02","ferrumia_03","ferrumia_04","ferrumia_05","ferrumia_06","ferrumia_07","ferrumia_08"]
+    for index in range(expected.size()):
+        var quest:Dictionary={}
+        for row in content.QUESTS:
+            if str(row.get("id",""))==expected[index]:
+                quest=row
+                break
+        _expect(not quest.is_empty(),"Ferrúmia campaign: missing %s"%expected[index])
+        if quest.is_empty():continue
+        _expect(str(quest.get("map",""))=="ferrumia","Ferrúmia campaign: wrong map")
+        var kind:=str(quest.get("type",""))
+        if kind=="kill":
+            var monster_id:=str(quest.get("monster",""))
+            _expect(content.MONSTERS.has(monster_id),"Ferrúmia campaign: missing creature")
+            _expect(monster_id in maps.maps["ferrumia"].get("enemies",[]),"Ferrúmia campaign: creature missing from map pool")
+        elif kind=="collect":
+            var item_id:=str(quest.get("item",""))
+            _expect(content.ITEMS.has(item_id),"Ferrúmia campaign: missing objective material")
+            var dropped:=false
+            for monster_id in maps.maps["ferrumia"].get("enemies",[]):
+                if item_id in content.MONSTERS.get(str(monster_id),{}).get("loot",[]):
+                    dropped=true
+                    break
+            _expect(dropped,"Ferrúmia campaign: objective material unavailable in region")
+        elif kind=="boss":
+            _expect(content.BOSSES.has(str(quest.get("boss",""))),"Ferrúmia campaign: boss catalog entry missing")
+        if index<expected.size()-1:
+            _expect(str(quest.get("next",""))==expected[index+1],"Ferrúmia campaign: broken quest chain")
+    _expect(str(content.REGIONAL_BOSSES.get("ferrumia",""))=="steel_coral_colossus",
+        "Ferrúmia campaign: regional boss mismatch")
+    _expect(str(content.CAMPAIGN_NEXT_QUEST.get("vesper",""))=="ferrumia_01",
+        "Ferrúmia campaign: chapter must unlock after Vesper")
     content.free()
     maps.free()
 

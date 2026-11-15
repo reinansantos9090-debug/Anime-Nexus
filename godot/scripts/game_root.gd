@@ -1089,6 +1089,8 @@ func _spawn_boss(id:String)->void:
     b.configure_boss(id,player,content,maps.difficulty(boss_map),state.difficulty_profile())
     if id=="crystal_stag":b.attach_visual(Factory.make_crystal_stag(b,Color("#416a80"),Color("#70f5dc")))
     elif id=="archive_zero":b.attach_visual(_make_archive_zero_visual(b))
+    elif id=="steel_coral_colossus":
+        b.attach_visual(Factory.make_colossus(b,Color("#68455a"),Color("#ffaf71")))
     else:
         var palette:Dictionary={
             "fire":[Color("#783b38"),Color("#ffad4d")],

@@ -174,6 +174,7 @@ func _ready() -> void:
             "duration":180.0,
             "goal":14,
             "hazard":"pulsos magnéticos de trilho",
+            "resonance_anchor":Vector3(0,0,-8.5),
             "ground":Color("#594c6d"),
             "accent":Color("#ff8bc7"),
             "fog":Color("#927b9f"),
