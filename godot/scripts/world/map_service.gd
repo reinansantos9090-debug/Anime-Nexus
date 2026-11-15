@@ -194,6 +194,7 @@ func _ready() -> void:
             "duration":175.0,
             "goal":12,
             "hazard":"ecos de areia temporal",
+            "resonance_anchor":Vector3(0,0,-8.5),
             "ground":Color("#b78555"),
             "accent":Color("#ffd17e"),
             "fog":Color("#d2a487"),

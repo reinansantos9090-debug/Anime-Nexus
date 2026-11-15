@@ -228,21 +228,21 @@ static func make_crystal_stag(parent: Node3D, color: Color, accent: Color) -> No
         shard.scale=Vector3(0.42,0.60,0.42)
     return root
 
-static func make_resonance_anchor(parent:Node3D,pos:Vector3)->Node3D:
+static func make_resonance_anchor(parent:Node3D,pos:Vector3,accent:Color=Color("#69e8cc"))->Node3D:
     var root:=Node3D.new()
     root.name="AncoraDeRessonancia_Blockout"
     root.position=pos
     parent.add_child(root)
     cylinder(root,1.25,1.45,0.32,Vector3(0,0.16,0),Color("#40536a"))
-    torus(root,1.38,1.53,Vector3(0,0.34,0),Color("#69e8cc"))
-    var central:=make_crystal(root,Vector3(0,1.05,0),Color("#71f0d1"))
+    torus(root,1.38,1.53,Vector3(0,0.34,0),accent)
+    var central:=make_crystal(root,Vector3(0,1.05,0),accent.lightened(0.08))
     central.scale=Vector3(1.0,1.45,1.0)
     for side in [-1.0,1.0]:
-        var shard:=make_crystal(root,Vector3(side*0.84,0.60,0.14),Color("#ad91ff"))
+        var shard:=make_crystal(root,Vector3(side*0.84,0.60,0.14),accent.lerp(Color("#ad91ff"),0.42))
         shard.scale=Vector3(0.48,0.78,0.48)
         shard.rotation.z=side*0.25
     var light:=OmniLight3D.new()
-    light.light_color=Color("#78f1d5")
+    light.light_color=accent.lightened(0.10)
     light.light_energy=1.25
     light.omni_range=5.5
     light.position=Vector3(0,1.4,0)

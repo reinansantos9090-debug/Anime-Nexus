@@ -37,6 +37,7 @@ func _init()->void:
     _test_save_slots()
     _test_virtual_joystick()
     _test_nimbara_vertical_slice_data_and_quest()
+    _test_aurelio_campaign_chain()
     _test_story_dialogue_completion()
     _test_vesper_region_data()
     _test_aurelio_region_data()
@@ -469,6 +470,42 @@ func _test_story_dialogue_completion()->void:
     _expect(state.data["story"]["journal"].size()==8,"Story: prologue must save all displayed lines locally")
     story.free()
     state.free()
+
+func _test_aurelio_campaign_chain()->void:
+    var content=ContentScript.new()
+    var maps=MapScript.new()
+    maps._ready()
+    var expected:Array=["aurelio_01","aurelio_02","aurelio_03","aurelio_04","aurelio_05","aurelio_06","aurelio_07","aurelio_08"]
+    for index in range(expected.size()):
+        var found:Dictionary={}
+        for quest in content.QUESTS:
+            if str(quest.get("id",""))==expected[index]:
+                found=quest
+                break
+        _expect(not found.is_empty(),"Aurélio campaign: missing %s"%expected[index])
+        if found.is_empty():continue
+        _expect(str(found.get("map",""))=="aurelio","Aurélio campaign: wrong map in %s"%expected[index])
+        if str(found.get("type",""))=="kill":
+            _expect(content.MONSTERS.has(str(found.get("monster",""))),
+                "Aurélio campaign: target creature missing in %s"%expected[index])
+        elif str(found.get("type",""))=="collect":
+            _expect(content.ITEMS.has(str(found.get("item",""))),
+                "Aurélio campaign: reward material missing in %s"%expected[index])
+        elif str(found.get("type",""))=="boss":
+            _expect(content.BOSSES.has(str(found.get("boss",""))),
+                "Aurélio campaign: boss missing in %s"%expected[index])
+        if str(found.get("type","")) in ["kill","collect"]:
+            _expect(str(found.get("type",""))!="kill" or str(found.get("monster","")) in maps.maps["aurelio"].get("enemies",[]),
+                "Aurélio campaign: target not available in map pool for %s"%expected[index])
+        _expect(int(found.get("target",0))>0,"Aurélio campaign: missing objective count in %s"%expected[index])
+        _expect(not str(found.get("start_dialogue","")).is_empty(),"Aurélio campaign: missing opening line in %s"%expected[index])
+        _expect(not str(found.get("completion_dialogue","")).is_empty(),"Aurélio campaign: missing completion line in %s"%expected[index])
+        if index<expected.size()-1:
+            _expect(str(found.get("next",""))==expected[index+1],"Aurélio campaign: broken next link in %s"%expected[index])
+    _expect(str(content.REGIONAL_BOSSES.get("aurelio",""))=="chrono_colossus",
+        "Aurélio campaign: final boss must match regional route")
+    content.free()
+    maps.free()
 
 func _test_regional_boss_catalog()->void:
     var content=ContentScript.new()

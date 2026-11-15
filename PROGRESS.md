@@ -10,6 +10,8 @@ Branch de desenvolvimento atual: `dev/anime-nexus-vertical-slice`.
 - Workflow revisado para validar a revisão exata e gerar artifacts sem alterar `main`.
 - Fluxo inicial da slice conectado no Godot: avatar blockout de Kaien, Manoplas Fulgor, três habilidades, mapa blockout de Nimbara, missão, chefe Cérvido de Cristal e interação de proximidade com a Âncora.
 - Câmera ortográfica diagonal e HUD simplificado para a campanha inicial; joystick analógico mantém intensidade gradual.
+- Portal de desafio roteia ao chefe catalogado da região persistida e retorna ao Observatório ou à Âncora conforme a missão. Modelos reutilizados continuam blockout.
+- Capítulo de Aurélio conectado após a primeira Âncora: oito missões de caça/coleta, Colosso Crono regional e ativação da segunda Âncora com save local; puzzles e recursos finais continuam pendentes.
 - Ataques em área do chefe agora exibem um círculo de aviso no chão antes do dano; a janela de aviso e a ausência de dano imediato estão cobertas por teste headless.
 - Núcleo C++ `AnimeNexusCombatCore` integrado ao ataque básico e à evolução por XP; cálculo de dano/crítico, reações de elementos e subida de nível passaram no Godot 4.7.2 local.
 - CI está sendo ampliado para compilar a extensão no Linux e no Android arm64 antes dos testes/exportação. APK com C++ não será considerado validado até essa CI passar.

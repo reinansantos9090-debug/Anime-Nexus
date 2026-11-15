@@ -53,7 +53,10 @@ func build_biome(id: String) -> void:
         for obstacle in b.get("obstacles",[]):
             _make_obstacle(obstacle,b.get("accent",Color.WHITE))
     _make_biome_decor(id,b)
-    if id=="nimbara":Factory.make_resonance_anchor(world_root,Vector3(0,0,-8.5))
+    if b.has("resonance_anchor"):
+        Factory.make_resonance_anchor(world_root,b["resonance_anchor"],b.get("accent",Color("#69e8cc")))
+    elif id=="nimbara":
+        Factory.make_resonance_anchor(world_root,Vector3(0,0,-8.5))
     portal=Factory.make_portal(world_root,Vector3(0,0,0),b.get("accent",Color("#5bdcff")))
     _make_hazard_markers(id,b.get("accent",Color.WHITE))
 
