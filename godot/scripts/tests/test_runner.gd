@@ -38,6 +38,7 @@ func _init()->void:
     _test_virtual_joystick()
     _test_nimbara_vertical_slice_data_and_quest()
     _test_kaien_personal_side_quest()
+    _test_akari_ember_flower_quest()
     _test_aurelio_campaign_chain()
     _test_story_dialogue_completion()
     _test_vesper_region_data()
@@ -791,6 +792,45 @@ func _test_kaien_personal_side_quest()->void:
     core.free()
     maps.free()
     content.free()
+
+func _test_akari_ember_flower_quest()->void:
+    var content=ContentScript.new()
+    var maps=MapScript.new()
+    maps._ready()
+    var quest:Dictionary={}
+    for row in content.QUESTS:
+        if str(row.get("id",""))=="nimbara_side_04":
+            quest=row
+            break
+    _expect(not quest.is_empty(),"Akari story: ember-flower quest record missing")
+    _expect(str(quest.get("type",""))=="interact" and int(quest.get("target",0))==1,"Akari story: objective should be one local interaction")
+    _expect(str(quest.get("map",""))=="nimbara" and bool(quest.get("optional",false)),"Akari story: optional Nimbara routing missing")
+    var point:Dictionary=maps.maps["nimbara"].get("interaction_points",{})
+    _expect(point.has("akari_flame_bloom"),"Akari story: interaction point is not authored in Nimbara")
+    _expect(str(quest.get("object",""))=="akari_flame_bloom","Akari story: objective does not use the authored flower marker")
+    _expect(str(quest.get("start_dialogue","")).contains("pedir ajuda"),"Akari story: personal conflict missing from opening")
+    _expect(str(quest.get("completion_dialogue","")).contains("sozinha"),"Akari story: resolution dialogue missing")
+    for reward_id in quest.get("rewards",{}).keys():
+        _expect(content.ITEMS.has(str(reward_id)),"Akari story: reward is not catalogued: "+str(reward_id))
+    var core:=AnimeNexusQuestCore.new()
+    var state:Dictionary={"active":[],"completed":[],"progress":{}}
+    var start:Dictionary=core.start_quest(state,content.QUESTS,"nimbara_side_04")
+    var interaction:Dictionary=core.apply_event(start.get("quests",{}),content.QUESTS,"interact","akari_flame_bloom",1)
+    _expect("nimbara_side_04" in interaction.get("quests",{}).get("completed",[]),"Akari story: interacting with the flower did not finish the objective")
+    _expect(int(interaction.get("items_reward",{}).get("ember_scale",0))==2,"Akari story: local reward mismatch")
+    var menu_file:=FileAccess.open("res://scripts/ui/activity_menu.gd",FileAccess.READ)
+    _expect(menu_file!=null,"Akari story: operations menu source should be readable")
+    if menu_file:
+        _expect(menu_file.get_as_text().contains('["akari_story"'),"Akari story: menu entry missing")
+        menu_file.close()
+    var root_file:=FileAccess.open("res://scripts/game_root.gd",FileAccess.READ)
+    _expect(root_file!=null,"Akari story: game root source should be readable")
+    if root_file:
+        _expect(root_file.get_as_text().contains('"akari_story":_start_optional_quest("nimbara_side_04")'),"Akari story: menu action is not routed")
+        root_file.close()
+    maps.free()
+    content.free()
+    core.free()
 
 func _test_aurelio_campaign_chain()->void:
     var content=ContentScript.new()
