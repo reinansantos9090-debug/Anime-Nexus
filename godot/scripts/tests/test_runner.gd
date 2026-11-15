@@ -39,6 +39,7 @@ func _init()->void:
     _test_nimbara_vertical_slice_data_and_quest()
     _test_kaien_personal_side_quest()
     _test_akari_ember_flower_quest()
+    _test_ren_wind_chime_quest()
     _test_aurelio_campaign_chain()
     _test_story_dialogue_completion()
     _test_vesper_region_data()
@@ -859,6 +860,72 @@ func _test_akari_ember_flower_quest()->void:
     maps.free()
     content.free()
     core.free()
+
+func _test_ren_wind_chime_quest()->void:
+    var content=ContentScript.new()
+    var maps=MapScript.new()
+    maps._ready()
+    var quest:Dictionary={}
+    for row in content.QUESTS:
+        if str(row.get("id",""))=="nimbara_side_05":
+            quest=row
+            break
+    _expect(not quest.is_empty(),"Ren story: wind-chime quest record missing")
+    _expect(str(quest.get("type",""))=="interact" and int(quest.get("target",0))==1,"Ren story: objective should be one local exploration interaction")
+    _expect(str(quest.get("map",""))=="nimbara" and bool(quest.get("optional",false)),"Ren story: optional Nimbara routing missing")
+    var points:Dictionary=maps.maps["nimbara"].get("interaction_points",{})
+    _expect(points.has("ren_wind_chime"),"Ren story: wind-chime point is not authored in Nimbara")
+    _expect(str(quest.get("object",""))=="ren_wind_chime","Ren story: objective does not use the authored chime marker")
+    _expect(str(quest.get("start_dialogue","")).contains("embora"),"Ren story: fear of leaving is missing from opening")
+    _expect(str(quest.get("completion_dialogue","")).contains("escolher voltar"),"Ren story: choice to stay is missing from resolution")
+    for reward_id in quest.get("rewards",{}).keys():
+        _expect(content.ITEMS.has(str(reward_id)),"Ren story: reward is not catalogued: "+str(reward_id))
+    var core:=AnimeNexusQuestCore.new()
+    var quests_state:Dictionary={"active":[],"completed":[],"progress":{}}
+    var started:Dictionary=core.start_quest(quests_state,content.QUESTS,"nimbara_side_05")
+    var completion:Dictionary=core.apply_event(started.get("quests",{}),content.QUESTS,"interact","ren_wind_chime",1)
+    _expect("nimbara_side_05" in completion.get("quests",{}).get("completed",[]),"Ren story: interacting with the chime did not complete the quest")
+    _expect(int(completion.get("items_reward",{}).get("ren_sky_knot",0))==1,"Ren story: unique local collectible reward missing")
+
+    var state=StateScript.new()
+    state.reset()
+    var quest_service=QuestScript.new()
+    quest_service.setup(state,content)
+    var save_service=SaveScript.new()
+    save_service.setup(state)
+    save_service.configure_paths("user://anime_nexus_ren_story.json","user://anime_nexus_ren_story.bak.json")
+    quest_service.start("nimbara_side_05")
+    quest_service.add_interaction("ren_wind_chime")
+    var story_root=GameRootScript.new()
+    story_root.state=state
+    story_root.quests=quest_service
+    story_root.save=save_service
+    story_root._quest_completed("nimbara_side_05")
+    _expect(bool(state.data["story"]["flags"].get("ren_chose_to_stay",false)),"Ren story: completion did not set the world-change flag")
+    state.data["story"]["flags"]["ren_chose_to_stay"]=false
+    _expect(save_service.load_now(),"Ren story: could not reload the local world-change flag")
+    var world_service=WorldScript.new()
+    world_service.root=story_root
+    _expect(world_service._story_flag("ren_chose_to_stay"),"Ren story: restored flag was not visible to the world renderer")
+    world_service.free()
+    story_root.free()
+    quest_service.free()
+    save_service.free()
+    state.free()
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_ren_story.json"))
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_ren_story.bak.json"))
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_ren_story.json.tmp"))
+    var menu_file:=FileAccess.open("res://scripts/ui/activity_menu.gd",FileAccess.READ)
+    _expect(menu_file!=null,"Ren story: operations menu source should be readable")
+    if menu_file:
+        _expect(menu_file.get_as_text().contains('["ren_story"'),"Ren story: menu entry missing")
+        menu_file.close()
+    var root_file:=FileAccess.open("res://scripts/game_root.gd",FileAccess.READ)
+    _expect(root_file!=null,"Ren story: game root action is not readable")
+    if root_file:
+        _expect(root_file.get_as_text().contains('"ren_story":_start_optional_quest("nimbara_side_05")'),"Ren story: operations action is not routed")
+        root_file.close()
+    maps.free()
 
 func _test_aurelio_campaign_chain()->void:
     var content=ContentScript.new()

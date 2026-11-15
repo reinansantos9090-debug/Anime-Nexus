@@ -198,6 +198,12 @@ GLB é formato de intercâmbio; preservar fonte editável em arquivo de criaçã
 
 
 
+## Sino do Vento de Ren
+
+| Asset | Finalidade | Região/personagem | Descrição visual / paleta | Especificações | Materiais | Animações | Estado | Origem/licença |
+|---|---|---|---|---|---|---|---|---|
+| Sino do Vento | Marco explorável da introdução pessoal adicional de Ren | Rota antiga de Nimbara | Haste simples com cristal suspenso e dois anéis turquesa; dourado após Ren escolher permanecer com o grupo | Elementos procedurais leves em torno de `ren_wind_chime`, visíveis na perspectiva isométrica | Sem textura externa; cores em material procedural | Sem animação até o polish | Blockout integrado; silhueta, oscilação do sino, som e modelo final pendentes | Geometria procedural original do projeto |
+
 ## Flor de Brasa
 
 | Asset | Finalidade | Região/personagem | Descrição visual / paleta | Especificações | Materiais | Animações | Estado | Origem/licença |

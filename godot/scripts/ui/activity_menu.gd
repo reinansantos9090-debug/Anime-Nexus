@@ -19,6 +19,7 @@ const ACTIONS := [
     ["memory_quest","MISSÃO • ECOS NO LAGO","Encontrar três ecos de memória escondidos"],
     ["kaien_story","HISTÓRIA DE KAIEN • O BRASÃO","Investigar uma pista antiga da família Arashi"],
     ["akari_story","HISTÓRIA DE AKARI • A FLOR DE BRASA","Ajudá-la a controlar o fogo sem ferir a floresta"],
+    ["ren_story","HISTÓRIA DE REN • O SOM QUE FICA","Ouvir a lembrança deixada numa antiga rota"],
     ["saves","SALVAMENTOS","Gerenciar três espaços locais"],
     ["difficulty","DIFICULDADE • AVENTURA","Alternar o desafio da campanha offline"]
 ]
@@ -59,9 +60,9 @@ func _build() -> void:
         var data = ACTIONS[i]
         var b := Button.new()
         b.text = str(data[1]) + "\n" + str(data[2])
-        b.position = Vector2(32 + (i % 2) * 360, 108 + int(i / 2) * 86)
-        b.size = Vector2(338, 70)
-        b.add_theme_font_size_override("font_size",16)
+        b.position = Vector2(32 + (i % 2) * 360, 108 + int(i / 2) * 72)
+        b.size = Vector2(338, 64)
+        b.add_theme_font_size_override("font_size",15)
         var normal := StyleBoxFlat.new()
         normal.bg_color = Color("#162235ee")
         normal.border_color = Color("#5bcfff88")

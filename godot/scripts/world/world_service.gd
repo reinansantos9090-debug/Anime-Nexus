@@ -95,6 +95,17 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
                 ember_ring.rotation.x=PI*0.5
                 var ember_marker:=Factory.make_crystal(world_root,ember_point+Vector3(0,0.62,0),ember_color.lightened(0.08))
                 ember_marker.scale=Vector3(0.34,0.34,0.34)
+            if interaction_points.has("ren_wind_chime"):
+                var chime_point:Vector3=interaction_points["ren_wind_chime"]
+                var chime_color:=Color("#ffd27a") if _story_flag("ren_chose_to_stay") else Color("#72e6dc")
+                var chime_stem:=Factory.cylinder(world_root,0.055,0.075,0.85,chime_point+Vector3(0,0.82,0),Color("#4b6870"))
+                chime_stem.rotation.z=-0.08
+                var chime_body:=Factory.make_crystal(world_root,chime_point+Vector3(0,1.42,0),chime_color)
+                chime_body.scale=Vector3(0.30,0.62,0.30)
+                var chime_ring:=Factory.torus(world_root,0.52,0.64,chime_point+Vector3(0,1.45,0),chime_color.lightened(0.12))
+                chime_ring.rotation.x=PI*0.5
+                var chime_echo:=Factory.torus(world_root,0.75,0.83,chime_point+Vector3(0,1.45,0),chime_color.darkened(0.12))
+                chime_echo.rotation=Vector3(PI*0.5,0,0.34)
             for p in b.get("memory_echoes",[]):
                 _memory_echo(p)
         "verdant_frontier":
