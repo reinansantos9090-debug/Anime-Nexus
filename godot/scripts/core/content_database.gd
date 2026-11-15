@@ -92,6 +92,12 @@ const MONSTERS := {
     "void_glider":{"name":"Planador do Vazio","hp":230.0,"damage":44.0,"speed":3.6,"xp":175,"tier":5,"behavior":"flying","loot":["void_membrane","sky_fragment"]},
     "storm_caster":{"name":"Conjurador da Tempestade","hp":205.0,"damage":52.0,"speed":2.0,"xp":190,"tier":5,"behavior":"ranged","loot":["storm_core","prism_fragment"]},
     "chrono_knight":{"name":"Cavaleiro Crono","hp":360.0,"damage":62.0,"speed":2.1,"xp":240,"tier":6,"behavior":"controller","loot":["chrono_gear","gravity_shard"]},
+    "shapeless_echo":{"element":"shadow","name":"Eco Sem Forma","hp":132.0,"damage":28.0,"speed":2.8,"xp":113,"tier":3,"behavior":"controller","loot":["umbral_echo","memory_glass"]},
+    "eclipse_butterfly":{"element":"shadow","name":"Borboleta do Eclipse","hp":110.0,"damage":26.0,"speed":4.2,"xp":102,"tier":3,"behavior":"flying","loot":["eclipse_powder","void_thread"]},
+    "mirror_guardian":{"element":"light","name":"Guardião do Espelho","hp":310.0,"damage":38.0,"speed":1.4,"xp":178,"tier":5,"behavior":"guardian","loot":["mirror_shard","memory_glass"]},
+    "fractured_shadow":{"element":"shadow","name":"Sombra Fragmentada","hp":172.0,"damage":34.0,"speed":3.8,"xp":164,"tier":4,"behavior":"splitter","loot":["umbral_echo","void_thread"]},
+    "wandering_illusion":{"element":"shadow","name":"Ilusão Errante","hp":148.0,"damage":31.0,"speed":4.3,"xp":151,"tier":4,"behavior":"stealth","loot":["eclipse_powder","silence_ink"]},
+    "silence_watch":{"element":"shadow","name":"Vigia do Silêncio","hp":212.0,"damage":47.0,"speed":1.7,"xp":194,"tier":5,"behavior":"sniper","loot":["silence_ink","mirror_shard"]},
     "snowflake_wisp":{"element":"ice","name":"Floco Vivente","hp":102.0,"damage":22.0,"speed":3.2,"xp":84,"tier":3,"behavior":"orbit","loot":["snowglass","aurora_shard"]},
     "boreal_fox":{"element":"wind","name":"Raposa Boreal Encantada","hp":148.0,"damage":35.0,"speed":5.0,"xp":132,"tier":4,"behavior":"assassin","loot":["boreal_fur","snowglass"]},
     "erratic_crystal":{"element":"ice","name":"Cristal Errático","hp":176.0,"damage":31.0,"speed":2.4,"xp":148,"tier":4,"behavior":"teleporter","loot":["aurora_shard","warm_crystal"]},
@@ -140,7 +146,8 @@ const BIOMES := {
     "vesper":{"name":"Vesper • Arquipélago das Marés","ground":Color("#376e77"),"accent":Color("#59d8d2"),"fog":Color("#527f91")},
     "aurelio":{"name":"Aurélio • Deserto das Horas","ground":Color("#b78555"),"accent":Color("#ffd17e"),"fog":Color("#d2a487")},
     "ferrumia":{"name":"Ferrúmia • Cidade das Engrenagens","ground":Color("#594c6d"),"accent":Color("#ff8bc7"),"fog":Color("#927b9f")},
-    "ivern":{"name":"Ivern • Montanhas da Aurora","ground":Color("#7183a0"),"accent":Color("#d5e9ff"),"fog":Color("#bdc9e2")}
+    "ivern":{"name":"Ivern • Montanhas da Aurora","ground":Color("#7183a0"),"accent":Color("#d5e9ff"),"fog":Color("#bdc9e2")},
+    "umbral":{"name":"Umbral • Jardins do Eclipse","ground":Color("#39334f"),"accent":Color("#d995f0"),"fog":Color("#665a86")}
 }
 
 const QUESTS := [
@@ -214,6 +221,12 @@ const ITEMS := {
     "rift_hide":{"name":"Pele da Fenda","value":37},"gravity_shard":{"name":"Estilhaço Gravitacional","value":43},
     "void_membrane":{"name":"Membrana do Vazio","value":48},"storm_core":{"name":"Núcleo de Tempestade","value":50},
     "chrono_gear":{"name":"Engrenagem Crono","value":58},
+    "umbral_echo":{"name":"Eco de Umbral","value":27},
+    "eclipse_powder":{"name":"Pó do Eclipse","value":30},
+    "mirror_shard":{"name":"Estilhaço de Espelho","value":37},
+    "void_thread":{"name":"Fio do Vazio","value":33},
+    "memory_glass":{"name":"Vidro de Memória","value":41},
+    "silence_ink":{"name":"Tinta do Silêncio","value":35},
     "snowglass":{"name":"Vidro de Neve","value":24},
     "aurora_shard":{"name":"Fragmento da Aurora","value":36},
     "boreal_fur":{"name":"Pelo Boreal","value":31},

@@ -15,6 +15,7 @@ Data da auditoria: 15 nov. 2026, branch `dev/anime-nexus-vertical-slice`.
 | Kaien | Em desenvolvimento | avatar procedural blockout com cores, cabelo e manoplas distintivos; sem modelo anime final, rig/skinning ou animações de produção |
 | Sete aliados | Planejado | nenhum personagem Anime Nexus produzido no runtime |
 | Nimbara | Em desenvolvimento | mapa 3D blockout com trilha, árvores, raízes, cristais e âncora; sem subáreas e arte final |
+| Umbral | Em desenvolvimento | expedição compacta com seis criaturas/saques, sete obstáculos, painéis e colunas estáticos blockout; sem reflexos/rotas mutáveis/chefe, rigs, animações ou arte final; runner curto manual adicionado |
 | Ivern | Em desenvolvimento | expedição compacta com seis espécies/saques, sete obstáculos e blockouts de neve/cristais/arcos; sem pontes dinâmicas, vento, chefe, rig/animações ou arte final; runner curto manual adicionado |
 | Ferrúmia | Em desenvolvimento | expedição compacta com seis espécies e loot local, sete obstáculos, trilhos estáticos e torres/engrenagens blockout; sem elevadores, máquinas interativas, chefe ou arte final; runner curto manual adicionado |
 | Aurélio | Em desenvolvimento | expedição selecionável com seis espécies/saques locais, sete obstáculos e cenário de ruínas blockout; puzzles temporais, plataformas, chefe e arte final pendentes; runner curto manual adicionado |

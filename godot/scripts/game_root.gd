@@ -727,12 +727,47 @@ func _attach_enemy_visual(e:Node3D,behavior:String,index:int)->void:
         e.attach_visual(_make_ferrumia_enemy_visual(e,str(e.monster_id)))
     elif str(e.monster_id).begins_with("snowflake_") or e.monster_id in ["boreal_fox","erratic_crystal","blizzard_spirit","frost_guardian","aurora_sentinel"]:
         e.attach_visual(_make_ivern_enemy_visual(e,str(e.monster_id)))
+    elif str(e.monster_id).begins_with("shapeless_") or e.monster_id in ["eclipse_butterfly","mirror_guardian","fractured_shadow","wandering_illusion","silence_watch"]:
+        e.attach_visual(_make_umbral_enemy_visual(e,str(e.monster_id)))
     elif behavior in ["flying","orbit"]:e.attach_visual(Factory.make_moth(e,base))
     elif behavior in ["guardian","shielded","knockback"]:e.attach_visual(Factory.make_golem(e,base,Color("#e9fcff")))
     elif behavior in ["berserker","crusher"]:e.attach_visual(Factory.make_colossus(e,base,Color("#ffd86b")))
     elif behavior in ["sniper","ranged","turret"]:e.attach_visual(Factory.make_crystal_monster(e,base))
     elif behavior in ["assassin","stealth","teleporter"]:e.attach_visual(Factory.make_hound(e,base))
     else:e.attach_visual(Factory.make_slime(e,base))
+
+func _make_umbral_enemy_visual(parent:Node3D,monster_id:String)->Node3D:
+    var visual:=Node3D.new()
+    parent.add_child(visual)
+    match monster_id:
+        "shapeless_echo":
+            var body:=Factory.sphere(visual,0.5,Vector3(0,0.95,0),Color("#706282"))
+            body.scale=Vector3(0.76,1.25,0.64)
+            Factory.torus(visual,0.36,0.45,Vector3(0,0.76,0),Color("#db95ec"))
+            Factory.sphere(visual,0.12,Vector3(-0.18,1.16,-0.34),Color("#f7d7ff"))
+            Factory.sphere(visual,0.12,Vector3(0.18,1.16,-0.34),Color("#f7d7ff"))
+        "eclipse_butterfly":
+            Factory.make_moth(visual,Color("#a87acb"))
+            Factory.sphere(visual,0.2,Vector3(0,1.3,-0.35),Color("#ff9edb"))
+        "mirror_guardian":
+            Factory.make_golem(visual,Color("#655978"),Color("#f0b4ee"))
+            for side in [-1.0,1.0]:
+                var plate:=Factory.box(visual,Vector3(0.12,1.6,0.95),Vector3(side*0.85,1.1,0),Color("#c3b2d8"))
+                plate.rotation.z=side*0.16
+        "fractured_shadow":
+            Factory.make_hound(visual,Color("#423852"))
+            Factory.make_crystal(visual,Vector3(0.45,0.92,0),Color("#dc8bec"))
+            Factory.sphere(visual,0.24,Vector3(-0.52,0.8,0.1),Color("#8b70aa"))
+        "wandering_illusion":
+            var body:=Factory.sphere(visual,0.48,Vector3(0,0.96,0),Color("#7b628e"))
+            body.scale=Vector3(0.62,1.22,0.65)
+            var echo:=Factory.sphere(visual,0.34,Vector3(0.58,0.78,0.1),Color("#cd9cda"))
+            echo.scale=Vector3(0.62,1.0,0.62)
+        "silence_watch":
+            Factory.make_crystal_monster(visual,Color("#55516e"))
+            Factory.torus(visual,0.46,0.54,Vector3(0,1.3,0),Color("#d99be8"))
+            Factory.sphere(visual,0.18,Vector3(0,1.72,-0.42),Color("#f5c4e5"))
+    return visual
 
 func _make_ivern_enemy_visual(parent:Node3D,monster_id:String)->Node3D:
     var visual:=Node3D.new()

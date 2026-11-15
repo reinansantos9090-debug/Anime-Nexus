@@ -30,7 +30,7 @@
 | EN-VESPER | 6 inimigos costeiros | bolha, coral, água-viva, caranguejo, onda e sentinela | rigs pequenos, água não exige transparência em toda peça | ricochete, onda, guarda, mergulho | Planejado; original |
 | EN-FERRUMIA | 6 inimigos mecânicos | drone, engrenagem, sentinela, autômato, magnético e núcleo | peças reutilizáveis em atlas sem reutilizar silhueta completa | patrulha, tiro, montagem, stagger | Dados/saques offline e seis silhuetas procedurais blockout integrados; IA/rigs/animações finais pendentes; original |
 | EN-IVERN | 6 inimigos de geada | floco, raposa, cristal, nevasca, guardião e sentinela | rig de criatura e partículas limitadas | pulo, névoa, ataque vertical, retorno | Dados/saques offline e seis silhuetas procedurais de blockout integrados; rigs, animações e modelos finais pendentes; original |
-| EN-UMBRAL | 6 inimigos de reflexo | eco, borboleta, espelho, sombra, ilusão e vigia | mesh leve; dissolve/duplicata por shader | invisibilidade curta e leitura de pista | Planejado; original |
+| EN-UMBRAL | 6 inimigos de reflexo | eco, borboleta, espelho, sombra, ilusão e vigia | mesh leve; dissolve/duplicata por shader | invisibilidade curta e leitura de pista | Dados/saques offline e seis silhuetas procedurais de blockout integrados; dissolve, espelhos reais, rigs e animações finais pendentes; original |
 | EN-NEXO | ecos de cada região | variações narrativas locais dos inimigos aprovados | combinações de material e comportamento; não só troca de cor | ataques combinados e reações próprias | Planejado; original |
 | ENV-OBSERVATORIO | hub principal | pedra suspensa, vidro astral, luz de portal azul | 1 cena modular, 3 setores visíveis, LOD/occlusion | bandeiras, portal, NPCs, luz narrativa | Blockout do hub reutilizado; arte final e áreas funcionais planejadas; original |
 | ENV-NIMBARA | floresta e três subáreas | folhagem verde, bioluminescência turquesa/violeta | kits de árvore, raiz, ruína, lago e trilha; atlas 2K por região | vento/folha/água em ciclos baratos | Blockout da clareira com trilha, árvores, raízes, cristais e Âncora; subáreas e arte final planejadas; original |
@@ -38,7 +38,7 @@
 | ENV-VESPER | porto/ilhas/caverna | água cobalto, coral, pontes de luz | kit de costa, cavernas, skiff e farol | maré, água, barco e ponte | Blockout costeiro procedural com enseadas, cais e corais acessível como expedição; maré interativa, subáreas e arte final pendentes; original |
 | ENV-FERRUMIA | cidade/trilhos/torre | cobre, magenta, azul elétrico | kit modular, plataformas, elevadores e cabos | trilhos/elevadores e máquinas | Expedição blockout com trilhos estáticos, quatro torres e engrenagens decorativas; elevadores, máquinas interativas, subáreas e arte final pendentes; original |
 | ENV-IVERN | vale/templo/picos | neve pérola, aurora lilás/dourada | terreno, cristais e pontes; material neve mobile | neve leve, corrente de vento e aurora | Expedição blockout selecionável com bancos de neve, cristais e arcos fixos de aurora; vento, pontes dinâmicas, templo, subáreas e arte final pendentes; original |
-| ENV-UMBRAL | jardim/galeria/palácio | violeta profundo, rosa, prata | módulos duplicáveis com variantes de rota | transição de geometria discreta | Planejado; original |
+| ENV-UMBRAL | jardim/galeria/palácio | violeta profundo, rosa, prata | módulos duplicáveis com variantes de rota | transição de geometria discreta | Expedição blockout com painéis e colunas estáticos; reflexos, geometria mutável, subáreas e arte final pendentes; original |
 | ENV-NUCLEO | ponte/salão/coração | mistura de paletas sem perder legibilidade | kit modular com pontos de âncora e arenas boss | transições de fase e fragmentos | Planejado; original |
 | UI-KIT | HUD/menu/inventário/oficina/mapa | ornamentos próprios de constelação, borda e ícones elementais | SVG/vector ou texturas 9-slice escaláveis; fonte legível licenciada | estados hover/touch/cooldown/quest | Planejado; original/licença documentada |
 | VFX-KIT | habilidades e estados | trilhas distintas para 8 ressonâncias | partículas agrupadas, atlas e materiais mobile | hit, dash, campo, cura, escudo, reação, suprema, boss | Em desenvolvimento: impacto, anel e névoa procedurais para reações da slice; efeitos finais das oito ressonâncias planejados; original |
@@ -175,3 +175,15 @@ GLB é formato de intercâmbio; preservar fonte editável em arquivo de criaçã
 | EN-IVE-NEVASCA | Espírito da Nevasca; núcleo vertical azul cercado por três aros | Ivern | Silhueta procedural no runtime; VFX de neblina, animação e modelo final pendentes; original |
 | EN-IVE-GUARDIAO | Guardião de Geada; golem azul com cristal dorsal | Ivern | Silhueta procedural no runtime; rig e animações de defesa pendentes; original |
 | EN-IVE-SENTINELA | Sentinela da Aurora; prisma azul com nadadeiras lilás e aro dourado | Ivern | Silhueta procedural no runtime; telegraph vertical, rig e modelo final pendentes; original |
+
+
+## Criaturas blockout de Umbral
+
+| Asset | Papel / desenho / paleta | Região | Estado e origem |
+|---|---|---|---|
+| EN-UMB-1 | Eco Sem Forma; silhueta vertical violeta com halo magenta | Umbral | Silhueta procedural blockout no runtime; rig/animações de produção pendentes; original |
+| EN-UMB-2 | Borboleta do Eclipse; asas violetas e núcleo rosa | Umbral | Silhueta procedural blockout no runtime; rig/animações de produção pendentes; original |
+| EN-UMB-3 | Guardião do Espelho; golem com placas laterais prateadas | Umbral | Silhueta procedural blockout no runtime; rig/animações de produção pendentes; original |
+| EN-UMB-4 | Sombra Fragmentada; corpo lupino escuro com prisma violeta | Umbral | Silhueta procedural blockout no runtime; rig/animações de produção pendentes; original |
+| EN-UMB-5 | Ilusão Errante; forma alongada acompanhada por eco menor | Umbral | Silhueta procedural blockout no runtime; rig/animações de produção pendentes; original |
+| EN-UMB-6 | Vigia do Silêncio; figura prismática com aro rosa-prata | Umbral | Silhueta procedural blockout no runtime; rig/animações de produção pendentes; original |

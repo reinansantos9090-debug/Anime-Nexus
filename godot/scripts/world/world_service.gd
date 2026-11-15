@@ -87,6 +87,8 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
         "sky_ruins":
             for p in [Vector3(-18,0,-15),Vector3(17,0,-15),Vector3(-17,0,15),Vector3(18,0,15)]:
                 _ruin_pillar(p,accent)
+        "umbral":
+            _make_umbral_gallery(accent)
         "ivern":
             _make_ivern_aurora(accent)
         "ferrumia":
@@ -95,6 +97,18 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
             _make_aurelio_ruins(accent,ground)
         "vesper":
             _make_vesper_cove(accent,ground)
+
+func _make_umbral_gallery(accent:Color)->void:
+    # Mirror panels are static blockout props; no reflection or geometry shift is simulated.
+    for p in [Vector3(-18,0,-16),Vector3(18,0,-16),Vector3(-18,0,16),Vector3(18,0,16)]:
+        var column:=Factory.box(world_root,Vector3(1.2,4.8,1.2),p+Vector3(0,2.4,0),Color("#49445d"))
+        column.rotation.y=0.2
+        Factory.torus(world_root,0.38,0.45,p+Vector3(0,4.95,0),accent)
+    for p in [Vector3(-8,0,0),Vector3(8,0,0),Vector3(0,0,-18)]:
+        Factory.box(world_root,Vector3(4.0,3.8,0.35),p+Vector3(0,1.9,0),Color("#867496"))
+        Factory.box(world_root,Vector3(3.2,3.1,0.08),p+Vector3(0,1.9,-0.22),Color("#b39bc1"))
+    for p in [Vector3(-4,0,12),Vector3(4,0,12)]:
+        Factory.make_crystal(world_root,p+Vector3(0,0.1,0),accent.lightened(0.10))
 
 func _make_ivern_aurora(accent:Color)->void:
     # The sky arcs are fixed low-cost landmarks, not dynamic aurora or wind gameplay.
@@ -208,6 +222,10 @@ func _make_obstacle(obstacle:Dictionary,accent:Color)->void:
             _cactus(pos,accent,maxf(1.0,size.y/1.9))
         "scrap":
             _scrap_stack(pos,accent,size)
+        "mirror":
+            var panel:=Factory.box(world_root,Vector3(size.x,size.y,size.z),pos+Vector3(0,size.y*0.5,0),Color("#817392"))
+            Factory.box(world_root,Vector3(size.x*0.78,size.y*0.82,0.08),pos+Vector3(0,size.y*0.5,-0.25),Color("#b39bc1"))
+            Factory.torus(world_root,0.42,0.50,pos+Vector3(0,size.y*0.50,-0.18),accent)
         "snowbank":
             var bank:=Factory.sphere(world_root,1.0,pos+Vector3(0,size.y*0.42,0),Color("#c9d8ec"))
             bank.scale=Vector3(size.x*0.5,size.y*0.55,size.z*0.5)

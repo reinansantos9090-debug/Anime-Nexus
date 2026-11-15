@@ -110,3 +110,12 @@ O runner segue manual; nenhum teste longo/emulador automático foi adicionado ou
 - Não considerar vento, pontes dinâmicas, salto entre picos ou chefe concluídos.
 
 Runner Godot é manual; nenhum teste longo/emulador automático foi adicionado ou iniciado.
+
+
+## Contrato de conteúdo de Umbral (runner manual curto)
+
+- Conferir seis encontros, obstáculos e referências de saque no catálogo local.
+- Abrir a expedição offline; painéis são blockout sem reflexos ou troca de geometria.
+- Não considerar ilusões interativas, caminhos mutáveis ou chefe implementados.
+
+Runner Godot permanece manual; nenhum teste longo/emulador automático foi adicionado ou iniciado.

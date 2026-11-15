@@ -1,5 +1,5 @@
 extends Node
-## Ten offline expedition maps. Each biome owns its encounter pool,
+## Eleven offline expedition maps. Each biome owns its encounter pool,
 ## difficulty, obstacle layout and environmental hazard.
 
 var maps: Dictionary = {}
@@ -120,6 +120,21 @@ func _ready() -> void:
                 {"shape":"ruin","pos":Vector3(10,0,9),"size":Vector3(2.2,3.7,2.2)},
                 {"shape":"ruin","pos":Vector3(0,0,-12),"size":Vector3(2.0,2.8,2.4)},
                 {"shape":"ruin","pos":Vector3(0,0,11),"size":Vector3(3.0,2.4,2.0)}
+            ]
+        },
+        "umbral": {
+            "name":"Umbral • Jardins do Eclipse",
+            "difficulty":1.42,"duration":190.0,"goal":16,"hazard":"ecos de reflexo",
+            "ground":Color("#39334f"),"accent":Color("#d995f0"),"fog":Color("#665a86"),
+            "enemies":["shapeless_echo","eclipse_butterfly","mirror_guardian","fractured_shadow","wandering_illusion","silence_watch"],
+            "obstacles":[
+                {"shape":"mirror","pos":Vector3(-12,0,-9),"size":Vector3(2.6,3.6,0.45)},
+                {"shape":"mirror","pos":Vector3(12,0,-9),"size":Vector3(2.6,3.6,0.45)},
+                {"shape":"crystal","pos":Vector3(-10,0,9),"size":Vector3(1.4,3.1,1.4)},
+                {"shape":"mirror","pos":Vector3(10,0,9),"size":Vector3(2.8,3.0,0.45)},
+                {"shape":"ruin","pos":Vector3(0,0,-15),"size":Vector3(3.0,3.3,2.1)},
+                {"shape":"mirror","pos":Vector3(-2,0,1),"size":Vector3(2.5,2.8,0.42)},
+                {"shape":"crystal","pos":Vector3(0,0,14),"size":Vector3(1.2,2.5,1.2)}
             ]
         },
         "ivern": {
