@@ -17,6 +17,7 @@ func start(id:String)->void:
     if bool(result.get("started",false)):
         game_state.data["quests"]=result["quests"]
         game_state.quest_changed.emit()
+        game_state.state_changed.emit()
         updated.emit()
         started.emit(id)
 
@@ -63,6 +64,7 @@ func _apply_event(event_type:String,subject_id:String,amount:int)->void:
         if quest_id not in active_before:
             started.emit(str(quest_id))
     game_state.quest_changed.emit()
+    game_state.state_changed.emit()
     updated.emit()
 
 func get_quest(id:String)->Dictionary:
