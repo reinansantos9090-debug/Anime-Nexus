@@ -119,3 +119,12 @@ Runner Godot é manual; nenhum teste longo/emulador automático foi adicionado o
 - Não considerar ilusões interativas, caminhos mutáveis ou chefe implementados.
 
 Runner Godot permanece manual; nenhum teste longo/emulador automático foi adicionado ou iniciado.
+
+
+## Contrato do Núcleo do Nexo e Arquivo Zero (runner manual curto)
+
+- Conferir seis ecos com dados/saque locais, oito marcadores visuais e a entrada do Arquivo Zero no catálogo.
+- Verificar ratios de fase e padrões na definição; testar combate RIFT offline e telegraphs no jogo quando o workflow manual for executado.
+- O mapa de expedição não conclui a campanha: âncoras interativas, cenas, escolha narrativa, arena definitiva, áudio e arte final estão pendentes.
+
+Runner e export Godot continuam manuais; nenhum teste longo/emulador foi iniciado.

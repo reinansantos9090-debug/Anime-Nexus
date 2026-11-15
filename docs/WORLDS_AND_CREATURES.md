@@ -1,6 +1,6 @@
 # Mundos e criaturas
 
-Esta tabela permanece a especificação de longo prazo. A build atual ainda é um protótipo: Nimbara continua sendo a missão vertical slice, e a lista de expedições inclui mapas de combate compactos. Aurélio, Ferrúmia, Ivern, Umbral e Vesper agora têm expedições blockout com fauna local; nenhum desses mapas equivale às regiões completas de exploração previstas abaixo.
+Esta tabela permanece a especificação de longo prazo. A build atual ainda é um protótipo: Nimbara continua sendo a missão vertical slice, e a lista de expedições inclui mapas de combate compactos. Aurélio, Ferrúmia, Ivern, Umbral, Vesper e o Núcleo do Nexo agora têm expedições blockout com fauna local; nenhum desses mapas equivale às regiões completas de exploração previstas abaixo.
 
 | Região / identidade | Subáreas e mecânicas de exploração | Criaturas comuns/especiais | Chefe e encontro |
 |---|---|---|---|
@@ -21,6 +21,10 @@ Cada espécie precisa de locomotion/pathing, telegraph, hitbox, reação, recupe
 
 Doze masmorras alvo devem variar rota e objetivo: fuga de raízes, sala de espelhos, corrida de plataforma, investigação sem combate, escolta, arena de ondas, quebra-cabeça temporal, barco em maré, máquina sob pressão, subida de ventos, memória em dupla e combate final cronometrado. Portais de desafio usam modificadores configuráveis offline. Evento local é escolhido ao entrar ou após marco de jogo e não expira por ausência.
 
+
+## Estado runtime do Núcleo do Nexo
+
+O Núcleo do Nexo agora possui uma expedição compacta com seis ecos locais e marcadores procedurais para oito âncoras; os ecos recebem cores por região e saque offline. O Arquivo Zero foi adicionado ao catálogo de chefes com três fases, padrões de estase/teleporte/summon/área/projétil e silhueta geométrica blockout, e pode surgir na rotação local de RIFT. A integração não implementa a missão final, a promessa narrativa, a escolha sobre o futuro dos mundos, arenas de memória, cenas/transições, áudio próprio ou modelos/animações finais. O aro central e os cristais não são oito objetivos interativos.
 
 ## Estado runtime de Umbral
 

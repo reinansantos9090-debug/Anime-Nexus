@@ -41,6 +41,7 @@ func _init()->void:
     _test_ferrumia_region_data()
     _test_ivern_region_data()
     _test_umbral_region_data()
+    _test_nexus_region_data()
     _test_boss_telegraph()
     _test_static_field_slow()
     if failures.is_empty():
@@ -401,6 +402,26 @@ func _test_umbral_region_data()->void:
         if content.MONSTERS.has(enemy_id):
             for item_id in content.MONSTERS[enemy_id].get("loot",[]):
                 _expect(content.ITEMS.has(item_id),"Umbral: local loot item missing: "+str(item_id))
+    maps.free()
+    content.free()
+
+func _test_nexus_region_data()->void:
+    var maps=MapScript.new()
+    var content=ContentScript.new()
+    var nexus:Dictionary=maps.get_map("nexus_core")
+    var enemies:Array=nexus.get("enemies",[])
+    _expect(str(nexus.get("name","")).begins_with("Núcleo do Nexo"),"Nexus: final-region expedition metadata missing")
+    _expect(enemies.size()==6,"Nexus: expected six local memory echoes")
+    _expect(content.BOSSES.has("archive_zero"),"Nexus: Archive Zero boss definition missing")
+    var archive:Dictionary=content.BOSSES.get("archive_zero",{})
+    _expect(archive.get("patterns",[]).size()>=4,"Nexus: Archive Zero needs several authored attack patterns")
+    _expect(float(archive.get("phase2_ratio",0.0))>float(archive.get("phase3_ratio",0.0)),"Nexus: Archive Zero phase thresholds are out of order")
+    _expect(content.MONSTERS.has(str(archive.get("summon_id",""))),"Nexus: boss summon must resolve to local creature data")
+    for enemy_id in enemies:
+        _expect(content.MONSTERS.has(enemy_id),"Nexus: local echo definition missing: "+str(enemy_id))
+        if content.MONSTERS.has(enemy_id):
+            for item_id in content.MONSTERS[enemy_id].get("loot",[]):
+                _expect(content.ITEMS.has(item_id),"Nexus: local echo loot item missing: "+str(item_id))
     maps.free()
     content.free()
 

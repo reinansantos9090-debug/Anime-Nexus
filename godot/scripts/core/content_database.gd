@@ -92,6 +92,12 @@ const MONSTERS := {
     "void_glider":{"name":"Planador do Vazio","hp":230.0,"damage":44.0,"speed":3.6,"xp":175,"tier":5,"behavior":"flying","loot":["void_membrane","sky_fragment"]},
     "storm_caster":{"name":"Conjurador da Tempestade","hp":205.0,"damage":52.0,"speed":2.0,"xp":190,"tier":5,"behavior":"ranged","loot":["storm_core","prism_fragment"]},
     "chrono_knight":{"name":"Cavaleiro Crono","hp":360.0,"damage":62.0,"speed":2.1,"xp":240,"tier":6,"behavior":"controller","loot":["chrono_gear","gravity_shard"]},
+    "memory_warden":{"element":"light","name":"Guardião da Memória","hp":288.0,"damage":40.0,"speed":1.4,"xp":210,"tier":5,"behavior":"guardian","loot":["nexus_memory","memory_glass"]},
+    "tide_echo":{"element":"water","name":"Eco das Marés","hp":170.0,"damage":33.0,"speed":3.0,"xp":164,"tier":4,"behavior":"ranged","loot":["nexus_memory","tidal_essence"]},
+    "gear_echo":{"element":"gravity","name":"Eco das Engrenagens","hp":218.0,"damage":37.0,"speed":2.7,"xp":181,"tier":4,"behavior":"swarm","loot":["nexus_memory","gear_teeth"]},
+    "frost_echo":{"element":"ice","name":"Eco da Aurora","hp":204.0,"damage":39.0,"speed":2.4,"xp":185,"tier":4,"behavior":"controller","loot":["nexus_memory","aurora_shard"]},
+    "root_echo":{"element":"nature","name":"Eco das Raízes","hp":242.0,"damage":35.0,"speed":2.0,"xp":175,"tier":4,"behavior":"shielded","loot":["nexus_memory","memory_bloom"]},
+    "hour_echo":{"element":"light","name":"Eco das Horas","hp":226.0,"damage":42.0,"speed":2.5,"xp":190,"tier":5,"behavior":"teleporter","loot":["nexus_memory","temporal_splinter"]},
     "shapeless_echo":{"element":"shadow","name":"Eco Sem Forma","hp":132.0,"damage":28.0,"speed":2.8,"xp":113,"tier":3,"behavior":"controller","loot":["umbral_echo","memory_glass"]},
     "eclipse_butterfly":{"element":"shadow","name":"Borboleta do Eclipse","hp":110.0,"damage":26.0,"speed":4.2,"xp":102,"tier":3,"behavior":"flying","loot":["eclipse_powder","void_thread"]},
     "mirror_guardian":{"element":"light","name":"Guardião do Espelho","hp":310.0,"damage":38.0,"speed":1.4,"xp":178,"tier":5,"behavior":"guardian","loot":["mirror_shard","memory_glass"]},
@@ -125,6 +131,7 @@ const MONSTERS := {
 }
 
 const BOSSES := {
+    "archive_zero":{"element":"gravity","name":"Arquivo Zero","hp":5200.0,"phase2_ratio":0.72,"phase3_ratio":0.36,"speed":1.25,"projectile_damage":92.0,"summon_interval":8.0,"summon_id":"memory_warden","patterns":["timewave","teleport","summon","prism","beam","nova"],"arena":"nexus_core"},
     "crystal_stag":{"element":"nature","name":"Cérvido de Cristal","hp":2150.0,"phase2_ratio":0.68,"phase3_ratio":0.34,"speed":2.05,"projectile_damage":43.0,"summon_interval":10.0,"summon_id":"moss_hopper","patterns":["roots","charge","summon","nova"],"arena":"clareira_luminar"},
     "overload_titan":{"element":"thunder","name":"Titã de Sobrecarga","hp":1800.0,"phase2_ratio":0.68,"phase3_ratio":0.32,"speed":1.9,"projectile_damage":38.0,"summon_interval":10.0,"summon_id":"aether_slime","patterns":["burst","charge","summon","nova"],"arena":"rift_dome"},
     "thorn_warden":{"element":"nature","name":"Guardião dos Espinhos","hp":2100.0,"phase2_ratio":0.70,"phase3_ratio":0.35,"speed":1.65,"projectile_damage":44.0,"summon_interval":8.0,"summon_id":"thornling","patterns":["roots","burst","summon","charge"],"arena":"emerald_grove"},
@@ -147,7 +154,8 @@ const BIOMES := {
     "aurelio":{"name":"Aurélio • Deserto das Horas","ground":Color("#b78555"),"accent":Color("#ffd17e"),"fog":Color("#d2a487")},
     "ferrumia":{"name":"Ferrúmia • Cidade das Engrenagens","ground":Color("#594c6d"),"accent":Color("#ff8bc7"),"fog":Color("#927b9f")},
     "ivern":{"name":"Ivern • Montanhas da Aurora","ground":Color("#7183a0"),"accent":Color("#d5e9ff"),"fog":Color("#bdc9e2")},
-    "umbral":{"name":"Umbral • Jardins do Eclipse","ground":Color("#39334f"),"accent":Color("#d995f0"),"fog":Color("#665a86")}
+    "umbral":{"name":"Umbral • Jardins do Eclipse","ground":Color("#39334f"),"accent":Color("#d995f0"),"fog":Color("#665a86")},
+    "nexus_core":{"name":"Núcleo do Nexo • Ponte dos Fragmentos","ground":Color("#343d63"),"accent":Color("#c4a3ff"),"fog":Color("#69739f")}
 }
 
 const QUESTS := [
@@ -221,6 +229,7 @@ const ITEMS := {
     "rift_hide":{"name":"Pele da Fenda","value":37},"gravity_shard":{"name":"Estilhaço Gravitacional","value":43},
     "void_membrane":{"name":"Membrana do Vazio","value":48},"storm_core":{"name":"Núcleo de Tempestade","value":50},
     "chrono_gear":{"name":"Engrenagem Crono","value":58},
+    "nexus_memory":{"name":"Memória do Nexo","value":52},
     "umbral_echo":{"name":"Eco de Umbral","value":27},
     "eclipse_powder":{"name":"Pó do Eclipse","value":30},
     "mirror_shard":{"name":"Estilhaço de Espelho","value":37},

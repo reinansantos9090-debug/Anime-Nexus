@@ -1,5 +1,5 @@
 extends Node
-## Eleven offline expedition maps. Each biome owns its encounter pool,
+## Twelve offline expedition maps. Each biome owns its encounter pool,
 ## difficulty, obstacle layout and environmental hazard.
 
 var maps: Dictionary = {}
@@ -120,6 +120,22 @@ func _ready() -> void:
                 {"shape":"ruin","pos":Vector3(10,0,9),"size":Vector3(2.2,3.7,2.2)},
                 {"shape":"ruin","pos":Vector3(0,0,-12),"size":Vector3(2.0,2.8,2.4)},
                 {"shape":"ruin","pos":Vector3(0,0,11),"size":Vector3(3.0,2.4,2.0)}
+            ]
+        },
+        "nexus_core": {
+            "name":"Núcleo do Nexo • Ponte dos Fragmentos",
+            "difficulty":1.85,"duration":200.0,"goal":18,"hazard":"ondas de estase",
+            "ground":Color("#343d63"),"accent":Color("#c4a3ff"),"fog":Color("#69739f"),
+            "enemies":["memory_warden","tide_echo","gear_echo","frost_echo","root_echo","hour_echo"],
+            "obstacles":[
+                {"shape":"anchor","pos":Vector3(-15,0,-12),"size":Vector3(2.0,3.2,2.0)},
+                {"shape":"anchor","pos":Vector3(15,0,-12),"size":Vector3(2.0,3.2,2.0)},
+                {"shape":"anchor","pos":Vector3(-17,0,10),"size":Vector3(2.0,3.2,2.0)},
+                {"shape":"anchor","pos":Vector3(17,0,10),"size":Vector3(2.0,3.2,2.0)},
+                {"shape":"ruin","pos":Vector3(-9,0,-19),"size":Vector3(2.0,2.6,2.0)},
+                {"shape":"ruin","pos":Vector3(9,0,-19),"size":Vector3(2.0,2.6,2.0)},
+                {"shape":"crystal","pos":Vector3(-3,0,18),"size":Vector3(1.1,2.8,1.1)},
+                {"shape":"crystal","pos":Vector3(3,0,18),"size":Vector3(1.1,2.8,1.1)}
             ]
         },
         "umbral": {

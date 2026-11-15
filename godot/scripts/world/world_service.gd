@@ -87,6 +87,8 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
         "sky_ruins":
             for p in [Vector3(-18,0,-15),Vector3(17,0,-15),Vector3(-17,0,15),Vector3(18,0,15)]:
                 _ruin_pillar(p,accent)
+        "nexus_core":
+            _make_nexus_bridge(accent)
         "umbral":
             _make_umbral_gallery(accent)
         "ivern":
@@ -97,6 +99,19 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
             _make_aurelio_ruins(accent,ground)
         "vesper":
             _make_vesper_cove(accent,ground)
+
+func _make_nexus_bridge(accent:Color)->void:
+    var anchor_colors:Array=[Color("#4bd2e6"),Color("#ff795d"),Color("#9be082"),Color("#f6d278"),Color("#8bc8ff"),Color("#d58df5"),Color("#e8efff"),accent]
+    for i in range(8):
+        var angle:=TAU*float(i)/8.0
+        var position:=Vector3(cos(angle)*20.0,0,sin(angle)*20.0)
+        Factory.box(world_root,Vector3(2.6,0.28,2.0),position+Vector3(0,0.14,0),Color("#555b7c"))
+        Factory.make_crystal(world_root,position+Vector3(0,0.35,0),anchor_colors[i])
+        Factory.torus(world_root,0.45,0.54,position+Vector3(0,0.2,0),anchor_colors[i])
+    for p in [Vector3(-22,0,-22),Vector3(22,0,-22),Vector3(-22,0,22),Vector3(22,0,22)]:
+        var shard:=Factory.make_crystal(world_root,p+Vector3(0,0.15,0),accent.lightened(0.1))
+        shard.scale=Vector3(1.6,1.8,1.6)
+    Factory.torus(world_root,4.0,4.2,Vector3(0,0.18,0),accent.darkened(0.1))
 
 func _make_umbral_gallery(accent:Color)->void:
     # Mirror panels are static blockout props; no reflection or geometry shift is simulated.
@@ -222,6 +237,10 @@ func _make_obstacle(obstacle:Dictionary,accent:Color)->void:
             _cactus(pos,accent,maxf(1.0,size.y/1.9))
         "scrap":
             _scrap_stack(pos,accent,size)
+        "anchor":
+            Factory.box(world_root,Vector3(size.x*0.45,size.y,size.z*0.45),pos+Vector3(0,size.y*0.5,0),Color("#555a7b"))
+            Factory.make_crystal(world_root,pos+Vector3(0,size.y*0.82,0),Color("#c5a2ff"))
+            Factory.torus(world_root,size.x*0.35,size.x*0.43,pos+Vector3(0,size.y*0.62,0),accent)
         "mirror":
             var panel:=Factory.box(world_root,Vector3(size.x,size.y,size.z),pos+Vector3(0,size.y*0.5,0),Color("#817392"))
             Factory.box(world_root,Vector3(size.x*0.78,size.y*0.82,0.08),pos+Vector3(0,size.y*0.5,-0.25),Color("#b39bc1"))

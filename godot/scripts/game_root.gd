@@ -729,12 +729,43 @@ func _attach_enemy_visual(e:Node3D,behavior:String,index:int)->void:
         e.attach_visual(_make_ivern_enemy_visual(e,str(e.monster_id)))
     elif str(e.monster_id).begins_with("shapeless_") or e.monster_id in ["eclipse_butterfly","mirror_guardian","fractured_shadow","wandering_illusion","silence_watch"]:
         e.attach_visual(_make_umbral_enemy_visual(e,str(e.monster_id)))
+    elif e.monster_id in ["memory_warden","tide_echo","gear_echo","frost_echo","root_echo","hour_echo"]:
+        e.attach_visual(_make_nexus_echo_visual(e,str(e.monster_id)))
     elif behavior in ["flying","orbit"]:e.attach_visual(Factory.make_moth(e,base))
     elif behavior in ["guardian","shielded","knockback"]:e.attach_visual(Factory.make_golem(e,base,Color("#e9fcff")))
     elif behavior in ["berserker","crusher"]:e.attach_visual(Factory.make_colossus(e,base,Color("#ffd86b")))
     elif behavior in ["sniper","ranged","turret"]:e.attach_visual(Factory.make_crystal_monster(e,base))
     elif behavior in ["assassin","stealth","teleporter"]:e.attach_visual(Factory.make_hound(e,base))
     else:e.attach_visual(Factory.make_slime(e,base))
+
+func _make_nexus_echo_visual(parent:Node3D,monster_id:String)->Node3D:
+    var visual:=Node3D.new()
+    parent.add_child(visual)
+    var palette:Color=Color("#c4a3ff")
+    match monster_id:
+        "tide_echo":palette=Color("#54d8d0")
+        "gear_echo":palette=Color("#ffab75")
+        "frost_echo":palette=Color("#a9dcff")
+        "root_echo":palette=Color("#86d09a")
+        "hour_echo":palette=Color("#ffd17e")
+    Factory.make_crystal_monster(visual,palette.darkened(0.18))
+    Factory.make_crystal(visual,Vector3(0,1.95,0.12),palette)
+    Factory.torus(visual,0.48,0.56,Vector3(0,0.9,0),palette.lightened(0.12))
+    return visual
+
+func _make_archive_zero_visual(parent:Node3D)->Node3D:
+    var visual:=Node3D.new()
+    parent.add_child(visual)
+    Factory.box(visual,Vector3(1.8,2.4,1.2),Vector3(0,1.5,0),Color("#34384f"))
+    Factory.make_crystal(visual,Vector3(0,1.65,-0.68),Color("#c6a0ff"))
+    for i in range(8):
+        var angle:=TAU*float(i)/8.0
+        var plate:=Factory.box(visual,Vector3(0.42,1.7,0.24),Vector3(cos(angle)*1.55,1.45,sin(angle)*1.55),Color("#6d628d").lerp(Color("#54c9df"),float(i%2)*0.35))
+        plate.rotation.y=-angle
+        var point:=Factory.sphere(visual,0.14,Vector3(cos(angle)*1.55,2.5,sin(angle)*1.55),Color("#f0d7ff"))
+    Factory.torus(visual,1.85,2.02,Vector3(0,0.75,0),Color("#cb9aff"))
+    Factory.torus(visual,1.25,1.38,Vector3(0,2.35,0),Color("#66d8ec"))
+    return visual
 
 func _make_umbral_enemy_visual(parent:Node3D,monster_id:String)->Node3D:
     var visual:=Node3D.new()
@@ -941,9 +972,10 @@ func _spawn_boss(id:String)->void:
     var b:Node3D=boss_scene.instantiate() if boss_scene else BossScript.new()
     add_child(b)
     b.position=player.position+Vector3(0,0,-10)
-    var boss_map:="nimbara" if id=="crystal_stag" else "sky_ruins"
+    var boss_map:="nimbara" if id=="crystal_stag" else ("nexus_core" if id=="archive_zero" else "sky_ruins")
     b.configure_boss(id,player,content,maps.difficulty(boss_map),state.difficulty_profile())
     if id=="crystal_stag":b.attach_visual(Factory.make_crystal_stag(b,Color("#416a80"),Color("#70f5dc")))
+    elif id=="archive_zero":b.attach_visual(_make_archive_zero_visual(b))
     else:b.attach_visual(Factory.make_colossus(b,Color("#7d5ce8"),Color("#ffd86b")))
     b.phase_changed.connect(func(p:int):
         hud.set_mode("CHEFE • FASE %d"%p)
