@@ -16,6 +16,7 @@ const MapScript=preload("res://scripts/world/map_service.gd")
 const WorldScript=preload("res://scripts/world/world_service.gd")
 const SkillTreeScript=preload("res://scripts/gameplay/skill_tree_service.gd")
 const QuestScript=preload("res://scripts/gameplay/quest_service.gd")
+const InventoryScript=preload("res://scripts/gameplay/inventory_service.gd")
 
 var failures:Array[String]=[]
 
@@ -29,6 +30,7 @@ func _init()->void:
     _test_companion_agent_setup()
     _test_elemental_reaction_runtime()
     _test_loot()
+    _test_weapon_workshop()
     _test_save()
     _test_save_slots()
     _test_virtual_joystick()
@@ -145,6 +147,26 @@ func _test_loot()->void:
     _expect(not str(drop.get("rarity","")).is_empty(),"Loot: missing rarity")
     _expect(int(drop.get("gold",0))>0,"Loot: missing gold")
     _expect(not drop.get("items",{}).is_empty(),"Loot: missing item")
+
+func _test_weapon_workshop()->void:
+    var state=StateScript.new()
+    state.reset()
+    var content=ContentScript.new()
+    var inventory=InventoryScript.new()
+    inventory.setup(state)
+    var available:Array[String]=inventory.available_weapons(content)
+    _expect("fulgor_gauntlets" in available and not ("volt_blades" in available),"Workshop: only the starting instrument should be available initially")
+    _expect(inventory.craft_by_id("forge_volt_blades",content),"Workshop: affordable unique instrument project failed")
+    _expect(inventory.quantity("aether_core")==6 and inventory.quantity("plasma_fiber")==2,"Workshop: instrument materials were not debited atomically")
+    _expect(inventory.quantity("weapon_license_volt_blades")==1,"Workshop: crafting did not persist the instrument license in inventory")
+    available=inventory.available_weapons(content)
+    _expect("volt_blades" in available and not ("toxic_bow" in available),"Workshop: Arsenal unlock list does not match owned licenses")
+    var after:Dictionary=state.get_inventory().duplicate(true)
+    _expect(not inventory.craft_by_id("forge_volt_blades",content),"Workshop: duplicate unique instrument project was allowed")
+    _expect(state.get_inventory()==after,"Workshop: duplicate project changed inventory after rejection")
+    inventory.free()
+    content.free()
+    state.free()
 
 func _test_save()->void:
     var state=StateScript.new()

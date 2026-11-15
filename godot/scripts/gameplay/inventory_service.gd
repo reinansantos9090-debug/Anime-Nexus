@@ -22,6 +22,16 @@ func has_cost(cost:Dictionary)->bool:
         if quantity(str(item))<int(cost[item]):return false
     return true
 
+func available_weapons(database:Node)->Array[String]:
+    var ids:Array[String]=[]
+    if database==null:return ids
+    for raw_id in database.WEAPONS.keys():
+        var id:=str(raw_id)
+        if id=="fulgor_gauntlets" or quantity("weapon_license_"+id)>0:
+            ids.append(id)
+    ids.sort()
+    return ids
+
 func craft(recipe:Dictionary)->bool:
     if game_state==null or native_core==null:return false
     var unlock_weapon:=str(recipe.get("unlock_weapon",""))

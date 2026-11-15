@@ -440,13 +440,8 @@ func _workshop_crafted(recipe_id:String,success:bool)->void:
             return
 
 func _cycle_weapon()->void:
-    var ids:Array=[]
-    for raw_id in content.WEAPONS.keys():
-        var id:=str(raw_id)
-        if id=="fulgor_gauntlets" or inventory.quantity("weapon_license_"+id)>0:
-            ids.append(id)
+    var ids:Array=inventory.available_weapons(content)
     if ids.is_empty():return
-    ids.sort()
     var current:=str(state.data["loadout"]["weapon"])
     var idx:=ids.find(current)
     idx=(idx+1)%ids.size()
