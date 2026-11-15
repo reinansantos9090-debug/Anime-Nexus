@@ -63,6 +63,10 @@ func _build() -> void:
     interact_button.visible=false
     interact_button.pressed.connect(func():interact_pressed.emit())
     _btn(root,"MENU",Vector2(1000,105),Vector2(215,62)).pressed.connect(func(): menu_pressed.emit())
+    _btn(root,"ARSENAL",Vector2(750,174),Vector2(108,48)).pressed.connect(func():arsenal_pressed.emit())
+    _btn(root,"GADGET",Vector2(870,174),Vector2(108,48)).pressed.connect(func():gadget_pressed.emit())
+    _btn(root,"BOLSA",Vector2(990,174),Vector2(108,48)).pressed.connect(func():inventory_pressed.emit())
+    _btn(root,"VISUAL",Vector2(1110,174),Vector2(108,48)).pressed.connect(func():wardrobe_pressed.emit())
     _btn(root,"ATAQUE",Vector2(1000,515),Vector2(220,105)).pressed.connect(func(): attack_pressed.emit())
     _btn(root,"ESQUIVA",Vector2(1000,625),Vector2(220,65)).pressed.connect(func(): dodge_pressed.emit())
     _btn(root,"PASSO",Vector2(790,545),Vector2(78,78)).pressed.connect(func(): ability_pressed.emit(0))

@@ -68,3 +68,7 @@ Este fluxo requer teste manual no Godot; nenhum job longo/emulador automático s
 - Oficina (runner manual curto): verificar projeto acessível, débito atômico, licença no inventário, desbloqueio no Arsenal e rejeição de duplicação. Na interface, fabricar cada um dos três projetos de instrumento; confirmar custo debitado uma única vez, licença persistida após recarregar o espaço e arma habilitada no Arsenal. Tentar fabricar projeto já concluído e conferir que inventário não muda.
 
 - Suprema Tempestade de Safira (runner manual curto): carga parcial, limite em 100, bloqueio abaixo de 100 e consumo ao ativar. No jogo, ganhar carga com ataques/derrotas, tocar quando cheia, confirmar bônus por 10 s e expiração; confirmar também persistência do medidor no save local.
+
+- HUD horizontal: tocar Arsenal e percorrer somente instrumentos desbloqueados; usar Gadget sem estoque sem alterar inventário; conferir Bolsa e Visuais. Confirmar separação entre os quatro botões e joystick/ataque em 1280×720 e em aparelho.
+
+- Bolsa: abrir em exploração/hub, conferir nomes e quantidades com o inventário persistido, obter um item e confirmar atualização; fechar e voltar sem alteração de saldo.

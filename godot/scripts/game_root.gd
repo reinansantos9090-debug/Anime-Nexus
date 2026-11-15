@@ -3,6 +3,7 @@ const StateScript=preload("res://scripts/core/game_state.gd")
 const SaveScript=preload("res://scripts/core/save_service.gd")
 const SaveSlotsMenuScript=preload("res://scripts/ui/save_slots_menu.gd")
 const WorkshopMenuScript=preload("res://scripts/ui/workshop_menu.gd")
+const InventoryMenuScript=preload("res://scripts/ui/inventory_menu.gd")
 const ContentScript=preload("res://scripts/core/content_database.gd")
 const PerfScript=preload("res://scripts/core/performance_service.gd")
 const WorldScript=preload("res://scripts/world/world_service.gd")
@@ -58,6 +59,7 @@ var director:Node
 var operations_menu:CanvasLayer
 var save_slots_menu:CanvasLayer
 var workshop_menu:CanvasLayer
+var inventory_menu:CanvasLayer
 var companion_roster_menu:CanvasLayer
 var player:Node3D
 var camera:Camera3D
@@ -130,7 +132,7 @@ func _ready()->void:
     hud.set_supreme_charge(float(state.get_hunter().get("chaos_energy",0.0)))
     hud.portal_pressed.connect(_portal)
     hud.interact_pressed.connect(_interact)
-    hud.inventory_pressed.connect(func():hud.set_mode("INVENTÁRIO • "+inventory.summary()))
+    hud.inventory_pressed.connect(_open_inventory)
     hud.story_pressed.connect(_story)
     hud.wardrobe_pressed.connect(_wardrobe)
     hud.dodge_pressed.connect(_dodge)
@@ -155,6 +157,9 @@ func _ready()->void:
     add_child(workshop_menu)
     workshop_menu.setup(content,inventory)
     workshop_menu.crafted.connect(_workshop_crafted)
+    inventory_menu=InventoryMenuScript.new()
+    add_child(inventory_menu)
+    inventory_menu.setup(content,inventory,state)
 
     world.build_hq()
     _apply_quality(perf.current())
@@ -427,6 +432,9 @@ func _run_operation(action_id:String)->void:
         "side_quest":_start_optional_quest("nimbara_side_01")
         "memory_quest":_start_optional_quest("nimbara_side_02")
         "companion_order":_cycle_companion_order()
+
+func _open_inventory()->void:
+    if inventory_menu:inventory_menu.show_menu()
 
 func _workshop_crafted(recipe_id:String,success:bool)->void:
     if not success:
