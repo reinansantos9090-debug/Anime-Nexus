@@ -242,6 +242,9 @@ func _portal()->void:
         _: _enter_hq()
 
 func _open_expedition_selection()->void:
+    if "prologue_02" in state.data.get("quests",{}).get("active",[]):
+        hud.set_mode("PRÓLOGO • INTERAJA COM O PORTAL CENTRAL ANTES DE PARTIR")
+        return
     var story_complete:=bool(state.data["story"]["flags"].get("nimbara_slice_complete",false))
     if not story_complete:
         _enter_expedition()
@@ -1249,9 +1252,9 @@ func _boss_down(b:Node3D,x:int)->void:
 func _quest_started(id:String)->void:
     var q:Dictionary=quests.get_quest(id)
     if q.is_empty():return
-    var map_id:=str(q.get("map",""))
-    if map_id.is_empty() or id.begins_with(map_id+"_side_"):return
     if id=="prologue_02":hud.set_interaction_visible(true)
+    var map_id:=str(q.get("map",""))
+    if (map_id.is_empty() and id!="prologue_02") or id.begins_with(map_id+"_side_"):return
     var line:=str(q.get("start_dialogue",""))
     if line.is_empty():return
     call_deferred("_show_local_quest_dialogue",str(q.get("title",id)),str(q.get("speaker","Kaien Arashi")),line)
