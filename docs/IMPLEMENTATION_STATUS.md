@@ -50,8 +50,8 @@ Data da auditoria: 15 nov. 2026, branch `dev/anime-nexus-vertical-slice`.
 | Áudio local final | Planejado | bus gera/aciona sons, mas nenhum recurso de música ou SFX existe |
 | Perfiles de qualidade/perf | Implementado (protótipo) | existe perfil/telemetria Kotlin e serviço Godot; sem medições reais de FPS |
 | AI Studio como ferramenta principal | Bloqueado/inadequado | limitações atuais e incompatibilidade detalhadas na arquitetura; repo direto é fonte de verdade |
-| Kotlin Android build | Testado (host legado) | run `43409376899` passou `:app:assembleDebug` e anexou o APK Kotlin; ele ainda abre o protótipo Aetheria, não o jogo final Anime Nexus |
-| Kotlin JUnit | Testado (CI) | `:app:testDebugUnitTest` passou no run `43409376899` |
+| Kotlin Android build | Testado (host legado) | run `43700129700` passou `:app:testDebugUnitTest` e `:app:assembleDebug` para o host Kotlin/Aetheria; ele não compila nem valida o runtime Godot Anime Nexus |
+| Kotlin JUnit | Testado (CI) | `:app:testDebugUnitTest` passou no run `43700129700`; essa lane curta não executa o runner Godot |
 | Godot test runner | Testado | `ANIME_NEXUS_TESTS: PASS` local em Godot 4.6.3; warnings de recursos em uso ao sair |
 | GitHub Actions Godot APK | Testado | APK debug da slice atual exportado e anexado à run `43409376899` |
 | GitHub Actions Kotlin APK | Testado (host legado) | APK debug anexado à run `43409376899`; não confundir com uma build jogável de Anime Nexus |
