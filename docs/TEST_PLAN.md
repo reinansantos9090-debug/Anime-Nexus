@@ -145,3 +145,10 @@ Runner Godot permanece manual; nenhum teste longo/emulador foi iniciado.
 - Carregar um payload de schema 4 com progresso parcial e campos aninhados com tipos inválidos; confirmar upgrade para schema 8, preservação do ouro e preenchimento dos defaults atuais.
 - Confirmar que schema futuro é recusado sem substituir o save suportado nem permitir sobrescrita silenciosa.
 - Este cenário é curto, headless e manual; não requer emulador nem workflow longo.
+
+
+### Diálogos de campanha local (runner manual)
+
+- Avançar as oito linhas do prólogo e confirmar que a cena termina sem repetir texto placeholder e que todas as falas ficam no diário local.
+- Encadear conclusão e início de missão enquanto uma fala ainda está aberta; confirmar que os diálogos de Nimbara aparecem um de cada vez, sem substituir uns aos outros.
+- Fluxo curto, manual, sem emulador e sem job longo.

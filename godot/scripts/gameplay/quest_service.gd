@@ -1,5 +1,6 @@
 extends Node
 signal updated
+signal started(quest_id:String)
 signal completed(quest_id:String)
 
 var game_state:Node
@@ -17,6 +18,7 @@ func start(id:String)->void:
         game_state.data["quests"]=result["quests"]
         game_state.quest_changed.emit()
         updated.emit()
+        started.emit(id)
 
 func add_progress(id:String,amount:=1)->void:
     _apply_event("direct",id,amount)
@@ -44,6 +46,7 @@ func complete(id:String)->void:
 
 func _apply_event(event_type:String,subject_id:String,amount:int)->void:
     if game_state==null or database==null or native_core==null:return
+    var active_before:Array=game_state.data["quests"].get("active",[]).duplicate()
     var result:Dictionary=native_core.apply_event(
         game_state.data["quests"],database.QUESTS,event_type,subject_id,amount)
     if not bool(result.get("changed",false)):return
@@ -56,6 +59,9 @@ func _apply_event(event_type:String,subject_id:String,amount:int)->void:
         if quantity>0:game_state.add_item(str(item_id),quantity)
     for quest_id in result.get("completed_now",[]):
         completed.emit(str(quest_id))
+    for quest_id in game_state.data["quests"].get("active",[]):
+        if quest_id not in active_before:
+            started.emit(str(quest_id))
     game_state.quest_changed.emit()
     updated.emit()
 

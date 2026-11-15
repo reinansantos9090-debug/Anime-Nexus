@@ -24,13 +24,17 @@ func setup(state: Node) -> void:
 func current_chapter() -> Dictionary:
     return CHAPTERS[0]
 
+func has_next_line() -> bool:
+    var story:Dictionary=game_state.data["story"]
+    return int(story.get("scene",0))<current_chapter()["lines"].size()
+
 func next_line() -> Dictionary:
     var story: Dictionary = game_state.data["story"]
     var chapter: Dictionary = current_chapter()
     var lines: Array = chapter["lines"]
     var index := int(story.get("scene",0))
     if index >= lines.size():
-        return {"character":"Iori","text":"A próxima etapa exige novas missões e cenas. O conteúdo jogável desta slice termina na primeira Âncora de Nimbara."}
+        return {"character":"","text":""}
     var pair: Array = lines[index]
     story["scene"] = index + 1
     var character := str(pair[0])

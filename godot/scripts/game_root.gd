@@ -82,6 +82,7 @@ var activity_goal:=0
 var activity_progress:=0
 var clock:=0.0
 var side_dialogue_active:=false
+var local_dialogue_queue:Array[Dictionary]=[]
 var supreme_active:=false
 var supreme_remaining:=0.0
 
@@ -97,6 +98,7 @@ func _ready()->void:
     world=WorldScript.new();add_child(world);world.setup(self,content,maps)
     quests=QuestScript.new();add_child(quests);quests.setup(state,content)
     quests.completed.connect(_quest_completed)
+    quests.started.connect(_quest_started)
     story=StoryScript.new();add_child(story);story.setup(state)
     events=EventScript.new();add_child(events);events.setup(state,content)
     daily=DailyScript.new();add_child(daily);daily.setup(state)
@@ -342,11 +344,19 @@ func _enter_versus()->void:
 
 func _side_dialogue_closed()->void:
     side_dialogue_active=false
+    if not local_dialogue_queue.is_empty():call_deferred("_present_next_local_dialogue")
 
 func _show_local_quest_dialogue(title:String,speaker:String,line:String)->void:
     if cutscene==null or not is_instance_valid(cutscene):return
+    local_dialogue_queue.append({"title":title,"speaker":speaker,"line":line})
+    if not cutscene.is_active() and not side_dialogue_active:
+        _present_next_local_dialogue()
+
+func _present_next_local_dialogue()->void:
+    if local_dialogue_queue.is_empty() or cutscene==null or not is_instance_valid(cutscene):return
+    var entry:Dictionary=local_dialogue_queue.pop_front()
     side_dialogue_active=true
-    cutscene.show_line("MISSÃO • "+title,speaker,line)
+    cutscene.show_line("MISSÃO • "+str(entry["title"]),str(entry["speaker"]),str(entry["line"]))
 
 func _start_optional_quest(quest_id:String)->void:
     if mode!="HQ":
@@ -1095,6 +1105,13 @@ func _boss_down(b:Node3D,x:int)->void:
     hud.set_mode("RIFT CONCLUÍDO • RECOMPENSAS • "+loot.describe(drop))
     audio.level_up()
 
+func _quest_started(id:String)->void:
+    if not id.begins_with("nimbara_0"):return
+    var q:Dictionary=quests.get_quest(id)
+    var line:=str(q.get("start_dialogue",""))
+    if line.is_empty():return
+    call_deferred("_show_local_quest_dialogue",str(q.get("title",id)),str(q.get("speaker","Kaien Arashi")),line)
+
 func _quest_completed(id:String)->void:
     var q:Dictionary=quests.get_quest(id)
     if not q.is_empty():
@@ -1176,7 +1193,15 @@ func _clear_combat()->void:
 
 func _story()->void:
     if side_dialogue_active:
+        if not local_dialogue_queue.is_empty():
+            _present_next_local_dialogue()
+        elif cutscene and cutscene.is_active():
+            cutscene.hide_cutscene()
+        return
+    if not story.has_next_line():
         if cutscene and cutscene.is_active():cutscene.hide_cutscene()
+        hud.set_mode("HISTÓRIA • CENA CONCLUÍDA")
+        if not local_dialogue_queue.is_empty():call_deferred("_present_next_local_dialogue")
         return
     var line:Dictionary=story.next_line()
     if cutscene and is_instance_valid(cutscene):

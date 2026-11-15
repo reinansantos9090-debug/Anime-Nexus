@@ -17,6 +17,7 @@ const WorldScript=preload("res://scripts/world/world_service.gd")
 const SkillTreeScript=preload("res://scripts/gameplay/skill_tree_service.gd")
 const QuestScript=preload("res://scripts/gameplay/quest_service.gd")
 const InventoryScript=preload("res://scripts/gameplay/inventory_service.gd")
+const StoryScript=preload("res://scripts/gameplay/story_service.gd")
 
 var failures:Array[String]=[]
 
@@ -36,6 +37,7 @@ func _init()->void:
     _test_save_slots()
     _test_virtual_joystick()
     _test_nimbara_vertical_slice_data_and_quest()
+    _test_story_dialogue_completion()
     _test_vesper_region_data()
     _test_aurelio_region_data()
     _test_ferrumia_region_data()
@@ -435,6 +437,20 @@ func _test_nexus_region_data()->void:
                 _expect(content.ITEMS.has(item_id),"Nexus: local echo loot item missing: "+str(item_id))
     maps.free()
     content.free()
+
+func _test_story_dialogue_completion()->void:
+    var state=StateScript.new()
+    state.reset()
+    var story=StoryScript.new()
+    story.setup(state)
+    for i in range(8):
+        _expect(story.has_next_line(),"Story: original prologue ended before all authored lines")
+        story.next_line()
+    _expect(not story.has_next_line(),"Story: completed prologue must expose a closed-scene state")
+    _expect(str(story.next_line().get("text","")).is_empty(),"Story: exhausted dialogue must not repeat a placeholder line")
+    _expect(state.data["story"]["journal"].size()==8,"Story: prologue must save all displayed lines locally")
+    story.free()
+    state.free()
 
 func _test_boss_telegraph()->void:
     var boss=BossScript.new()
