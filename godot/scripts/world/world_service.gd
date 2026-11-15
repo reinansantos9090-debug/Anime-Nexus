@@ -3,6 +3,7 @@ extends Node
 ## primitives stay lightweight so authored layouts remain viable on mobile.
 
 const Factory = preload("res://scripts/visuals/stylized_factory.gd")
+const GroundShader = preload("res://shaders/biome_ground.gdshader")
 
 var root: Node3D
 var database: Node
@@ -39,7 +40,15 @@ func build_biome(id: String) -> void:
     _reset()
     var b: Dictionary = map_db.get_map(id) if map_db else database.BIOMES.get(id,database.BIOMES["verdant_frontier"])
     _make_environment(b.get("fog",Color("#8fb1a5")),b.get("accent",Color("#d8ebff")))
-    Factory.box(world_root,Vector3(58,0.5,58),Vector3(0,-0.25,0),b.get("ground",Color("#4ea66f")))
+    var ground_color:Color=b.get("ground",Color("#4ea66f"))
+    var ground_accent:Color=b.get("accent",Color("#d8ebff"))
+    var terrain:=Factory.box(world_root,Vector3(58,0.5,58),Vector3(0,-0.25,0),ground_color)
+    var terrain_material:=ShaderMaterial.new()
+    terrain_material.shader=GroundShader
+    terrain_material.set_shader_parameter("base_color",ground_color)
+    terrain_material.set_shader_parameter("accent_color",ground_color.lerp(ground_accent,0.28))
+    terrain_material.set_shader_parameter("variation_strength",0.20)
+    terrain.material_override=terrain_material
     if map_db:
         for obstacle in b.get("obstacles",[]):
             _make_obstacle(obstacle,b.get("accent",Color.WHITE))

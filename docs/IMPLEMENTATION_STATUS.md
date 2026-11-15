@@ -10,6 +10,7 @@ Data da auditoria: 15 nov. 2026, branch `dev/anime-nexus-vertical-slice`.
 | OpenGL ES e loop de combate Kotlin | Implementado (protótipo Aetheria) | engine/render/AI/combat/session/HUD em `app/src/main/java/.../game3d`; geometria procedural |
 | Godot Android export | Testado em revisão anterior | workflow Godot 4.7.2 exportou APK da slice em run `43409376899`; o workflow longo atual é manual e ainda não foi executado para esta integração |
 | Godot + GDExtension C++ | Em desenvolvimento | Godot mantém renderer/cenas/física; C++17 é o domínio autoritativo em migração. A arquitetura e funções iniciais estão em `CPP_GAMEPLAY_ARCHITECTURE.md`; falta CI Android/arm64 e migração dos demais domínios. |
+| Shader de terreno por bioma | Em desenvolvimento | Shader spatial local com ruído de duas escalas e diffuse toon aplicado ao piso dos biomas, com paleta derivada dos dados locais; performance e leitura visual ainda aguardam exportação/teste manual em Android. |
 | Câmera isométrica | Implementado (protótipo) | câmera ortográfica diagonal com acompanhamento suave; zoom, ocultação de obstáculos e teste visual em aparelho pendentes |
 | Kaien | Em desenvolvimento | avatar procedural blockout com cores, cabelo e manoplas distintivos; sem modelo anime final, rig/skinning ou animações de produção |
 | Sete aliados | Planejado | nenhum personagem Anime Nexus produzido no runtime |

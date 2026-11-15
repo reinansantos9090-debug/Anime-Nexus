@@ -125,3 +125,10 @@ O manifest de produção deve validar todos os IDs, caminhos, licenças e arquiv
 ## Especificação comum de importação
 
 GLB é formato de intercâmbio; preservar fonte editável em arquivo de criação fora do APK, aplicar escala/origem e nomear bones/animations de modo consistente. Texturas usam compressão mobile e perfis por aparelho; todo material declara custo e fallback. Modelo tem LOD e limites de textura/triângulos medidos. Áudio é local, loop testado e sem música de terceiros. Manifest deve falhar build quando asset marcado Integrado não existe ou licença está vazia.
+
+
+## Recurso visual integrado nesta etapa
+
+| Nome | Finalidade | Região | Descrição / paleta | Especificação | Materiais e animações | Estado | Origem / licença |
+|---|---|---|---|---|---|---|---|
+| `godot/shaders/biome_ground.gdshader` | Variação estilizada do solo sem textura externa | Biomas atuais; cores recebidas do catálogo de mapa | Ruído orgânico em duas escalas, bandas diffuse toon suaves; combina a cor de solo local com 28% da cor de acento | Shader spatial de baixo custo por material de piso; coordenadas em mundo evitam repetição visível entre blocos | Material rough, sem textura e sem animação; luz principal do ambiente | Em desenvolvimento; revisão visual e perfil mobile pendentes | Código original do projeto, sem dependências de arte proprietária |
