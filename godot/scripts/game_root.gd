@@ -296,6 +296,23 @@ func _enter_versus()->void:
     _spawn_wave(mini(8,perf.max_enemies()))
     hud.set_mode("VERSUS • SIMULAÇÃO OFFLINE")
 
+func _show_side_quest_completion(line:String)->void:
+    hud.set_mode("LIORA • "+line)
+
+func _start_nimbara_side_quest()->void:
+    if mode!="HQ":
+        hud.set_mode("MISSÕES SECUNDÁRIAS • CONSULTE NO OBSERVATÓRIO")
+        return
+    const quest_id:="nimbara_side_01"
+    var completed:Array=state.data["quests"].get("completed",[])
+    var active:Array=state.data["quests"].get("active",[])
+    var quest:Dictionary=quests.get_quest(quest_id)
+    if quest_id in completed:
+        hud.set_mode("LIORA • "+str(quest.get("completion_dialogue","A clareira agradece.")))
+        return
+    if quest_id not in active:quests.start(quest_id)
+    hud.set_mode("LIORA • "+str(quest.get("start_dialogue","Ajude a clareira.")))
+
 func _cycle_companion_order()->void:
     var order:Array=["auto","follow","retreat"]
     var party:Dictionary=state.data.get("party",{}).duplicate(true)
@@ -370,6 +387,7 @@ func _run_operation(action_id:String)->void:
         "difficulty":_cycle_difficulty()
         "companions":
             if companion_roster_menu:companion_roster_menu.show_menu()
+        "side_quest":_start_nimbara_side_quest()
         "companion_order":_cycle_companion_order()
 
 func _cycle_weapon()->void:
@@ -644,6 +662,9 @@ func _enemy_down(e:Node3D,x:int)->void:
     progression.award_xp(x)
     var drop:Dictionary=loot.roll(monster_id,str(portal_service.destination),int(state.get_hunter()["level"]),events.multiplier())
     inventory.record_loot(drop)
+    var collected:Dictionary=drop.get("items",{})
+    for item_id in collected.keys():
+        quests.add_collect(str(item_id),int(collected[item_id]))
     daily.add("daily_kills",1)
     director.record_kill()
     quests.add_kill(monster_id,1)
@@ -652,7 +673,6 @@ func _enemy_down(e:Node3D,x:int)->void:
     if mode=="EXPEDITION":
         activity_progress+=1
         var map_id:=str(portal_service.destination)
-        quests.add_collect("scrap_plate",0)
         hud.set_mode("EXPEDIÇÃO • %s • %d/%d"%[maps.get_map(map_id)["name"],activity_progress,activity_goal])
         if activity_progress>=activity_goal:
             activity_remaining=0.0
@@ -681,7 +701,10 @@ func _boss_down(b:Node3D,x:int)->void:
 func _quest_completed(id:String)->void:
     var q:Dictionary=quests.get_quest(id)
     if not q.is_empty():
-        hud.set_mode("OBJETIVO CONCLUÍDO • "+str(q.get("title",id)))
+        if id=="nimbara_side_01":
+            call_deferred("_show_side_quest_completion",str(q.get("completion_dialogue","A clareira agradece.")))
+        else:
+            hud.set_mode("OBJETIVO CONCLUÍDO • "+str(q.get("title",id)))
     if id.begins_with("chapter_") or id.begins_with("boss_"):
         _story()
     if id=="nimbara_03":

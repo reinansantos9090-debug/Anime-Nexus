@@ -68,7 +68,12 @@ func get_quest(id:String)->Dictionary:
 func active_summary()->String:
     var active:Array=game_state.data["quests"]["active"]
     if active.is_empty():return "Nenhum contrato ativo"
-    var id:=str(active[0])
-    var quest:=get_quest(id)
-    var value:=int(game_state.data["quests"]["progress"].get(id,0))
-    return "%s  %d/%d"%[quest.get("title",id),value,int(quest.get("target",1))]
+    var summaries:Array[String]=[]
+    for value in active:
+        var id:=str(value)
+        var quest:=get_quest(id)
+        if quest.is_empty():continue
+        var progress:=int(game_state.data["quests"]["progress"].get(id,0))
+        summaries.append("%s  %d/%d"%[quest.get("title",id),progress,int(quest.get("target",1))])
+        if summaries.size()>=2:break
+    return "  •  ".join(summaries)

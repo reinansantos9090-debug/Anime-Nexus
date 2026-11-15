@@ -167,3 +167,8 @@ Cada arco de personagem oferece seis formatos diferentes; as recompensas são re
 ## Regras de implementação narrativa
 
 Cada missão usa ID estável, pré-requisitos, objetivo serializável, condição de conclusão única, reward bundle validado e diálogo por personagem/flag. Abandonar/pausar não reseta coleta já persistida salvo se missão disser explicitamente “por expedição”. Concluir atualiza save e desbloqueio da região na mesma operação. Placeholders de diálogo aparecem apenas em dev builds e nunca recebem o estado Testado.
+
+
+## Missão secundária integrada na slice
+
+**Sementes para Liora** — disponível no terminal do Observatório após o início da partida. Liora pede quatro unidades de Pólen de Nimbara; cada item efetivamente recebido do saque de criaturas da floresta avança a missão, que concede 180 XP e duas Flores da Memória. Ao iniciar, Liora explica que os brotos perderam a memória da estação; ao concluir, agradece e comenta que a clareira pode florescer novamente. Progresso e recompensa usam a fila offline e o salvamento local. O runner Godot contém uma regressão curta para o objetivo collect; aguarda execução manual.
