@@ -278,7 +278,12 @@ func _enter_hq()->void:
     _set_companion_combat(false)
     for companion in companions:
         if is_instance_valid(companion):companion.reset_formation()
-    hud.set_mode("PRÓLOGO DA SLICE CONCLUÍDO • NOVOS CAPÍTULOS EM PRODUÇÃO" if bool(state.data["story"]["flags"].get("nimbara_slice_complete",false)) else "OBSERVATÓRIO DE ÍRIS • PORTAL CENTRAL")
+    if bool(state.data["story"]["flags"].get("nexus_core_slice_complete",false)):
+        hud.set_mode("CORAÇÃO DO NEXO ESTABILIZADO • EXPEDIÇÕES LIVRES")
+    elif bool(state.data["story"]["flags"].get("nimbara_slice_complete",false)):
+        hud.set_mode("OBSERVATÓRIO DE ÍRIS • ÂNCORAS EM RESSONÂNCIA")
+    else:
+        hud.set_mode("OBSERVATÓRIO DE ÍRIS • PORTAL CENTRAL")
 
 func _enter_expedition()->void:
     mode="EXPEDITION"
@@ -372,7 +377,7 @@ func _enter_rift()->void:
     var region_id:=str(state.data.get("world",{}).get("map_id","nimbara"))
     for active_id in active_quests:
         var active_quest:Dictionary=quests.get_quest(str(active_id))
-        if str(active_id).begins_with(region_id+"_") and not active_quest.is_empty() and str(active_quest.get("type",""))!="boss":
+        if str(active_quest.get("map",""))==region_id and not active_quest.is_empty() and str(active_quest.get("type",""))!="boss":
             if str(active_quest.get("object","")).ends_with("_anchor"):
                 hud.set_mode("MISSÃO • INTERAJA COM A ÂNCORA DE RESSONÂNCIA")
             else:
@@ -1088,11 +1093,15 @@ func _spawn_boss(id:String)->void:
     if not maps.maps.has(boss_map):boss_map="nimbara"
     b.configure_boss(id,player,content,maps.difficulty(boss_map),state.difficulty_profile())
     if id=="crystal_stag":b.attach_visual(Factory.make_crystal_stag(b,Color("#416a80"),Color("#70f5dc")))
+    elif id=="glass_sphinx":
+        b.attach_visual(Factory.make_colossus(b,Color("#806147"),Color("#ffd37b")))
     elif id=="archive_zero":b.attach_visual(_make_archive_zero_visual(b))
     elif id=="steel_coral_colossus":
         b.attach_visual(Factory.make_colossus(b,Color("#68455a"),Color("#ffaf71")))
     elif id=="blizzard_monarch":
         b.attach_visual(Factory.make_colossus(b,Color("#50627e"),Color("#bdeaff")))
+    elif id=="mirror_archivist":
+        b.attach_visual(Factory.make_colossus(b,Color("#3c354b"),Color("#d994f0")))
     else:
         var palette:Dictionary={
             "fire":[Color("#783b38"),Color("#ffad4d")],
@@ -1199,7 +1208,7 @@ func _quest_started(id:String)->void:
     var q:Dictionary=quests.get_quest(id)
     if q.is_empty():return
     var map_id:=str(q.get("map",""))
-    if map_id.is_empty() or not id.begins_with(map_id+"_") or id.begins_with(map_id+"_side_"):return
+    if map_id.is_empty() or id.begins_with(map_id+"_side_"):return
     var line:=str(q.get("start_dialogue",""))
     if line.is_empty():return
     call_deferred("_show_local_quest_dialogue",str(q.get("title",id)),str(q.get("speaker","Kaien Arashi")),line)
@@ -1219,6 +1228,9 @@ func _quest_completed(id:String)->void:
         var region_id:=str(q.get("map",""))
         if region_id.is_empty():return
         state.data["story"]["flags"][region_id+"_slice_complete"]=true
+        if region_id=="umbral":
+            state.data["world"]["nexus_core_unlocked"]=true
+            state.state_changed.emit()
         save.save_now()
         hud.set_mode("ÂNCORA ESTABILIZADA • CAPÍTULO CONCLUÍDO")
         var next_quest_id:=str(content.CAMPAIGN_NEXT_QUEST.get(region_id,""))

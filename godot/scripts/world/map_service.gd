@@ -124,7 +124,7 @@ func _ready() -> void:
         },
         "nexus_core": {
             "name":"Núcleo do Nexo • Ponte dos Fragmentos",
-            "difficulty":1.85,"duration":200.0,"goal":18,"hazard":"ondas de estase",
+            "difficulty":1.85,"duration":200.0,"goal":18,"hazard":"ondas de estase","resonance_anchor":Vector3(0,0,-8.5),
             "ground":Color("#343d63"),"accent":Color("#c4a3ff"),"fog":Color("#69739f"),
             "enemies":["memory_warden","tide_echo","gear_echo","frost_echo","root_echo","hour_echo"],
             "obstacles":[
@@ -140,7 +140,7 @@ func _ready() -> void:
         },
         "umbral": {
             "name":"Umbral • Jardins do Eclipse",
-            "difficulty":1.42,"duration":190.0,"goal":16,"hazard":"ecos de reflexo",
+            "difficulty":1.42,"duration":190.0,"goal":16,"hazard":"ecos de reflexo","resonance_anchor":Vector3(0,0,-8.5),
             "ground":Color("#39334f"),"accent":Color("#d995f0"),"fog":Color("#665a86"),
             "enemies":["shapeless_echo","eclipse_butterfly","mirror_guardian","fractured_shadow","wandering_illusion","silence_watch"],
             "obstacles":[

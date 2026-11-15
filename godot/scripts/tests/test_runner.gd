@@ -47,7 +47,9 @@ func _init()->void:
     _test_ivern_region_data()
     _test_ivern_campaign_chain()
     _test_umbral_region_data()
+    _test_umbral_campaign_chain()
     _test_nexus_region_data()
+    _test_nexus_final_campaign_chain()
     _test_regional_boss_catalog()
     _test_boss_telegraph()
     _test_static_field_slow()
@@ -552,6 +554,66 @@ func _test_ivern_campaign_chain()->void:
     content.free()
     maps.free()
 
+func _test_umbral_campaign_chain()->void:
+    var content=ContentScript.new()
+    var maps=MapScript.new()
+    maps._ready()
+    var expected:Array=["umbral_01","umbral_02","umbral_03","umbral_04","umbral_05","umbral_06","umbral_07","umbral_08"]
+    for index in range(expected.size()):
+        var quest:Dictionary={}
+        for row in content.QUESTS:
+            if str(row.get("id",""))==expected[index]:
+                quest=row
+                break
+        _expect(not quest.is_empty(),"Umbral campaign: missing %s"%expected[index])
+        if quest.is_empty():continue
+        _expect(str(quest.get("map",""))=="umbral","Umbral campaign: wrong map")
+        var kind:=str(quest.get("type",""))
+        if kind=="kill":
+            var target_id:=str(quest.get("monster",""))
+            _expect(content.MONSTERS.has(target_id),"Umbral campaign: missing target")
+            _expect(target_id in maps.maps["umbral"].get("enemies",[]),"Umbral campaign: target absent from map")
+        elif kind=="collect":
+            var item_id:=str(quest.get("item",""))
+            _expect(content.ITEMS.has(item_id),"Umbral campaign: missing material")
+            var dropped:=false
+            for monster_id in maps.maps["umbral"].get("enemies",[]):
+                if item_id in content.MONSTERS.get(str(monster_id),{}).get("loot",[]):
+                    dropped=true
+                    break
+            _expect(dropped,"Umbral campaign: objective material unavailable in region")
+        elif kind=="boss":
+            _expect(content.BOSSES.has(str(quest.get("boss",""))),"Umbral campaign: missing boss")
+        if index<expected.size()-1:
+            _expect(str(quest.get("next",""))==expected[index+1],"Umbral campaign: broken chain")
+    _expect(str(content.CAMPAIGN_NEXT_QUEST.get("ivern",""))=="umbral_01","Umbral: chapter link missing")
+    _expect(str(content.CAMPAIGN_NEXT_QUEST.get("umbral",""))=="final_01","Umbral: final unlock link missing")
+    content.free()
+    maps.free()
+
+func _test_nexus_final_campaign_chain()->void:
+    var content=ContentScript.new()
+    var maps=MapScript.new()
+    maps._ready()
+    var expected:Array=["final_01","final_02","final_03","final_04","final_05","final_06"]
+    for index in range(expected.size()):
+        var quest:Dictionary={}
+        for row in content.QUESTS:
+            if str(row.get("id",""))==expected[index]:
+                quest=row
+                break
+        _expect(not quest.is_empty(),"Final campaign: missing %s"%expected[index])
+        if quest.is_empty():continue
+        _expect(str(quest.get("map",""))=="nexus_core","Final campaign: wrong map")
+        if str(quest.get("type",""))=="boss":
+            _expect(str(quest.get("boss",""))=="archive_zero","Final campaign: boss must be Arquivo Zero")
+        if str(quest.get("object","")).ends_with("_anchor"):
+            _expect(maps.maps["nexus_core"].has("resonance_anchor"),"Final campaign: central anchor has no map position")
+        if index<expected.size()-1:
+            _expect(str(quest.get("next",""))==expected[index+1],"Final campaign: broken quest chain")
+    content.free()
+    maps.free()
+
 func _test_ferrumia_campaign_chain()->void:
     var content=ContentScript.new()
     var maps=MapScript.new()
@@ -632,7 +694,7 @@ func _test_aurelio_campaign_chain()->void:
                 "Aurélio campaign: reward item missing in %s"%expected[index])
         if index<expected.size()-1:
             _expect(str(found.get("next",""))==expected[index+1],"Aurélio campaign: broken next link in %s"%expected[index])
-    _expect(str(content.REGIONAL_BOSSES.get("aurelio",""))=="chrono_colossus",
+    _expect(str(content.REGIONAL_BOSSES.get("aurelio",""))=="glass_sphinx",
         "Aurélio campaign: final boss must match regional route")
     _expect(str(content.CAMPAIGN_NEXT_QUEST.get("nimbara",""))=="aurelio_01",
         "Aurélio campaign: chapter must unlock after Nimbara")

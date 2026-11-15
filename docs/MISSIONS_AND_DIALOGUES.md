@@ -1,6 +1,6 @@
 # Missões e diálogos
 
-As campanhas além de Ivern e as entradas não marcadas na seção de estado continuam **Planejadas**. As cadeias de Nimbara, Aurélio, Vesper, Ferrúmia e Ivern estão conectadas ao catálogo e ao fluxo offline do protótipo, com objetivos verificáveis, recompensas e diálogos locais; a regressão do runner Godot aguarda disparo manual e o fluxo aguarda validação touch. A tabela abaixo descreve a intenção completa da campanha: as mecânicas detalhadas de puzzle, cenas, arenas e algumas recompensas listadas ainda não estão implementadas só por aparecerem aqui. As missões secundárias Sementes para Liora e Ecos no Lago permanecem jogáveis e aguardam validação manual.
+As seis campanhas regionais têm oito missões cada e o desfecho tem seis: 54 missões conectadas ao fluxo offline. As quatro missões jogáveis do prólogo e as duas do epílogo ainda estão planejadas, assim como as 45 secundárias. O runner manual e a validação touch das cadeias integradas ainda aguardam execução. As tabelas documentam o escopo completo; puzzles, cenas, recompensas e eventos citados nelas não estão todos implementados.
 
 ## Campanha principal — 60 missões
 
