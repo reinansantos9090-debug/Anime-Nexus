@@ -117,7 +117,7 @@ Cada arco de personagem oferece seis formatos diferentes; as recompensas são re
 
 | ID / pessoa / local | Missão e objetivo de conclusão | Recompensa | Fala de contexto |
 |---|---|---|---|
-| SQ-K-1 Kaien, Nimbara — runtime `nimbara_side_03` | No terminal do Observatório, aceite a missão e derrote três Musgos Saltadores que carregam fragmentos de um brasão antigo | Brasão Arashi (item de inventário), três Fragmentos de Ressonância e uma Flor de Memória | Kaien: “Esse símbolo... minha mãe o desenhava nas margens dos mapas.”; conclusão: “Minha família não escondia apenas uma história: ela protegia uma rota.” |
+| SQ-K-1 Kaien, Nimbara — runtime `nimbara_side_03` | No terminal do Observatório, aceite a missão e derrote três Musgos Saltadores que carregam fragmentos de um brasão antigo | Brasão Arashi (item de inventário), três Fragmentos de Ressonância e uma Flor de Memória | Kaien: “Esse símbolo... minha mãe o desenhava nas margens dos mapas.”; conclusão: “Minha família não escondia apenas uma história: ela protegia a rota dos antigos guardiões.” |
 | SQ-K-2 Kaien, treino | Completar circuito de dash sem tocar em barreiras | visual Rastro Ciano | Orin: “Velocidade é escolher quando parar.” |
 | SQ-K-3 Kaien, Nimbara | Conduzir trovão entre quatro alvos de treino sem ferir plantas | runa Elo | Liora: “Força que escuta também pode proteger.” |
 | SQ-K-4 Kaien, Observatório | Entregar mensagens aos aliados escolhidos por ele | cena de banter | Akari: “Você não precisa carregar cada recado sozinho.” |
