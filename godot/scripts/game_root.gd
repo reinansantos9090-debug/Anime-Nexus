@@ -581,6 +581,7 @@ func _run_operation(action_id:String)->void:
             if companion_roster_menu:companion_roster_menu.show_menu()
         "side_quest":_start_optional_quest("nimbara_side_01")
         "memory_quest":_start_optional_quest("nimbara_side_02")
+        "kaien_story":_start_optional_quest("nimbara_side_03")
         "companion_order":_cycle_companion_order()
 
 func _open_inventory()->void:
