@@ -24,7 +24,7 @@
 
 ## Plataforma e experiência
 
-- `godot --headless --editor --quit --path godot`, runner headless, export debug Android e teste de instalação.
+- CI automático: importar/exportar projeto Godot e compilar a extensão C++ Android arm64 para produzir APK. Não executa runner de gameplay, Linux nativo, emulador nem instalação.
 - Gradle unit tests e assemble do host Android enquanto existir.
 - Testar landscape, diferentes proporções, safe areas, toque simultâneo, pause/resume, teclado e back.
 - Aparelhos baixo/médio/alto: frame time p50/p95, memória GPU/CPU, temperatura, carregamento, draw calls, quedas ao abrir menus e ao lutar.
@@ -40,7 +40,7 @@
 - CI da revisão `c66eec5`: runner Godot 4.7.2, export Android Godot, testes unitários Kotlin, recuperação do save corrompido e APK do host Kotlin passaram; artifacts publicados na [run 43410319631](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43410319631). Nenhum APK foi instalado ou testado em aparelho.
 - Sem aparelho Android ligado a este ambiente, FPS, toque real, instalação APK e qualidade visual ainda não foram verificados.
 - Godot 4.7.2 local carregou `AnimeNexusCombatCore`; GDExtension C++ Linux release compilou e o runner imprimiu `ANIME_NEXUS_TESTS: PASS`, incluindo dano, crítico, reações invertidas e XP acumulado. Restaram apenas avisos conhecidos de recursos em uso ao encerrar.
-- O build Android arm64 do núcleo C++ e a exportação do APK com a extensão são pendentes no CI novo; a validação local do APK é bloqueada pela ausência do Android SDK/NDK.
+- O workflow automático compila o núcleo C++ para Android arm64 e exporta APK. Instalação e validação no aparelho exigem teste manual; não há emulador no CI.
 
 
 ## Validação manual curta da dificuldade
@@ -50,7 +50,7 @@
 - Conferir que a escolha salva sobrevive ao recarregamento e que saves antigos recebem Aventura por padrão.
 - Entrar em expedição e observar vida/dano/XP de um inimigo e do chefe em cada perfil; conferir que trocar no meio da expedição é bloqueado.
 
-A verificação Godot/C++/APK continua no workflow manual; nenhum teste de emulador ou job longo será iniciado automaticamente.
+A compilação Godot/C++ para Android e a exportação do APK rodam automaticamente. O runner de gameplay, emulador e testes de aparelho permanecem fora do CI automático.
 
 
 ## Exploração dos ecos de memória
@@ -134,7 +134,7 @@ Runner Godot permanece manual; nenhum teste longo/emulador automático foi adici
 - Verificar ratios de fase e padrões na definição; testar combate RIFT offline e telegraphs no jogo quando o workflow manual for executado.
 - O mapa de expedição não conclui a campanha: âncoras interativas, cenas, escolha narrativa, arena definitiva, áudio e arte final estão pendentes.
 
-Runner e export Godot continuam manuais; nenhum teste longo/emulador foi iniciado.
+A exportação Godot para Android é automática; o runner de gameplay e qualquer teste em dispositivo permanecem manuais.
 
 
 ## Cadeia principal de Nimbara (runner manual curto)

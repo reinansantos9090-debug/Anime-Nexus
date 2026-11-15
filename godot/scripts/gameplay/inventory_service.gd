@@ -2,11 +2,11 @@ extends Node
 signal changed
 
 var game_state:Node
-var native_core:AnimeNexusCombatCore
+var native_core
 
 func setup(state:Node)->void:
     game_state=state
-    native_core=AnimeNexusCombatCore.new()
+    native_core = ClassDB.instantiate("AnimeNexusCombatCore") if ClassDB.class_exists("AnimeNexusCombatCore") else null
     if game_state and not game_state.inventory_changed.is_connected(_emit):
         game_state.inventory_changed.connect(_emit)
 

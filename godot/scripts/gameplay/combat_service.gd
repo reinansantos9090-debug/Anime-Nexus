@@ -3,14 +3,14 @@ var game_state: Node
 var audio_service: Node
 var vfx_service: Node
 var rng := RandomNumberGenerator.new()
-var native_core: AnimeNexusCombatCore
+var native_core
 
 func setup(state: Node, audio: Node, vfx: Node = null) -> void:
     game_state = state
     audio_service = audio
     vfx_service = vfx
     rng.seed = 9917
-    native_core = AnimeNexusCombatCore.new()
+    native_core = ClassDB.instantiate("AnimeNexusCombatCore") if ClassDB.class_exists("AnimeNexusCombatCore") else null
 
 func player_damage(weapon: Dictionary, level: int, bonus: float, crit_bonus: float) -> float:
     return float(player_attack(weapon, level, bonus, crit_bonus).get("amount", 0.0))

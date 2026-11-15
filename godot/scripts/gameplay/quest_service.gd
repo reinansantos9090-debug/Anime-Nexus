@@ -5,12 +5,12 @@ signal completed(quest_id:String)
 
 var game_state:Node
 var database:Node
-var native_core: AnimeNexusQuestCore
+var native_core
 
 func setup(state:Node,content:Node)->void:
     game_state=state
     database=content
-    native_core=AnimeNexusQuestCore.new()
+    native_core = ClassDB.instantiate("AnimeNexusQuestCore") if ClassDB.class_exists("AnimeNexusQuestCore") else null
 
 func start(id:String)->void:
     var result:Dictionary=native_core.start_quest(game_state.data["quests"],database.QUESTS,id)

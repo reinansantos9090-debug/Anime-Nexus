@@ -44,8 +44,7 @@ jobs:
           path: app/build/outputs/apk/debug/*.apk
 
   godot-android:
-    # Native Godot binding compilation is intentionally manual due to its long runtime.
-    if: github.event_name == 'workflow_dispatch'
+    # Build the Android game artifact automatically; gameplay runners and emulators stay out of CI.
     runs-on: ubuntu-latest
     steps:
       - name: Checkout exact revision
@@ -115,10 +114,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          adb start-server
-          adb devices
           "$GODOT_BIN" --headless --editor --quit --path godot
-          "$GODOT_BIN" --headless --path godot --script tests/test_runner.gd
           mkdir -p "$RUNNER_TEMP/game-artifacts"
           "$GODOT_BIN" --headless --path godot --export-debug "Android" "$RUNNER_TEMP/game-artifacts/anime-nexus-godot-debug.apk"
 

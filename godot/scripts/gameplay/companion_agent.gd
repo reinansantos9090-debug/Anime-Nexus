@@ -7,7 +7,7 @@ const Factory=preload("res://scripts/visuals/stylized_factory.gd")
 var owner_actor:Node3D
 var combat_service:Node
 var game_state:Node
-var native_core:AnimeNexusCombatCore
+var native_core
 var companion_id:=""
 var display_name:=""
 var element:="fire"
@@ -58,7 +58,7 @@ func configure(owner:Node3D,combat:Node,state:Node,id:String,title:String,elemen
     support_heal_ratio=support_heal_value
     support_energy_restore=support_energy_value
     support_threshold=support_threshold_value
-    native_core=AnimeNexusCombatCore.new()
+    native_core = ClassDB.instantiate("AnimeNexusCombatCore") if ClassDB.class_exists("AnimeNexusCombatCore") else null
     name=id
     global_position=owner.global_position+offset
     var visual_root:Node3D=Factory.make_companion(self,companion_id,body_color,accent_color,Color("#edc19c"))

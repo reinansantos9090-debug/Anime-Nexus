@@ -88,7 +88,7 @@ func _test_damage()->void:
     _expect(damage>=100.0 and damage<=175.0,"Damage: formula outside expected range")
 
 func _test_native_combat_core()->void:
-    var core=AnimeNexusCombatCore.new()
+    var core=ClassDB.instantiate("AnimeNexusCombatCore")
     var normal:Dictionary=core.calculate_damage(100.0,1,0.2,0.5,0.7)
     var critical:Dictionary=core.calculate_damage(100.0,3,0.2,0.5,0.2)
     _expect(is_equal_approx(float(normal["amount"]),120.0),"C++ combat: normal damage formula mismatch")
@@ -127,7 +127,7 @@ func _test_native_combat_core()->void:
     _expect(int(level_result["hp"])==164 and is_equal_approx(float(level_result["max_energy"]),108.0),"C++ progression: level stat growth mismatch")
     
 func _test_supreme_meter()->void:
-    var core=AnimeNexusCombatCore.new()
+    var core=ClassDB.instantiate("AnimeNexusCombatCore")
     var half:Dictionary=core.resolve_supreme_meter(0.0,42.5,false)
     _expect(is_equal_approx(float(half["charge"]),42.5) and not bool(half["ready"]),"Supreme: partial charge mismatch")
     var cap:Dictionary=core.resolve_supreme_meter(97.0,12.0,false)
@@ -655,7 +655,7 @@ func _test_prologue_and_epilogue_routes()->void:
     _expect(epilogue_rows.size()==2,"Epilogue: both playable missions must be cataloged")
     _expect(str(epilogue_rows[0].get("next",""))=="epilogue_02","Epilogue: return mission must lead into the horizon challenge")
     _expect(bool(epilogue_rows[1].get("optional",false)),"Epilogue: secret boss must not block free expedition selection")
-    var quest_core:=AnimeNexusQuestCore.new()
+    var quest_core:=ClassDB.instantiate("AnimeNexusQuestCore")
     var quest_state:Dictionary={"active":["prologue_01"],"completed":[],"progress":{}}
     var prologue_steps:Array=[
         ["complete","prologue_01","prologue_02"],
@@ -732,7 +732,7 @@ func _test_kaien_personal_side_quest()->void:
     for reward_id in quest.get("rewards",{}).keys():
         _expect(content.ITEMS.has(str(reward_id)),"Kaien side story: reward is not in local item catalog")
 
-    var core:=AnimeNexusQuestCore.new()
+    var core:=ClassDB.instantiate("AnimeNexusQuestCore")
     var quest_state:Dictionary={"active":[],"completed":[],"progress":{}}
     var start_result:Dictionary=core.start_quest(quest_state,content.QUESTS,"nimbara_side_03")
     quest_state=start_result.get("quests",{})
@@ -816,7 +816,7 @@ func _test_akari_ember_flower_quest()->void:
     _expect(str(quest.get("completion_dialogue","")).contains("sozinha"),"Akari story: resolution dialogue missing")
     for reward_id in quest.get("rewards",{}).keys():
         _expect(content.ITEMS.has(str(reward_id)),"Akari story: reward is not catalogued: "+str(reward_id))
-    var core:=AnimeNexusQuestCore.new()
+    var core:=ClassDB.instantiate("AnimeNexusQuestCore")
     var state:Dictionary={"active":[],"completed":[],"progress":{}}
     var start:Dictionary=core.start_quest(state,content.QUESTS,"nimbara_side_04")
     var interaction:Dictionary=core.apply_event(start.get("quests",{}),content.QUESTS,"interact","akari_flame_bloom",1)
@@ -883,7 +883,7 @@ func _test_ren_wind_chime_quest()->void:
     _expect(str(quest.get("completion_dialogue","")).contains("escolher voltar"),"Ren story: choice to stay is missing from resolution")
     for reward_id in quest.get("rewards",{}).keys():
         _expect(content.ITEMS.has(str(reward_id)),"Ren story: reward is not catalogued: "+str(reward_id))
-    var core:=AnimeNexusQuestCore.new()
+    var core:=ClassDB.instantiate("AnimeNexusQuestCore")
     var quests_state:Dictionary={"active":[],"completed":[],"progress":{}}
     var started:Dictionary=core.start_quest(quests_state,content.QUESTS,"nimbara_side_05")
     var completion:Dictionary=core.apply_event(started.get("quests",{}),content.QUESTS,"interact","ren_wind_chime",1)
@@ -948,7 +948,7 @@ func _test_mira_memory_prism_quest()->void:
     _expect(str(quest.get("completion_dialogue","")).contains("sem transformá-la"),"Mira story: emotional resolution is missing")
     for reward_id in quest.get("rewards",{}).keys():
         _expect(content.ITEMS.has(str(reward_id)),"Mira story: reward is not catalogued: "+str(reward_id))
-    var core:=AnimeNexusQuestCore.new()
+    var core:=ClassDB.instantiate("AnimeNexusQuestCore")
     var quest_state:Dictionary={"active":[],"completed":[],"progress":{}}
     var started:Dictionary=core.start_quest(quest_state,content.QUESTS,"nimbara_side_06")
     var result:Dictionary=core.apply_event(started.get("quests",{}),content.QUESTS,"interact","mira_memory_prism",1)
@@ -1015,7 +1015,7 @@ func _test_yuna_lunar_seal_quest()->void:
     _expect(str(quest.get("completion_dialogue","")).contains("cuidasse de mim"),"Yuna story: personal revelation missing")
     for reward_id in quest.get("rewards",{}).keys():
         _expect(content.ITEMS.has(str(reward_id)),"Yuna story: reward is not catalogued: "+str(reward_id))
-    var core:=AnimeNexusQuestCore.new()
+    var core:=ClassDB.instantiate("AnimeNexusQuestCore")
     var quest_state:Dictionary={"active":[],"completed":[],"progress":{}}
     var started:Dictionary=core.start_quest(quest_state,content.QUESTS,"nimbara_side_07")
     var result:Dictionary=core.apply_event(started.get("quests",{}),content.QUESTS,"interact","yuna_lunar_seal",1)
@@ -1080,7 +1080,7 @@ func _test_shin_shadow_reflection_quest()->void:
     _expect(str(quest.get("completion_dialogue","")).contains("sozinho"),"Shin story: trust resolution is missing")
     for reward_id in quest.get("rewards",{}).keys():
         _expect(content.ITEMS.has(str(reward_id)),"Shin story: reward is not catalogued: "+str(reward_id))
-    var core:=AnimeNexusQuestCore.new()
+    var core:=ClassDB.instantiate("AnimeNexusQuestCore")
     var quest_state:Dictionary={"active":[],"completed":[],"progress":{}}
     var started:Dictionary=core.start_quest(quest_state,content.QUESTS,"nimbara_side_08")
     var result:Dictionary=core.apply_event(started.get("quests",{}),content.QUESTS,"interact","shin_shadow_reflection",1)

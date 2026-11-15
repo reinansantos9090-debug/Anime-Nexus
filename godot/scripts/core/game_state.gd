@@ -6,10 +6,10 @@ signal story_changed
 
 const SCHEMA := 8
 var data: Dictionary = {}
-var native_core: AnimeNexusCombatCore
+var native_core
 
 func _init() -> void:
-    native_core = AnimeNexusCombatCore.new()
+    native_core = ClassDB.instantiate("AnimeNexusCombatCore") if ClassDB.class_exists("AnimeNexusCombatCore") else null
 
 func _ready() -> void:
     reset()

@@ -67,7 +67,7 @@ func _test_damage()->void:
     _expect(damage>=100.0 and damage<=175.0,"Damage: formula outside expected range")
 
 func _test_native_combat_core()->void:
-    var core=AnimeNexusCombatCore.new()
+    var core=ClassDB.instantiate("AnimeNexusCombatCore")
     var normal:Dictionary=core.calculate_damage(100.0,1,0.2,0.5,0.7)
     var critical:Dictionary=core.calculate_damage(100.0,3,0.2,0.5,0.2)
     _expect(is_equal_approx(float(normal["amount"]),120.0),"C++ combat: normal damage formula mismatch")

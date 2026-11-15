@@ -4,13 +4,13 @@ extends Node
 
 var state:Node
 var content:Node
-var native_core:AnimeNexusCombatCore
+var native_core
 var rng:=RandomNumberGenerator.new()
 
 func setup(game_state:Node,content_db:Node)->void:
     state=game_state
     content=content_db
-    native_core=AnimeNexusCombatCore.new()
+    native_core = ClassDB.instantiate("AnimeNexusCombatCore") if ClassDB.class_exists("AnimeNexusCombatCore") else null
     rng.seed=73191
 
 func roll(monster_id:String,map_id:String,level:int,event_multiplier:float=1.0)->Dictionary:
