@@ -1,6 +1,6 @@
 # Missões e diálogos
 
-As seis campanhas regionais têm oito missões cada, o desfecho tem seis, o prólogo quatro e o epílogo duas: 60 missões estão ligadas ao fluxo offline. O runner Godot/GDExtension está no workflow manual e não foi executado nesta atualização; a CI curta não o substitui. As 48 missões secundárias listadas ainda não estão integradas. Puzzles, cenas, recompensas e eventos continuam em diferentes estados de implementação.
+As seis campanhas regionais têm oito missões cada, o desfecho tem seis, o prólogo quatro e o epílogo duas: 60 missões estão ligadas ao fluxo offline. O runner Godot/GDExtension está no workflow manual e não foi executado nesta atualização; a CI curta não o substitui. Três secundárias estão integradas no protótipo: Sementes para Liora, Ecos no Lago e a pista pessoal de Kaien abaixo. As outras 45 secundárias desta lista permanecem planejadas. Puzzles, cenas, recompensas e eventos continuam em diferentes estados de implementação.
 
 ## Campanha principal — 60 missões
 
@@ -113,11 +113,11 @@ O prólogo e o epílogo agora possuem objetivos conectados ao fluxo local: a cen
 
 ## Missões secundárias — 48
 
-Cada arco de personagem oferece seis formatos diferentes; as recompensas são recursos, registros, visuais ou melhorias locais, sem itens pagos. IDs usam `SQ-{initial}-{n}`.
+Cada arco de personagem oferece seis formatos diferentes; as recompensas são recursos, registros, visuais ou melhorias locais, sem itens pagos. IDs usam `SQ-{initial}-{n}`. A linha `SQ-K-1` está integrada no runtime como `nimbara_side_03`; seu objetivo e diálogos abaixo correspondem ao protótipo atual. As duas missões de Liora têm IDs próprios e também estão jogáveis.
 
 | ID / pessoa / local | Missão e objetivo de conclusão | Recompensa | Fala de contexto |
 |---|---|---|---|
-| SQ-K-1 Kaien, ruínas | Recuperar três marcas da família sem quebrar os memoriais | registro Arashi | Kaien: “Quero descobrir por que minha família escondeu isto.” |
+| SQ-K-1 Kaien, Nimbara — runtime `nimbara_side_03` | No terminal do Observatório, aceite a missão e derrote três Musgos Saltadores que carregam fragmentos de um brasão antigo; a recompensa concede três Fragmentos de Ressonância e uma Flor de Memória | pista sobre a rota dos guardiões | Kaien: “Esse símbolo... minha mãe o desenhava nas margens dos mapas.”; conclusão: “Minha família não escondia apenas uma história: ela protegia uma rota.” |
 | SQ-K-2 Kaien, treino | Completar circuito de dash sem tocar em barreiras | visual Rastro Ciano | Orin: “Velocidade é escolher quando parar.” |
 | SQ-K-3 Kaien, Nimbara | Conduzir trovão entre quatro alvos de treino sem ferir plantas | runa Elo | Liora: “Força que escuta também pode proteger.” |
 | SQ-K-4 Kaien, Observatório | Entregar mensagens aos aliados escolhidos por ele | cena de banter | Akari: “Você não precisa carregar cada recado sozinho.” |
