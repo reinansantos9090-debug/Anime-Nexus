@@ -9,9 +9,9 @@ var root: Control
 var action_buttons:Dictionary={}
 
 const ACTIONS := [
-    ["expedition","EXPEDIÇÃO • NIMBARA","Continuar a missão da Clareira Luminar"],
+    ["expedition","EXPEDIÇÃO • CONTINUAR","Seguir a missão ativa ou escolher uma região livre"],
     ["craft","OFICINA • MEKA","Ver receitas e criar itens com materiais locais"],
-    ["rift","CHEFE • CÉRVIDO","Enfrentar o guardião da primeira Âncora"],
+    ["rift","RIFT • CHEFE REGIONAL","Enfrentar o chefe ligado à região atual"],
     ["history","DIÁLOGOS","Continuar o prólogo de Kaien"],
     ["companions","COMPANHEIROS","Escolher até dois aliados offline"],
     ["companion_order","ORDEM • AUTO","Alternar entre combate, seguir e recuar"],
