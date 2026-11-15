@@ -1,6 +1,6 @@
 # Mundos e criaturas
 
-Regiões abaixo são o conteúdo-alvo. Layout, ambientação e criaturas ainda são **Planejados**; o mapa atual Godot tem cinco arenas de combate Aetheria com base plana e obstáculos procedurais.
+Esta tabela permanece a especificação de longo prazo. A build atual ainda é um protótipo: Nimbara continua sendo a missão vertical slice, e a lista de expedições inclui mapas de combate compactos. Aurélio, Ferrúmia, Ivern, Umbral, Vesper e o Núcleo do Nexo agora têm expedições blockout com fauna local; nenhum desses mapas equivale às regiões completas de exploração previstas abaixo.
 
 | Região / identidade | Subáreas e mecânicas de exploração | Criaturas comuns/especiais | Chefe e encontro |
 |---|---|---|---|
@@ -20,3 +20,32 @@ Cada espécie precisa de locomotion/pathing, telegraph, hitbox, reação, recupe
 ## Masmorras e eventos
 
 Doze masmorras alvo devem variar rota e objetivo: fuga de raízes, sala de espelhos, corrida de plataforma, investigação sem combate, escolta, arena de ondas, quebra-cabeça temporal, barco em maré, máquina sob pressão, subida de ventos, memória em dupla e combate final cronometrado. Portais de desafio usam modificadores configuráveis offline. Evento local é escolhido ao entrar ou após marco de jogo e não expira por ausência.
+
+
+## Estado runtime do Núcleo do Nexo
+
+O Núcleo do Nexo agora possui uma expedição compacta com seis ecos locais e marcadores procedurais para oito âncoras; os ecos recebem cores por região e saque offline. O Arquivo Zero foi adicionado ao catálogo de chefes com três fases, padrões de estase/teleporte/summon/área/projétil e silhueta geométrica blockout, e pode surgir na rotação local de RIFT. A integração não implementa a missão final, a promessa narrativa, a escolha sobre o futuro dos mundos, arenas de memória, cenas/transições, áudio próprio ou modelos/animações finais. O aro central e os cristais não são oito objetivos interativos.
+
+## Estado runtime de Umbral
+
+Umbral tem uma expedição compacta com seis criaturas e materiais de saque locais. Painéis e colunas de espelho são meshes estáticos sem reflexão; não há transição de geometria, caminhos ilusórios, memórias interativas, troca real de arena ou chefe. Cada espécie possui silhueta blockout procedural própria; dissolve, rig e animações permanecem pendentes.
+
+## Estado runtime de Ivern
+
+Ivern está disponível como expedição compacta com seis criaturas e saques locais. O cenário blockout tem bancos de neve decorativos, cristais e arcos estáticos em paleta pérola/lilás; não representa neve física nem aurora dinâmica. Pontes que surgem com o vento, saltos entre picos, templo, chefe e subáreas não estão implementados. As seis criaturas têm silhuetas próprias de blockout sem rig ou animação final.
+
+## Estado runtime de Ferrúmia
+
+Ferrúmia tem expedição selecionável com paleta, seis criaturas e saque local. O blockout usa trilhos estáticos desenhados no piso, torres de cobre e engrenagens geométricas, além de sete obstáculos que afetam a rota. Não existem elevadores, plataformas móveis, máquinas acionáveis, navegação por trilho, chefe ou subáreas. As seis criaturas recebem silhuetas procedurais próprias, mas ainda sem rigs/animações de produção.
+
+## Estado runtime de Aurélio
+
+Aurélio tem mapa selecionável, paleta e seis espécies locais com saque offline. O cenário de expedição usa cristas baixas decorativas, marcos de arenito, fragmentos de templo e sete obstáculos. É um blockout sobre piso plano: não implementa dunas suspensas navegáveis, plataformas móveis, ilusões interativas, quebra-cabeças temporais, chefe nem subáreas finais. Os seis inimigos possuem silhuetas procedurais de blockout e comportamentos locais reaproveitados; rigs e animações de produção estão pendentes.
+
+## Estado runtime de Vesper
+
+Vesper agora possui o mapa de expedição **Vesper • Arquipélago das Marés**, com paleta e encontro locais, sete obstáculos de rota e seis espécies que usam os sistemas offline existentes de spawn, combate e saque. O world builder cria água decorativa sem colisão, dois cais blockout e corais procedurais; os seis inimigos têm silhuetas blockout próprias, ainda sem rig ou animações. Isso não implementa mudança de maré, barco, travessia submersa, farol, chefe ou as subáreas de produção. A água não simula maré e não existe navegação aquática.
+
+## Interações de exploração integradas
+
+Nimbara tem um pequeno lago estilizado e declara três posições fixas de ecos de memória junto à margem em `map_service.gd`. O world builder renderiza marcadores ciano discretos. A missão Ecos no Lago permite sincronizar cada cristal quando Kaien está a até 3 unidades; o ID individual fica salvo em `story.flags`, impedindo contagem duplicada após sair/recarregar.

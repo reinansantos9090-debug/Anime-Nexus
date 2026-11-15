@@ -6,11 +6,25 @@ signal closed
 
 var panel: Panel
 var root: Control
+var action_buttons:Dictionary={}
 
 const ACTIONS := [
-    ["expedition","EXPEDIÇÃO • NIMBARA","Continuar a missão da Clareira Luminar"],
-    ["rift","CHEFE • CÉRVIDO","Enfrentar o guardião da primeira Âncora"],
-    ["history","DIÁLOGOS","Continuar o prólogo de Kaien"]
+    ["expedition","EXPEDIÇÃO • CONTINUAR","Seguir a missão ativa ou escolher uma região livre"],
+    ["craft","OFICINA • MEKA","Ver receitas e criar itens com materiais locais"],
+    ["rift","RIFT • CHEFE REGIONAL","Enfrentar o chefe ligado à região atual"],
+    ["history","DIÁLOGOS","Continuar o prólogo de Kaien"],
+    ["companions","COMPANHEIROS","Escolher até dois aliados offline"],
+    ["companion_order","ORDEM • AUTO","Alternar entre combate, seguir e recuar"],
+    ["side_quest","MISSÃO • SEMENTES PARA LIORA","Recolher pólen real deixado pelas criaturas"],
+    ["memory_quest","MISSÃO • ECOS NO LAGO","Encontrar três ecos de memória escondidos"],
+    ["kaien_story","HISTÓRIA DE KAIEN • O BRASÃO","Investigar uma pista antiga da família Arashi"],
+    ["akari_story","HISTÓRIA DE AKARI • A FLOR DE BRASA","Ajudá-la a controlar o fogo sem ferir a floresta"],
+    ["ren_story","HISTÓRIA DE REN • O SOM QUE FICA","Ouvir a lembrança deixada numa antiga rota"],
+    ["mira_story","HISTÓRIA DE MIRA • A LEMBRANÇA","Escutar um eco sem tentar transformá-lo"],
+    ["yuna_story","HISTÓRIA DE YUNA • O SELO LUNAR","Recuperar uma lembrança dos guardiões da família"],
+    ["shin_story","HISTÓRIA DE SHIN • O REFLEXO","Enfrentar uma lembrança sem ficar sozinho"],
+    ["saves","SALVAMENTOS","Gerenciar três espaços locais"],
+    ["difficulty","DIFICULDADE • AVENTURA","Alternar o desafio da campanha offline"]
 ]
 
 func _ready() -> void:
@@ -29,8 +43,8 @@ func _build() -> void:
     root.add_child(shade)
 
     panel = Panel.new()
-    panel.size = Vector2(780, 585)
-    panel.position = Vector2(250, 68)
+    panel.size = Vector2(780, 660)
+    panel.position = Vector2(250, 30)
     root.add_child(panel)
 
     var title := Label.new()
@@ -45,13 +59,27 @@ func _build() -> void:
     subtitle.add_theme_font_size_override("font_size",15)
     panel.add_child(subtitle)
 
+    var actions_scroll:=ScrollContainer.new()
+    actions_scroll.position=Vector2(24,100)
+    actions_scroll.size=Vector2(732,492)
+    actions_scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+    actions_scroll.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_AUTO
+    panel.add_child(actions_scroll)
+
+    var actions_grid:=GridContainer.new()
+    actions_grid.columns=2
+    actions_grid.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+    actions_grid.add_theme_constant_override("h_separation",14)
+    actions_grid.add_theme_constant_override("v_separation",8)
+    actions_scroll.add_child(actions_grid)
+
     for i in range(ACTIONS.size()):
         var data = ACTIONS[i]
         var b := Button.new()
         b.text = str(data[1]) + "\n" + str(data[2])
-        b.position = Vector2(32 + (i % 2) * 360, 108 + (i / 2) * 86)
-        b.size = Vector2(338, 70)
-        b.add_theme_font_size_override("font_size",16)
+        b.custom_minimum_size = Vector2(338,70)
+        b.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+        b.add_theme_font_size_override("font_size",15)
         var normal := StyleBoxFlat.new()
         normal.bg_color = Color("#162235ee")
         normal.border_color = Color("#5bcfff88")
@@ -62,15 +90,28 @@ func _build() -> void:
         b.add_theme_stylebox_override("normal", normal)
         b.add_theme_stylebox_override("hover", hover)
         b.add_theme_stylebox_override("pressed", hover)
+        action_buttons[str(data[0])]=b
         b.pressed.connect(_choose.bind(str(data[0])))
-        panel.add_child(b)
+        actions_grid.add_child(b)
 
     var close := Button.new()
     close.text = "FECHAR"
-    close.position = Vector2(550, 530)
+    close.position = Vector2(550, 612)
     close.size = Vector2(195, 38)
     close.pressed.connect(hide_menu)
     panel.add_child(close)
+
+func set_difficulty(difficulty_id:String)->void:
+    if not action_buttons.has("difficulty"):return
+    var labels:Dictionary={"casual":"CASUAL","adventure":"AVENTURA","challenge":"DESAFIO"}
+    var label:=str(labels.get(difficulty_id,"AVENTURA"))
+    action_buttons["difficulty"].text="DIFICULDADE • "+label+"\nToque para alternar a campanha offline"
+
+func set_companion_order(order_id:String)->void:
+    if not action_buttons.has("companion_order"):return
+    var labels:Dictionary={"auto":"AUTO","follow":"SEGUIR","retreat":"RECUAR"}
+    var label:=str(labels.get(order_id,"AUTO"))
+    action_buttons["companion_order"].text="ORDEM • "+label+"\nDefinir comportamento dos aliados"
 
 func _choose(action_id: String) -> void:
     hide_menu()

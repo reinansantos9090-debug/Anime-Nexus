@@ -2,9 +2,11 @@ extends Node
 signal changed
 
 var game_state:Node
+var native_core
 
 func setup(state:Node)->void:
     game_state=state
+    native_core = ClassDB.instantiate("AnimeNexusCombatCore") if ClassDB.class_exists("AnimeNexusCombatCore") else null
     if game_state and not game_state.inventory_changed.is_connected(_emit):
         game_state.inventory_changed.connect(_emit)
 
@@ -20,13 +22,29 @@ func has_cost(cost:Dictionary)->bool:
         if quantity(str(item))<int(cost[item]):return false
     return true
 
+func available_weapons(database:Node)->Array[String]:
+    var ids:Array[String]=[]
+    if database==null:return ids
+    for raw_id in database.WEAPONS.keys():
+        var id:=str(raw_id)
+        if id=="fulgor_gauntlets" or quantity("weapon_license_"+id)>0:
+            ids.append(id)
+    ids.sort()
+    return ids
+
 func craft(recipe:Dictionary)->bool:
+    if game_state==null or native_core==null:return false
+    var unlock_weapon:=str(recipe.get("unlock_weapon",""))
+    if not unlock_weapon.is_empty():
+        var license_id:="weapon_license_"+unlock_weapon
+        if quantity(license_id)>0:return false
     var cost:Dictionary=recipe.get("requires",{})
-    if not has_cost(cost):return false
-    for item in cost.keys():
-        game_state.remove_item(str(item),int(cost[item]))
-    for item in recipe.get("result",{}).keys():
-        game_state.add_item(str(item),int(recipe["result"][item]))
+    var results:Dictionary=recipe.get("result",{})
+    var outcome:Dictionary=native_core.apply_craft(game_state.get_inventory(),cost,results)
+    if not bool(outcome.get("success",false)):return false
+    game_state.data["inventory"]=outcome["inventory"]
+    game_state.inventory_changed.emit()
+    game_state.state_changed.emit()
     return true
 
 func craft_by_id(id:String,database:Node)->bool:

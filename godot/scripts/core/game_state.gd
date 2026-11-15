@@ -6,10 +6,10 @@ signal story_changed
 
 const SCHEMA := 8
 var data: Dictionary = {}
-var native_core: AnimeNexusCombatCore
+var native_core
 
 func _init() -> void:
-    native_core = AnimeNexusCombatCore.new()
+    native_core = ClassDB.instantiate("AnimeNexusCombatCore") if ClassDB.class_exists("AnimeNexusCombatCore") else null
 
 func _ready() -> void:
     reset()
@@ -17,12 +17,14 @@ func _ready() -> void:
 func reset() -> void:
     data = {
         "schema": SCHEMA,
+        "settings": {"difficulty":"adventure","camera_zoom":24.0},
         "hunter": {"name":"Kaien Arashi","level":1,"xp":0,"xp_to_next":120,"hp":140,"max_hp":140,"energy":100.0,"max_energy":100.0,"gold":0,"chaos_energy":0,"rank":0},
         "loadout": {"weapon":"fulgor_gauntlets","ability_1":"lightning_step","ability_2":"sky_chain","ability_3":"static_field","core_slots":["damage","cooldown","dodge"]},
+        "party": {"companions":["akari_solen","ren_aozora"],"command":"auto"},
         "inventory": {"aether_core":8,"slime_gel":12,"plasma_fiber":4,"scrap_plate":5,"power_cell":3,"oak_branch":8,"stone":6,"herb":10},
-        "quests": {"active":["nimbara_01"],"progress":{},"completed":[]},
+        "quests": {"active":["prologue_01"],"progress":{},"completed":[]},
         "story": {"chapter":1,"scene":0,"flags":{"tutorial_complete":false,"rooftop_unlocked":true},"journal":[]},
-        "world": {"map_id":"nimbara","day_clock":0.0,"completed_expeditions":0,"completed_rifts":0},
+        "world": {"map_id":"nimbara","day_clock":0.0,"completed_expeditions":0,"completed_rifts":0,"nexus_core_unlocked":false},
         "wardrobe": {"style":"kaien_arashi","unlocked":["kaien_arashi"],"rides":[],"emotes":["wave"]},
         "cores": {"owned":["damage_1","cooldown_1","dodge_1"],"equipped":["damage_1","cooldown_1","dodge_1"]},
         "events": {"research_destroy":0,"transformation_unlocked":false},
@@ -32,26 +34,74 @@ func reset() -> void:
     }
     state_changed.emit()
 
-func apply_loaded(loaded: Dictionary) -> void:
+func apply_loaded(loaded: Dictionary) -> bool:
+    var source_schema:=int(loaded.get("schema",1))
+    if source_schema>SCHEMA:return false
+    var migrated:Dictionary=loaded.duplicate(true)
+    for target_schema in range(source_schema+1,SCHEMA+1):
+        _migrate_schema(migrated,target_schema)
     reset()
-    _merge_recursive(data, loaded)
+    _merge_recursive(data,migrated)
+    data["schema"]=SCHEMA
     state_changed.emit()
     inventory_changed.emit()
     quest_changed.emit()
     story_changed.emit()
+    return true
+
+func _migrate_schema(save_data:Dictionary,target_schema:int)->void:
+    match target_schema:
+        5:
+            _ensure_section(save_data,"settings")
+            _ensure_section(save_data,"statistics")
+        6:
+            _ensure_section(save_data,"party")
+            _ensure_section(save_data,"world")
+        7:
+            _ensure_section(save_data,"story")
+            _ensure_section(save_data,"progression")
+        8:
+            _ensure_section(save_data,"inventory")
+            _ensure_section(save_data,"quests")
+            _ensure_section(save_data,"wardrobe")
+            _ensure_section(save_data,"cores")
+            _ensure_section(save_data,"events")
+            _ensure_section(save_data,"loot")
+
+func _ensure_section(save_data:Dictionary,id:String)->void:
+    if not save_data.get(id,{}) is Dictionary:
+        save_data[id]={}
 
 func _merge_recursive(target: Dictionary, source: Dictionary) -> void:
     for key in source.keys():
-        if target.get(key) is Dictionary and source[key] is Dictionary:
-            _merge_recursive(target[key], source[key])
-        else:
-            target[key] = source[key]
+        if not target.has(key):
+            target[key]=source[key]
+            continue
+        var expected:Variant=target[key]
+        var incoming:Variant=source[key]
+        if expected is Dictionary:
+            if incoming is Dictionary:
+                _merge_recursive(expected,incoming)
+            continue
+        if expected is Array:
+            if incoming is Array:
+                target[key]=incoming
+            continue
+        var expected_type:=typeof(expected)
+        var incoming_type:=typeof(incoming)
+        var numeric_pair:bool=expected_type in [TYPE_INT,TYPE_FLOAT] and incoming_type in [TYPE_INT,TYPE_FLOAT]
+        if expected_type==incoming_type or numeric_pair:
+            target[key]=incoming
 
 func get_hunter() -> Dictionary:
     return data["hunter"]
 
 func get_inventory() -> Dictionary:
     return data["inventory"]
+
+func difficulty_profile() -> Dictionary:
+    var settings:Dictionary=data.get("settings",{})
+    return native_core.difficulty_profile(str(settings.get("difficulty","adventure")))
 
 func add_item(id: String, amount: int) -> void:
     data["inventory"][id] = int(data["inventory"].get(id, 0)) + amount

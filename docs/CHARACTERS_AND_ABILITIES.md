@@ -1,6 +1,6 @@
 # Personagens e habilidades
 
-Os oito kits a seguir são a especificação de jogo. Todos estão **Planejados**; o protótipo atual possui um avatar genérico e não cumpre a lista. Habilidades devem ter custo, cooldown, alcance, hitbox, reação, animação, VFX legível, feedback de toque e comportamento IA testável.
+Os oito kits a seguir são a especificação de jogo. A suprema de Kaien tem uma primeira integração funcional de carga/ativação/bônus no protótipo; os modelos anime finais, rigs e a maioria dos kits ainda estão **Planejados**. Habilidades devem ter custo, cooldown, alcance, hitbox, reação, animação, VFX legível, feedback de toque e comportamento IA testável.
 
 | Personagem / ressonância | Silhueta e personalidade | Básico e três habilidades | Suprema e papel IA | Arco |
 |---|---|---|---|---|
@@ -20,6 +20,10 @@ Os oito kits a seguir são a especificação de jogo. Todos estão **Planejados*
 - Suprema carrega por dano, combinação e objetivos; não depende de tempo de servidor. Cut-in pode ser reduzido/desligado.
 - Cada personagem tem idle, caminhada/corrida, ataque básico, 3 especiais, esquiva, dano, vitória, interação e suprema; facial entra na etapa de produção de rig/expressão.
 - Companion usa mesmas regras/custos sob IA; não cria dano grátis e nunca gasta consumíveis raros.
+
+## Estado da primeira suprema
+
+**Tempestade de Safira (Kaien): Em desenvolvimento.** O medidor local carrega ao causar dano e ao derrotar inimigos/chefes; o botão de toque ativa uma forma de 10 segundos, aumenta o dano em 35% e reduz o tempo de recarga das habilidades em 32%. O medidor usa regra C++ com limites de 0–100 e consumo somente quando está cheio. VFX atuais são anéis/partículas reutilizados do protótipo; cut-in, modelo/forma de transformação, animação exclusiva, som próprio e balanceamento em aparelho ainda pendentes.
 
 ## Curvas de personagem
 

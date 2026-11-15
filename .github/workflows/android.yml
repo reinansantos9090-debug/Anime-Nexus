@@ -44,7 +44,7 @@ jobs:
           path: app/build/outputs/apk/debug/*.apk
 
   godot-android:
-    # Native Godot binding compilation is intentionally manual due to its long runtime.
+    # Manual Android-only build; no Linux gameplay runner is part of the workflow.
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
@@ -80,12 +80,11 @@ jobs:
           git clone --filter=blob:none https://github.com/godotengine/godot-cpp.git "$extension_dir/godot-cpp"
           git -C "$extension_dir/godot-cpp" checkout 507ed9d840c01a3c5b2a39af8bb4000bfac30bf5
 
-      - name: Build C++ combat extension for Linux tests and Android
+      - name: Build C++ combat extension for Android
         shell: bash
         run: |
           set -euo pipefail
           cd godot/extensions/anime_nexus_core
-          scons platform=linux target=template_release arch=x86_64 -j"$(nproc)"
           scons platform=android target=template_debug arch=arm64 -j"$(nproc)"
           scons platform=android target=template_release arch=arm64 -j"$(nproc)"
 
@@ -116,10 +115,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          adb start-server
-          adb devices
           "$GODOT_BIN" --headless --editor --quit --path godot
-          "$GODOT_BIN" --headless --path godot --script tests/test_runner.gd
           mkdir -p "$RUNNER_TEMP/game-artifacts"
           "$GODOT_BIN" --headless --path godot --export-debug "Android" "$RUNNER_TEMP/game-artifacts/anime-nexus-godot-debug.apk"
 

@@ -10,16 +10,20 @@ var phase:=1
 var summon_timer:=8.0
 var pattern_index:=0
 
-func configure_boss(id:String,target_node:Node3D,database:Node,scale:=1.0)->void:
+func configure_boss(id:String,target_node:Node3D,database:Node,scale:=1.0,profile:Dictionary={})->void:
     boss_id=id
     boss_stats=database.BOSSES.get(id,database.BOSSES.values()[0])
     target=target_node
     difficulty=maxf(0.6,scale)
+    health_multiplier=clampf(float(profile.get("enemy_health_multiplier",1.0)),0.50,1.75)
+    damage_multiplier=clampf(float(profile.get("enemy_damage_multiplier",1.0)),0.50,1.50)
+    reward_multiplier=clampf(float(profile.get("reward_multiplier",1.0)),0.75,1.50)
     behavior="boss"
     stats={
         "name":boss_stats["name"],
-        "hp":float(boss_stats["hp"])*difficulty,
-        "damage":float(boss_stats["projectile_damage"])*difficulty,
+        "element":str(boss_stats.get("element","none")),
+        "hp":float(boss_stats["hp"])*difficulty*health_multiplier,
+        "damage":float(boss_stats["projectile_damage"])*difficulty*damage_multiplier,
         "speed":float(boss_stats["speed"]),
         "xp":650+int(boss_stats["hp"])*0.18
     }

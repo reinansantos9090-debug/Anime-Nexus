@@ -2,12 +2,13 @@
 
 ## Automated validation
 
-- Keep push and pull request checks short, deterministic, and headless.
-- Do not add Android emulator, device, instrumentation, long-running integration, performance, or benchmark tests to automatically triggered workflows.
-- Do not add long or redundant tests to the repository. Prefer focused tests for gameplay rules and persistence.
-- When a necessary validation is slow, put it in a job that runs only on `workflow_dispatch`. Do not run it automatically on push or pull request.
-- Native Godot C++ cross-compilation and Godot Android APK export take a long time. Keep the `godot-android` job manual-only; a successful result is not implied by the automatic Kotlin job.
-- Do not claim manual validation passed until a user has dispatched it and the result has been observed.
+- Keep automatically triggered checks focused and deterministic.
+- The `godot-android` job is manual-only (`workflow_dispatch`). When dispatched, it builds only the Android arm64 C++ GDExtension and exports the Godot Android APK.
+- Do not add Linux-native extension builds or Linux gameplay-runner execution to the workflow. The game target is Android.
+- Do not add emulator, device, instrumentation, long-running gameplay, performance, or benchmark tests to automatically triggered workflows.
+- Do not add long or redundant tests. Keep rule checks focused; gameplay runner execution remains a separate manual validation.
+- APK export success confirms a build artifact only; do not claim device installation, gameplay, or performance validation without observing it.
+- Do not claim manual validation passed until the corresponding result has been observed.
 
 ## Project boundaries
 

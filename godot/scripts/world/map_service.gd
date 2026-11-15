@@ -1,5 +1,5 @@
 extends Node
-## Five authored expedition maps. Each biome owns its encounter pool,
+## Twelve offline expedition maps. Each biome owns its encounter pool,
 ## difficulty, obstacle layout and environmental hazard.
 
 var maps: Dictionary = {}
@@ -12,10 +12,12 @@ func _ready() -> void:
             "duration":180.0,
             "goal":4,
             "hazard":"raízes da memória",
+            "interaction_points":{"prologue_resonator":Vector3(0,0,-8.5),"akari_flame_bloom":Vector3(-15,0,0),"ren_wind_chime":Vector3(16,0,-2),"mira_memory_prism":Vector3(-18,0,-1),"yuna_lunar_seal":Vector3(18,0,-5),"shin_shadow_reflection":Vector3(0,0,-20)},
             "ground":Color("#376a59"),
             "accent":Color("#63ead0"),
             "fog":Color("#557f7c"),
             "enemies":["moss_hopper","leaf_spark","crystal_stagling","root_guardian"],
+            "memory_echoes":[Vector3(-6,0,10),Vector3(6,0,10),Vector3(0,0,17)],
             "obstacles":[
                 {"shape":"tree","pos":Vector3(-10,0,-9),"size":Vector3(1.6,4.5,1.6)},
                 {"shape":"tree","pos":Vector3(10,0,-10),"size":Vector3(1.5,4.1,1.5)},
@@ -119,6 +121,115 @@ func _ready() -> void:
                 {"shape":"ruin","pos":Vector3(10,0,9),"size":Vector3(2.2,3.7,2.2)},
                 {"shape":"ruin","pos":Vector3(0,0,-12),"size":Vector3(2.0,2.8,2.4)},
                 {"shape":"ruin","pos":Vector3(0,0,11),"size":Vector3(3.0,2.4,2.0)}
+            ]
+        },
+        "nexus_core": {
+            "name":"Núcleo do Nexo • Ponte dos Fragmentos",
+            "difficulty":1.85,"duration":200.0,"goal":18,"hazard":"ondas de estase","resonance_anchor":Vector3(0,0,-8.5),"interaction_points":{"observatory_return":Vector3(0,0,-4.5)},
+            "ground":Color("#343d63"),"accent":Color("#c4a3ff"),"fog":Color("#69739f"),
+            "enemies":["memory_warden","tide_echo","gear_echo","frost_echo","root_echo","hour_echo"],
+            "obstacles":[
+                {"shape":"anchor","pos":Vector3(-15,0,-12),"size":Vector3(2.0,3.2,2.0)},
+                {"shape":"anchor","pos":Vector3(15,0,-12),"size":Vector3(2.0,3.2,2.0)},
+                {"shape":"anchor","pos":Vector3(-17,0,10),"size":Vector3(2.0,3.2,2.0)},
+                {"shape":"anchor","pos":Vector3(17,0,10),"size":Vector3(2.0,3.2,2.0)},
+                {"shape":"ruin","pos":Vector3(-9,0,-19),"size":Vector3(2.0,2.6,2.0)},
+                {"shape":"ruin","pos":Vector3(9,0,-19),"size":Vector3(2.0,2.6,2.0)},
+                {"shape":"crystal","pos":Vector3(-3,0,18),"size":Vector3(1.1,2.8,1.1)},
+                {"shape":"crystal","pos":Vector3(3,0,18),"size":Vector3(1.1,2.8,1.1)}
+            ]
+        },
+        "umbral": {
+            "name":"Umbral • Jardins do Eclipse",
+            "difficulty":1.42,"duration":190.0,"goal":16,"hazard":"ecos de reflexo","resonance_anchor":Vector3(0,0,-8.5),
+            "ground":Color("#39334f"),"accent":Color("#d995f0"),"fog":Color("#665a86"),
+            "enemies":["shapeless_echo","eclipse_butterfly","mirror_guardian","fractured_shadow","wandering_illusion","silence_watch"],
+            "obstacles":[
+                {"shape":"mirror","pos":Vector3(-12,0,-9),"size":Vector3(2.6,3.6,0.45)},
+                {"shape":"mirror","pos":Vector3(12,0,-9),"size":Vector3(2.6,3.6,0.45)},
+                {"shape":"crystal","pos":Vector3(-10,0,9),"size":Vector3(1.4,3.1,1.4)},
+                {"shape":"mirror","pos":Vector3(10,0,9),"size":Vector3(2.8,3.0,0.45)},
+                {"shape":"ruin","pos":Vector3(0,0,-15),"size":Vector3(3.0,3.3,2.1)},
+                {"shape":"mirror","pos":Vector3(-2,0,1),"size":Vector3(2.5,2.8,0.42)},
+                {"shape":"crystal","pos":Vector3(0,0,14),"size":Vector3(1.2,2.5,1.2)}
+            ]
+        },
+        "ivern": {
+            "name":"Ivern • Montanhas da Aurora",
+            "difficulty":1.34,"duration":185.0,"goal":15,"hazard":"rajadas da aurora","resonance_anchor":Vector3(0,0,-8.5),
+            "ground":Color("#7183a0"),"accent":Color("#d5e9ff"),"fog":Color("#bdc9e2"),
+            "enemies":["snowflake_wisp","boreal_fox","erratic_crystal","blizzard_spirit","frost_guardian","aurora_sentinel"],
+            "obstacles":[
+                {"shape":"ice","pos":Vector3(-12,0,-10),"size":Vector3(2.8,0.6,2.6)},
+                {"shape":"crystal","pos":Vector3(11,0,-10),"size":Vector3(1.3,3.0,1.3)},
+                {"shape":"snowbank","pos":Vector3(-10,0,8),"size":Vector3(3.6,1.7,2.8)},
+                {"shape":"snowbank","pos":Vector3(11,0,8),"size":Vector3(3.2,1.5,3.0)},
+                {"shape":"ice","pos":Vector3(0,0,-15),"size":Vector3(4.2,0.7,2.0)},
+                {"shape":"crystal","pos":Vector3(-2,0,2),"size":Vector3(1.0,2.5,1.0)},
+                {"shape":"snowbank","pos":Vector3(0,0,14),"size":Vector3(4.5,1.4,2.8)}
+            ]
+        },
+        "ferrumia": {
+            "name":"Ferrúmia • Cidade das Engrenagens",
+            "difficulty":1.28,
+            "duration":180.0,
+            "goal":14,
+            "hazard":"pulsos magnéticos de trilho",
+            "resonance_anchor":Vector3(0,0,-8.5),
+            "ground":Color("#594c6d"),
+            "accent":Color("#ff8bc7"),
+            "fog":Color("#927b9f"),
+            "enemies":["prism_drone","living_gear","copper_sentinel","unstable_automaton","magnetic_guardian","mechanical_core"],
+            "obstacles":[
+                {"shape":"scrap","pos":Vector3(-13,0,-9),"size":Vector3(2.6,2.2,2.1)},
+                {"shape":"gear","pos":Vector3(10,0,-10),"size":Vector3(2.6,0.6,2.6)},
+                {"shape":"gear","pos":Vector3(-10,0,8),"size":Vector3(2.0,0.55,2.0)},
+                {"shape":"scrap","pos":Vector3(13,0,8),"size":Vector3(2.8,2.4,2.2)},
+                {"shape":"ruin","pos":Vector3(0,0,-15),"size":Vector3(2.4,4.0,2.4)},
+                {"shape":"gear","pos":Vector3(0,0,13),"size":Vector3(2.4,0.65,2.4)},
+                {"shape":"scrap","pos":Vector3(-2,0,-2),"size":Vector3(2.4,1.8,2.0)}
+            ]
+        },
+        "aurelio": {
+            "name":"Aurélio • Deserto das Horas",
+            "difficulty":1.18,
+            "duration":175.0,
+            "goal":12,
+            "hazard":"ecos de areia temporal",
+            "resonance_anchor":Vector3(0,0,-8.5),
+            "ground":Color("#b78555"),
+            "accent":Color("#ffd17e"),
+            "fog":Color("#d2a487"),
+            "enemies":["aurelio_crystal","sun_disk_scarab","mirage_duplicator","dune_watch","hourglass_wisp","oasis_guardian"],
+            "obstacles":[
+                {"shape":"sandstone","pos":Vector3(-12,0,-9),"size":Vector3(3.0,3.4,2.7)},
+                {"shape":"sandstone","pos":Vector3(12,0,-9),"size":Vector3(2.7,4.0,2.4)},
+                {"shape":"ruin","pos":Vector3(-9,0,9),"size":Vector3(2.4,3.0,2.2)},
+                {"shape":"ruin","pos":Vector3(9,0,10),"size":Vector3(2.2,3.6,2.2)},
+                {"shape":"crystal","pos":Vector3(-2,0,-15),"size":Vector3(1.1,2.7,1.1)},
+                {"shape":"cactus","pos":Vector3(14,0,2),"size":Vector3(0.9,2.2,0.9)},
+                {"shape":"sandstone","pos":Vector3(0,0,13),"size":Vector3(4.0,1.7,2.4)}
+            ]
+        },
+        "vesper": {
+            "name":"Vesper • Arquipélago das Marés",
+            "difficulty":1.12,
+            "duration":170.0,
+            "goal":12,
+            "hazard":"correntes de maré",
+            "resonance_anchor":Vector3(0,0,-8.5),
+            "ground":Color("#376e77"),
+            "accent":Color("#59d8d2"),
+            "fog":Color("#527f91"),
+            "enemies":["bubble_jumper","wandering_coral","astral_jelly","pearl_crab","tide_spirit","abyssal_sentinel"],
+            "obstacles":[
+                {"shape":"coral","pos":Vector3(-12,0,-9),"size":Vector3(2.2,2.0,2.0)},
+                {"shape":"coral","pos":Vector3(11,0,-10),"size":Vector3(2.5,2.3,2.2)},
+                {"shape":"pier","pos":Vector3(-8,0,11),"size":Vector3(5.0,0.55,1.5)},
+                {"shape":"pier","pos":Vector3(8,0,12),"size":Vector3(4.0,0.55,1.5)},
+                {"shape":"rock","pos":Vector3(-14,0,5),"size":Vector3(2.4,1.4,2.0)},
+                {"shape":"coral","pos":Vector3(14,0,5),"size":Vector3(2.0,1.8,2.0)},
+                {"shape":"rock","pos":Vector3(0,0,-14),"size":Vector3(3.0,1.6,2.1)}
             ]
         }
     }

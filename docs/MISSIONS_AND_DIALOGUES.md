@@ -1,8 +1,10 @@
 # Missões e diálogos
 
-Todas as entradas são especificações **Planejadas**, não missões já integradas. Objetivos são condições verificáveis; cada recompensa é offline. Falas curtas abaixo são a fala de contexto principal e devem entrar em diálogo roteado com retorno de estado, não apenas aparecer como texto decorativo.
+As seis campanhas regionais têm oito missões cada, o desfecho tem seis, o prólogo quatro e o epílogo duas: 60 missões estão ligadas ao fluxo offline. O runner Godot/GDExtension está no workflow manual e não foi executado nesta atualização; a CI curta não o substitui. Duas missões pessoais da lista estão integradas: SQ-K-1, a pista de Kaien, e SQ-A-4, a missão da Flor de Brasa para Akari; as outras 46 da lista permanecem planejadas. Introduções pessoais adicionais de Ren, Mira, Yuna e Shin, fora das histórias pessoais planejadas, e duas tarefas de Nimbara — Sementes para Liora e Ecos no Lago — também estão jogáveis. Puzzles, cenas, recompensas e eventos continuam em diferentes estados de implementação.
 
 ## Campanha principal — 60 missões
+
+O prólogo e o epílogo agora possuem objetivos conectados ao fluxo local: a cena de abertura fecha a primeira missão, o Portal Central inicia a expedição, a entrada em Nimbara inicia a missão 3 e a interação na Âncora inicia o capítulo 1. Após o Coração, um sinal local retorna ao Observatório e a última missão abre o RIFT opcional do Prisma Primordial. Modelos e apresentação permanecem blockouts.
 
 ### Prólogo — O Primeiro Fragmento (4)
 
@@ -111,11 +113,11 @@ Todas as entradas são especificações **Planejadas**, não missões já integr
 
 ## Missões secundárias — 48
 
-Cada arco de personagem oferece seis formatos diferentes; as recompensas são recursos, registros, visuais ou melhorias locais, sem itens pagos. IDs usam `SQ-{initial}-{n}`.
+Cada arco de personagem oferece seis formatos diferentes; as recompensas são recursos, registros, visuais ou melhorias locais, sem itens pagos. IDs usam `SQ-{initial}-{n}`. A linha `SQ-K-1` está integrada no runtime como `nimbara_side_03`; seu objetivo e diálogos abaixo correspondem ao protótipo atual. As duas missões de Liora têm IDs próprios e também estão jogáveis.
 
 | ID / pessoa / local | Missão e objetivo de conclusão | Recompensa | Fala de contexto |
 |---|---|---|---|
-| SQ-K-1 Kaien, ruínas | Recuperar três marcas da família sem quebrar os memoriais | registro Arashi | Kaien: “Quero descobrir por que minha família escondeu isto.” |
+| SQ-K-1 Kaien, Nimbara — runtime `nimbara_side_03` | No terminal do Observatório, aceite a missão e derrote três Musgos Saltadores que carregam fragmentos de um brasão antigo | Brasão Arashi (item de inventário), três Fragmentos de Ressonância e uma Flor de Memória | Kaien: “Esse símbolo... minha mãe o desenhava nas margens dos mapas.”; conclusão: “Minha família não escondia apenas uma história: ela protegia a rota dos antigos guardiões.” |
 | SQ-K-2 Kaien, treino | Completar circuito de dash sem tocar em barreiras | visual Rastro Ciano | Orin: “Velocidade é escolher quando parar.” |
 | SQ-K-3 Kaien, Nimbara | Conduzir trovão entre quatro alvos de treino sem ferir plantas | runa Elo | Liora: “Força que escuta também pode proteger.” |
 | SQ-K-4 Kaien, Observatório | Entregar mensagens aos aliados escolhidos por ele | cena de banter | Akari: “Você não precisa carregar cada recado sozinho.” |
@@ -124,7 +126,11 @@ Cada arco de personagem oferece seis formatos diferentes; as recompensas são re
 | SQ-A-1 Akari, porto | Ajudar aprendiz a recuperar forno apagado por maré | Anel Braseiro cosmético | Akari: “Ninguém precisa competir para merecer calor.” |
 | SQ-A-2 Akari, arena | Sobreviver a ondas sem derrubar alvos de treino | maestria Orbe Fênix | Orin: “Controle também é parte do espetáculo.” |
 | SQ-A-3 Akari, Ferrúmia | Encontrar lenço perdido em trilho móvel | visual Lenço de Brasa | Meka: “Ele ficou preso no lugar mais quente da oficina.” |
-| SQ-A-4 Akari, Nimbara | Apagar incêndio mágico preservando três plantas raras | Pó de Nimbara | Haru: “Você protegeu a floresta sem apagar seu fogo.” |
+| SQ-A-4 Akari, Nimbara — runtime `nimbara_side_04` | Aceitar a missão pessoal no terminal do Observatório, seguir o sinal até a Flor de Brasa e interagir com ela em Nimbara enquanto Akari contém a própria Ressonância | duas Escamas Incandescentes e uma Flor da Memória | Akari: “Eu sei que consigo controlar o fogo. O que não sei é pedir ajuda antes de perder o controle.”; conclusão: “Desta vez eu não precisei provar que consigo fazer tudo sozinha.” |
+| Introdução pessoal de Ren, Nimbara — runtime `nimbara_side_05` | Aceitar a missão no terminal, encontrar o sino em uma rota antiga e ouvir a memória que Ren deixou para trás; esta introdução não substitui as futuras SQ-R-3/SQ-R-6 | Nó do Céu-Livre único e duas Flores da Memória | Ren: “Eu pendurei esse sino quando ainda acreditava que qualquer lugar podia ser casa.”; conclusão: “Vou ficar até reconstruirmos a rota — desta vez porque quero.” |
+| Introdução pessoal de Mira, Nimbara — runtime `nimbara_side_06` | Aceitar a missão no terminal, encontrar o prisma de memória e acompanhar Mira enquanto ela escuta uma lembrança sem tentar classificá-la ou consertá-la; não substitui as futuras SQ-M planejadas | Lembrança em Silêncio única e duas Flores da Memória | Mira: “Este eco não se deixa classificar e ainda assim parece pedir que eu o escute.”; conclusão: “Acho que isso já é um começo.” |
+| Introdução pessoal de Yuna, Nimbara — runtime `nimbara_side_07` | Aceitar a missão no terminal, encontrar o selo lunar e ouvir com Yuna a lembrança de uma guardiã de sua família | Selo da Primeira Lua único e duas Flores da Memória | Yuna: “Só conheço as instruções, não a voz de quem as escreveu.”; conclusão: “Encontrei uma lembrança de minha avó pedindo que eu também cuidasse de mim.” |
+| Introdução pessoal de Shin, Nimbara — runtime `nimbara_side_08` | Aceitar a missão no terminal, investigar um reflexo marcado por Seraphine e dividir a lembrança da cidade perdida com os aliados; este trecho não substitui as missões futuras de Shin em Umbral | Fragmento do Véu único e duas Flores da Memória | Shin: “Seraphine jurou que o portal protegeria minha casa; depois, a cidade sumiu.”; conclusão: “Ainda desconfio de Seraphine, mas não vou carregar essa suspeita sozinho.” |
 | SQ-A-5 Akari, Observatório | Preparar festival e pedir três contribuições aos amigos | emote Festival | Ren: “Esta festa precisa de alguém que saiba dividir o palco.” |
 | SQ-A-6 Akari, Umbral | Derrotar reflexo de perfeccionismo sem receber três acertos | registro de personagem | Akari: “Posso falhar e ainda continuar aqui.” |
 | SQ-R-1 Ren, Vesper | Recolher três velas antes que o vento as leve ao mar | Colar Céu-Livre | Nami: “O vento levou a pressa; você trouxe a luz.” |
@@ -167,3 +173,16 @@ Cada arco de personagem oferece seis formatos diferentes; as recompensas são re
 ## Regras de implementação narrativa
 
 Cada missão usa ID estável, pré-requisitos, objetivo serializável, condição de conclusão única, reward bundle validado e diálogo por personagem/flag. Abandonar/pausar não reseta coleta já persistida salvo se missão disser explicitamente “por expedição”. Concluir atualiza save e desbloqueio da região na mesma operação. Placeholders de diálogo aparecem apenas em dev builds e nunca recebem o estado Testado.
+
+
+## Missão secundária integrada na slice
+
+**Sementes para Liora** — disponível no terminal do Observatório após o início da partida. Liora pede quatro unidades de Pólen de Nimbara; cada item efetivamente recebido do saque de criaturas da floresta avança a missão, que concede 180 XP e duas Flores da Memória. Ao iniciar, Liora explica que os brotos perderam a memória da estação; ao concluir, agradece e comenta que a clareira pode florescer novamente. Progresso e recompensa usam a fila offline e o salvamento local. O runner Godot contém uma regressão curta para o objetivo collect; aguarda execução manual.
+
+
+**Ecos no Lago** — na margem do Lago das Memórias, Liora pede para sincronizar três ecos de memória distintos. Cada cristal tem uma posição e uma flag persistida própria; a mesma estação não pode contar duas vezes. O objetivo é avançado pelo evento `interact` do núcleo C++ e concede 220 XP, três Flores da Memória e dois Fragmentos de Ressonância. A conversa e o layout dos marcadores são originais; a interação visual aguarda validação manual.
+
+
+## Estado integrado da campanha
+
+A sequência Nimbara `nimbara_01` a `nimbara_08` está integrada no protótipo como cadeia offline: combater Musgos, combater Faíscas, coletar Flores da Memória, retornar à clareira, derrotar o Guardião de Raízes, sincronizar três ecos, enfrentar o Cérvido e estabilizar a Âncora. O alvo da missão ativa direciona o mapa de expedição e as waves de combate para a criatura necessária quando aplicável. Cada etapa tem fala de conclusão. O runner de regras foi atualizado, mas aguarda execução manual; o fluxo por toque também aguarda validação. As missões restantes dos oito capítulos permanecem planejadas.

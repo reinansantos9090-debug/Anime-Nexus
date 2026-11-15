@@ -7,6 +7,12 @@
 - Cooldowns, energia, esquiva invulnerável e telegraph/recuperação dos chefes.
 - IA: todos estados permitidos, retorno à região inicial, companion que recupera caminho e nunca causa dano a aliado.
 - Objetivos de missão: contagem, conclusão única, pré-requisitos, recompensa e save sem duplicação.
+- Missão pessoal de Kaien: entrada do terminal, disponibilidade dos Musgos Saltadores em Nimbara, três abates, bloqueio de conclusão antecipada, recompensa C++ e ligação da ação da interface ao serviço de missão; salvar e restaurar o progresso parcial após um abate, concluir a missão e verificar que progresso e Brasão Arashi são gravados juntos antes de continuar.
+- Missão pessoal de Akari: disponibilidade do ponto Flor de Brasa em Nimbara, ação do terminal ligada ao objetivo `interact`, conclusão uma única vez, materiais locais e persistência da flag que muda a flor para dourada ao reconstruir a região.
+- Introdução pessoal de Ren: acesso pelo terminal, ponto `ren_wind_chime`, objetivo de interação, item exclusivo `ren_sky_knot`, flag `ren_chose_to_stay` e leitura da flag pelo mundo após salvar e restaurar. A regressão curta correspondente está no runner manual e ainda não foi executada.
+- Introdução pessoal de Mira: acesso pelo terminal, ponto `mira_memory_prism`, objetivo de interação, item exclusivo `mira_silent_memory`, flag `mira_accepted_silence` e leitura da flag pelo mundo após salvar e restaurar. A regressão curta correspondente está no runner manual e ainda não foi executada.
+- Introdução pessoal de Yuna: acesso pelo terminal, ponto `yuna_lunar_seal`, objetivo de interação, item exclusivo `yuna_family_seal`, flag `yuna_family_memory_recovered` e leitura da flag após salvar/restaurar; regressão curta manual ainda não executada.
+- Introdução pessoal de Shin: acesso pelo terminal, ponto `shin_shadow_reflection`, item exclusivo `shin_veil_fragment`, flag `shin_shared_seraphine_memory` e leitura da flag após salvar/restaurar; regressão curta manual ainda não executada.
 - Crafting: verificar todos os materiais antes de debitar, débito único e rollback se criação falhar.
 - Progressão: XP em limiar exato/múltiplo, limites, migração e desbloqueios.
 
@@ -18,7 +24,7 @@
 
 ## Plataforma e experiência
 
-- `godot --headless --editor --quit --path godot`, runner headless, export debug Android e teste de instalação.
+- Workflow manual (`workflow_dispatch`): importar/exportar projeto Godot e compilar a extensão C++ Android arm64 para produzir APK. Não executa runner de gameplay, Linux nativo, emulador nem instalação.
 - Gradle unit tests e assemble do host Android enquanto existir.
 - Testar landscape, diferentes proporções, safe areas, toque simultâneo, pause/resume, teclado e back.
 - Aparelhos baixo/médio/alto: frame time p50/p95, memória GPU/CPU, temperatura, carregamento, draw calls, quedas ao abrir menus e ao lutar.
@@ -34,4 +40,142 @@
 - CI da revisão `c66eec5`: runner Godot 4.7.2, export Android Godot, testes unitários Kotlin, recuperação do save corrompido e APK do host Kotlin passaram; artifacts publicados na [run 43410319631](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43410319631). Nenhum APK foi instalado ou testado em aparelho.
 - Sem aparelho Android ligado a este ambiente, FPS, toque real, instalação APK e qualidade visual ainda não foram verificados.
 - Godot 4.7.2 local carregou `AnimeNexusCombatCore`; GDExtension C++ Linux release compilou e o runner imprimiu `ANIME_NEXUS_TESTS: PASS`, incluindo dano, crítico, reações invertidas e XP acumulado. Restaram apenas avisos conhecidos de recursos em uso ao encerrar.
-- O build Android arm64 do núcleo C++ e a exportação do APK com a extensão são pendentes no CI novo; a validação local do APK é bloqueada pela ausência do Android SDK/NDK.
+- O workflow manual compila o núcleo C++ para Android arm64 e exporta APK quando disparado. Instalação e validação no aparelho exigem teste manual; não há emulador no CI.
+
+
+## Validação manual curta da dificuldade
+
+- Executar o runner Godot existente apenas quando for manualmente disparado.
+- Conferir que os três perfis C++ retornam multiplicadores esperados e que um identificador desconhecido volta com segurança a Aventura.
+- Conferir que a escolha salva sobrevive ao recarregamento e que saves antigos recebem Aventura por padrão.
+- Entrar em expedição e observar vida/dano/XP de um inimigo e do chefe em cada perfil; conferir que trocar no meio da expedição é bloqueado.
+
+A compilação Godot/C++ para Android e a exportação do APK rodam somente quando o workflow manual é disparado. O runner de gameplay, emulador e testes de aparelho permanecem fora do fluxo automático.
+
+
+## Exploração dos ecos de memória
+
+- Iniciar Ecos no Lago no Observatório e confirmar o diálogo de Liora.
+- Percorrer Nimbara, interagir com cada um dos três cristais pálidos e observar 1/3, 2/3 e 3/3.
+- Tentar interagir novamente com um cristal sincronizado; o progresso não pode duplicar.
+- Sair e recarregar antes da conclusão; as flags locais precisam permanecer salvas.
+- Confirmar a recompensa e que a ação de interação desaparece após completar.
+
+Este fluxo requer teste manual no Godot; nenhum job longo/emulador automático será adicionado.
+
+
+## Oficina de crafting
+
+- Abrir a Oficina pelo terminal no Observatório e conferir nome, materiais exigidos, resultado e estado do botão em cada receita.
+- Criar uma receita com materiais suficientes e confirmar que o saldo e o resultado atualizam sem fechar a oficina.
+- Tentar criar sem saldo; o botão deve permanecer desabilitado e nenhum item pode ser debitado.
+- Voltar a uma expedição; a oficina só pode abrir no Observatório.
+
+- Oficina (runner manual curto): verificar projeto acessível, débito atômico, licença no inventário, desbloqueio no Arsenal e rejeição de duplicação. Na interface, fabricar cada um dos três projetos de instrumento; confirmar custo debitado uma única vez, licença persistida após recarregar o espaço e arma habilitada no Arsenal. Tentar fabricar projeto já concluído e conferir que inventário não muda.
+
+- Suprema Tempestade de Safira (runner manual curto): carga parcial, limite em 100, bloqueio abaixo de 100 e consumo ao ativar. No jogo, ganhar carga com ataques/derrotas, tocar quando cheia, confirmar bônus por 10 s e expiração; confirmar também persistência do medidor no save local.
+
+- HUD horizontal: tocar Arsenal e percorrer somente instrumentos desbloqueados; usar Gadget sem estoque sem alterar inventário; conferir Bolsa e Visuais. Confirmar separação entre os quatro botões e joystick/ataque em 1280×720 e em aparelho.
+- Central de operações: conferir lista rolável de ações em duas colunas, acesso aos botões após o fim da área visível e botão Fechar separado; a estrutura tem uma checagem curta no runner manual, mas o gesto e a leitura em tela touch ainda dependem de validação em aparelho.
+
+- Bolsa: abrir em exploração/hub, conferir nomes e quantidades com o inventário persistido, obter um item e confirmar atualização; fechar e voltar sem alteração de saldo.
+
+- Câmera: usar botões de zoom para dentro/fora, conferir limites 14–32, trocar de mapa/reabrir save e verificar que a escala salva permanece; mover e combater nos extremos do zoom.
+
+
+## Contrato de conteúdo de Vesper (runner manual curto)
+
+- Conferir mapa Vesper, seis IDs de encontro, obstáculos e existência local de toda espécie/material de saque.
+- Abrir a expedição Vesper no jogo, verificar a enseada/cais/corais em blockout, spawn e saque offline.
+- Confirmar que o mapa continua sendo apenas uma expedição de combate: maré dinâmica, barco, subáreas, chefe e assets finais ainda não estão implementados.
+
+O runner permanece manual e não é iniciado por este trabalho.
+
+
+## Contrato de conteúdo de Aurélio (runner manual curto)
+
+- Conferir a expedição, seis IDs de criatura, obstáculos, e que todos os itens de saque existem no catálogo offline.
+- Abrir Aurélio e conferir marcos de arenito/ruínas e as silhuetas blockout durante encontros; conferir saque sem internet.
+- Validar em aparelho quando disponível que os adornos permanecem leves e legíveis; não declarar puzzle temporal, plataforma móvel ou chefe concluído.
+
+O runner Godot segue manual; nenhum teste longo ou emulador será disparado automaticamente.
+
+
+## Contrato de conteúdo de Ferrúmia (runner manual curto)
+
+- Conferir mapa, seis encontros, obstáculos e resolução local de todos os itens de saque.
+- Abrir a expedição e confirmar os trilhos estáticos, torres, engrenagens e blockouts durante o combate offline.
+- Não considerar elevadores, trilhos funcionais, máquinas interativas ou chefe implementados.
+
+O runner segue manual; nenhum teste longo/emulador automático foi adicionado ou iniciado.
+
+
+## Contrato de conteúdo de Ivern (runner manual curto)
+
+- Conferir os seis encontros e toda referência de loot local no catálogo.
+- Abrir a expedição Ivern offline, verificar a rota de blockout e distinguir os arcos fixos da aurora como decoração.
+- Não considerar vento, pontes dinâmicas, salto entre picos ou chefe concluídos.
+
+Runner Godot é manual; nenhum teste longo/emulador automático foi adicionado ou iniciado.
+
+
+## Contrato de conteúdo de Umbral (runner manual curto)
+
+- Conferir seis encontros, obstáculos e referências de saque no catálogo local.
+- Abrir a expedição offline; painéis são blockout sem reflexos ou troca de geometria.
+- Não considerar ilusões interativas, caminhos mutáveis ou chefe implementados.
+
+Runner Godot permanece manual; nenhum teste longo/emulador automático foi adicionado ou iniciado.
+
+
+## Contrato do Núcleo do Nexo e Arquivo Zero (runner manual curto)
+
+- Conferir seis ecos com dados/saque locais, oito marcadores visuais e a entrada do Arquivo Zero no catálogo.
+- Verificar ratios de fase e padrões na definição; testar combate RIFT offline e telegraphs no jogo quando o workflow manual for executado.
+- O mapa de expedição não conclui a campanha: âncoras interativas, cenas, escolha narrativa, arena definitiva, áudio e arte final estão pendentes.
+
+A exportação Godot para Android é manual; o runner de gameplay e qualquer teste em dispositivo também permanecem manuais.
+
+
+## Cadeia principal de Nimbara (runner manual curto)
+
+- Conferir a sequência `nimbara_01` a `nimbara_08: Musgos, Faíscas, saque de Flores da Memória, retorno ao mapa, Guardião de Raízes, três ecos, Cérvido e Âncora.
+- No jogo, confirmar que o Portal direciona ao mapa exigido e que waves priorizam a criatura ligada ao objetivo kill/collect.
+- Confirmar os três ecos individualmente, a entrada RIFT apenas na missão do Cérvido e o retorno ao Observatório após estabilizar a Âncora.
+- Conferir o diálogo contextual de conclusão de cada etapa e persistência do progresso offline.
+
+Runner Godot permanece manual; nenhum teste longo/emulador foi iniciado.
+
+
+### Save local: migração de schema (runner manual)
+
+- Carregar um payload de schema 4 com progresso parcial e seções/valores aninhados com tipos inválidos; confirmar upgrade para schema 8, preservação do ouro e preenchimento dos defaults atuais.
+- Confirmar que schema futuro é recusado sem substituir o save suportado nem permitir sobrescrita silenciosa.
+- Este cenário é curto, headless e manual; não requer emulador nem workflow longo.
+
+
+### Diálogos de campanha local (runner manual)
+
+- Avançar as oito linhas do prólogo e confirmar que a cena termina sem repetir texto placeholder e que todas as falas ficam no diário local.
+- Encadear conclusão e início de missão enquanto uma fala ainda está aberta; confirmar que os diálogos de Nimbara aparecem um de cada vez, sem substituir uns aos outros.
+- Fluxo curto, manual, sem emulador e sem job longo.
+
+
+### Formação offline ampliada (runner/manual)
+
+- Confirmar no runner que os sete aliados têm perfis locais distintos de área/recarga e que o pulso de suporte de Yuna restaura vida e energia quando solicitado.
+- No Android, abrir Formação, rolar a lista até Eiko, escolher dois aliados, fechar e reabrir; conferir seleção persistida e limite de dois.
+- A validação de rolagem/touch é manual e curta; sem emulador ou job longo automático.
+
+
+### Blockouts de aliados (revisão visual manual)
+
+- Na câmera de gameplay, conferir se lenço/chamas da Akari, aro/vane do Ren, prismas da Mira, aro/cristais orbitais da Yuna, manto do Shin, folhas do Haru e anéis da Eiko oscilam/giram com leveza e mantêm silhuetas legíveis sem se sobrepor ao HUD.
+- São adereços procedurais simples de blockout com movimento de idle; a revisão confirma legibilidade, não substitui rig, animação nem arte final.
+
+
+### Seletor de expedições (manual, curto)
+
+- Concluir a Âncora de Nimbara, tocar o Portal no Observatório e conferir a lista rolável de mapas, risco, perigo local, objetivo e duração.
+- Selecionar Nimbara, Aurélio, Vesper, Ferrúmia, Ivern ou Umbral e confirmar troca de terreno, pool de criaturas e `world.map_id`; conferir Núcleo bloqueado até a flag de campanha e ausência dos mapas legados; repetir com objetivo ativo e confirmar sua região-alvo.
+- Fluxo offline pelo HUD; validação touch manual, sem emulador ou workflow longo.

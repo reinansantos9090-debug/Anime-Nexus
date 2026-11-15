@@ -3,6 +3,7 @@ extends Node
 ## primitives stay lightweight so authored layouts remain viable on mobile.
 
 const Factory = preload("res://scripts/visuals/stylized_factory.gd")
+const GroundShader = preload("res://shaders/biome_ground.gdshader")
 
 var root: Node3D
 var database: Node
@@ -34,25 +35,50 @@ func build_hq() -> void:
     Factory.box(world_root,Vector3(8,0.4,5),Vector3(11,0.05,-5),Color("#394762"))
     Factory.box(world_root,Vector3(3.5,0.24,3.5),Vector3(0,0.12,8),Color("#32425c"))
     _make_hq_details()
+    _make_hq_districts()
 
 func build_biome(id: String) -> void:
     _reset()
     var b: Dictionary = map_db.get_map(id) if map_db else database.BIOMES.get(id,database.BIOMES["verdant_frontier"])
     _make_environment(b.get("fog",Color("#8fb1a5")),b.get("accent",Color("#d8ebff")))
-    Factory.box(world_root,Vector3(58,0.5,58),Vector3(0,-0.25,0),b.get("ground",Color("#4ea66f")))
+    var ground_color:Color=b.get("ground",Color("#4ea66f"))
+    var ground_accent:Color=b.get("accent",Color("#d8ebff"))
+    var terrain:=Factory.box(world_root,Vector3(58,0.5,58),Vector3(0,-0.25,0),ground_color)
+    var terrain_material:=ShaderMaterial.new()
+    terrain_material.shader=GroundShader
+    terrain_material.set_shader_parameter("base_color",ground_color)
+    terrain_material.set_shader_parameter("accent_color",ground_color.lerp(ground_accent,0.28))
+    terrain_material.set_shader_parameter("variation_strength",0.20)
+    terrain.material_override=terrain_material
     if map_db:
         for obstacle in b.get("obstacles",[]):
             _make_obstacle(obstacle,b.get("accent",Color.WHITE))
     _make_biome_decor(id,b)
-    if id=="nimbara":Factory.make_resonance_anchor(world_root,Vector3(0,0,-8.5))
+    if b.has("resonance_anchor"):
+        Factory.make_resonance_anchor(world_root,b["resonance_anchor"],b.get("accent",Color("#69e8cc")))
+    elif id=="nimbara":
+        Factory.make_resonance_anchor(world_root,Vector3(0,0,-8.5))
     portal=Factory.make_portal(world_root,Vector3(0,0,0),b.get("accent",Color("#5bdcff")))
     _make_hazard_markers(id,b.get("accent",Color.WHITE))
+
+func _story_flag(flag_id:String)->bool:
+    if not is_instance_valid(root):return false
+    var game_state:Variant=root.get("state")
+    if not game_state is Node:return false
+    var save_data:Variant=game_state.get("data")
+    if not save_data is Dictionary:return false
+    var story_data:Variant=save_data.get("story",{})
+    if not story_data is Dictionary:return false
+    var flags:Variant=story_data.get("flags",{})
+    if not flags is Dictionary:return false
+    return bool(flags.get(flag_id,false))
 
 func _make_biome_decor(id:String,b:Dictionary)->void:
     var accent:Color=b.get("accent",Color.WHITE)
     var ground:Color=b.get("ground",Color("#4ea66f"))
     match id:
         "nimbara":
+            _make_memory_lake()
             for p in [Vector3(-20,0,-18),Vector3(20,0,-18),Vector3(-21,0,18),Vector3(20,0,19)]:
                 _tree(p,accent,Color("#493c3e"),4.8)
             for i in range(7):
@@ -60,6 +86,55 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
                 Factory.make_crystal(world_root,Vector3(x,0.05,-16.0 if i%2==0 else 16.0),accent.lerp(Color("#c084fc"),float(i%3)*0.22))
             for p in [Vector3(-8,0,13),Vector3(-5,0,14),Vector3(-2,0,13),Vector3(7,0,-15)]:
                 _memory_bloom(p,accent)
+            var interaction_points:Dictionary=b.get("interaction_points",{})
+            if interaction_points.has("akari_flame_bloom"):
+                var ember_point:Vector3=interaction_points["akari_flame_bloom"]
+                var ember_color:=Color("#ffd27a") if _story_flag("akari_flame_stabilized") else Color("#ff8b59")
+                _memory_bloom(ember_point,ember_color)
+                var ember_ring:=Factory.torus(world_root,0.48,0.57,ember_point+Vector3(0,0.06,0),ember_color)
+                ember_ring.rotation.x=PI*0.5
+                var ember_marker:=Factory.make_crystal(world_root,ember_point+Vector3(0,0.62,0),ember_color.lightened(0.08))
+                ember_marker.scale=Vector3(0.34,0.34,0.34)
+            if interaction_points.has("ren_wind_chime"):
+                var chime_point:Vector3=interaction_points["ren_wind_chime"]
+                var chime_color:=Color("#ffd27a") if _story_flag("ren_chose_to_stay") else Color("#72e6dc")
+                var chime_stem:=Factory.cylinder(world_root,0.055,0.075,0.85,chime_point+Vector3(0,0.82,0),Color("#4b6870"))
+                chime_stem.rotation.z=-0.08
+                var chime_body:=Factory.make_crystal(world_root,chime_point+Vector3(0,1.42,0),chime_color)
+                chime_body.scale=Vector3(0.30,0.62,0.30)
+                var chime_ring:=Factory.torus(world_root,0.52,0.64,chime_point+Vector3(0,1.45,0),chime_color.lightened(0.12))
+                chime_ring.rotation.x=PI*0.5
+                var chime_echo:=Factory.torus(world_root,0.75,0.83,chime_point+Vector3(0,1.45,0),chime_color.darkened(0.12))
+                chime_echo.rotation=Vector3(PI*0.5,0,0.34)
+            if interaction_points.has("mira_memory_prism"):
+                var mira_point:Vector3=interaction_points["mira_memory_prism"]
+                var mira_color:=Color("#ffe1a4") if _story_flag("mira_accepted_silence") else Color("#adbdf4")
+                var mirror_crystal:=Factory.make_crystal(world_root,mira_point+Vector3(0,0.95,0),mira_color)
+                mirror_crystal.scale=Vector3(0.62,1.15,0.42)
+                var mirror_frame:=Factory.torus(world_root,0.92,1.04,mira_point+Vector3(0,0.08,0),mira_color.lightened(0.1))
+                mirror_frame.rotation.x=PI*0.5
+                var mirror_echo:=Factory.torus(world_root,0.54,0.62,mira_point+Vector3(0,1.0,0),mira_color.darkened(0.08))
+                mirror_echo.rotation=Vector3(PI*0.5,0,0.55)
+            if interaction_points.has("yuna_lunar_seal"):
+                var yuna_point:Vector3=interaction_points["yuna_lunar_seal"]
+                var yuna_color:=Color("#ffe8a5") if _story_flag("yuna_family_memory_recovered") else Color("#d9c8ff")
+                var yuna_frame:=Factory.torus(world_root,0.72,0.84,yuna_point+Vector3(0,0.08,0),yuna_color)
+                yuna_frame.rotation.x=PI*0.5
+                var yuna_prism:=Factory.make_crystal(world_root,yuna_point+Vector3(0,0.90,0),yuna_color.lightened(0.08))
+                yuna_prism.scale=Vector3(0.30,0.95,0.30)
+                Factory.sphere(world_root,0.12,yuna_point+Vector3(-0.50,1.30,0),yuna_color)
+                Factory.sphere(world_root,0.12,yuna_point+Vector3(0.50,1.30,0),yuna_color)
+            if interaction_points.has("shin_shadow_reflection"):
+                var shin_point:Vector3=interaction_points["shin_shadow_reflection"]
+                var shin_color:=Color("#a8dcff") if _story_flag("shin_shared_seraphine_memory") else Color("#8c68c9")
+                var shadow_frame:=Factory.torus(world_root,0.72,0.84,shin_point+Vector3(0,0.08,0),shin_color)
+                shadow_frame.rotation.x=PI*0.5
+                var shadow_prism:=Factory.make_crystal(world_root,shin_point+Vector3(0,0.86,0),shin_color)
+                shadow_prism.scale=Vector3(0.45,1.24,0.32)
+                var shadow_echo:=Factory.torus(world_root,0.48,0.56,shin_point+Vector3(0,1.15,0),shin_color.lightened(0.18))
+                shadow_echo.rotation=Vector3(PI*0.5,0,0.42)
+            for p in b.get("memory_echoes",[]):
+                _memory_echo(p)
         "verdant_frontier":
             for p in [Vector3(-18,0,-18),Vector3(18,0,-17),Vector3(-19,0,17),Vector3(17,0,18)]:
                 _tree(p,accent,ground)
@@ -75,6 +150,143 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
         "sky_ruins":
             for p in [Vector3(-18,0,-15),Vector3(17,0,-15),Vector3(-17,0,15),Vector3(18,0,15)]:
                 _ruin_pillar(p,accent)
+        "nexus_core":
+            _make_nexus_bridge(accent)
+        "umbral":
+            _make_umbral_gallery(accent)
+        "ivern":
+            _make_ivern_aurora(accent)
+        "ferrumia":
+            _make_ferrumia_tracks(accent)
+        "aurelio":
+            _make_aurelio_ruins(accent,ground)
+        "vesper":
+            _make_vesper_cove(accent,ground)
+
+func _make_nexus_bridge(accent:Color)->void:
+    var anchor_colors:Array=[Color("#4bd2e6"),Color("#ff795d"),Color("#9be082"),Color("#f6d278"),Color("#8bc8ff"),Color("#d58df5"),Color("#e8efff"),accent]
+    for i in range(8):
+        var angle:=TAU*float(i)/8.0
+        var position:=Vector3(cos(angle)*20.0,0,sin(angle)*20.0)
+        Factory.box(world_root,Vector3(2.6,0.28,2.0),position+Vector3(0,0.14,0),Color("#555b7c"))
+        Factory.make_crystal(world_root,position+Vector3(0,0.35,0),anchor_colors[i])
+        Factory.torus(world_root,0.45,0.54,position+Vector3(0,0.2,0),anchor_colors[i])
+    for p in [Vector3(-22,0,-22),Vector3(22,0,-22),Vector3(-22,0,22),Vector3(22,0,22)]:
+        var shard:=Factory.make_crystal(world_root,p+Vector3(0,0.15,0),accent.lightened(0.1))
+        shard.scale=Vector3(1.6,1.8,1.6)
+    Factory.torus(world_root,4.0,4.2,Vector3(0,0.18,0),accent.darkened(0.1))
+    Factory.make_crystal(world_root,Vector3(0,0.15,-4.5),Color("#82f4e4"))
+    Factory.torus(world_root,0.62,0.76,Vector3(0,0.15,-4.5),Color("#82f4e4"))
+
+func _make_umbral_gallery(accent:Color)->void:
+    # Mirror panels are static blockout props; no reflection or geometry shift is simulated.
+    for p in [Vector3(-18,0,-16),Vector3(18,0,-16),Vector3(-18,0,16),Vector3(18,0,16)]:
+        var column:=Factory.box(world_root,Vector3(1.2,4.8,1.2),p+Vector3(0,2.4,0),Color("#49445d"))
+        column.rotation.y=0.2
+        Factory.torus(world_root,0.38,0.45,p+Vector3(0,4.95,0),accent)
+    for p in [Vector3(-8,0,0),Vector3(8,0,0),Vector3(0,0,-18)]:
+        Factory.box(world_root,Vector3(4.0,3.8,0.35),p+Vector3(0,1.9,0),Color("#867496"))
+        Factory.box(world_root,Vector3(3.2,3.1,0.08),p+Vector3(0,1.9,-0.22),Color("#b39bc1"))
+    for p in [Vector3(-4,0,12),Vector3(4,0,12)]:
+        Factory.make_crystal(world_root,p+Vector3(0,0.1,0),accent.lightened(0.10))
+
+func _make_ivern_aurora(accent:Color)->void:
+    # The sky arcs are fixed low-cost landmarks, not dynamic aurora or wind gameplay.
+    for p in [Vector3(-19,0,-15),Vector3(19,0,-15),Vector3(-18,0,16),Vector3(18,0,16)]:
+        Factory.make_crystal(world_root,p+Vector3(0,0.1,0),accent)
+    for i in range(3):
+        var arc:=Factory.torus(world_root,8.0+float(i)*1.1,8.25+float(i)*1.1,Vector3(0,4.0+float(i)*0.55,-17),Color("#a8caff").lerp(Color("#d69cff"),float(i)*0.22))
+        arc.rotation_degrees=Vector3(20.0,-18.0+float(i)*18.0,0)
+        arc.scale=Vector3(1.25,0.6,1.0)
+    for p in [Vector3(-18,0,0),Vector3(18,0,0)]:
+        Factory.box(world_root,Vector3(1.3,5.2,1.3),p+Vector3(0,2.6,0),Color("#667c9a"))
+        Factory.make_crystal(world_root,p+Vector3(0,5.2,0),accent.lightened(0.12))
+
+func _make_ferrumia_tracks(accent:Color)->void:
+    # Static rails and tower pieces suggest the industrial district; they do not move.
+    for z in [-8.0,0.0,8.0]:
+        Factory.box(world_root,Vector3(38,0.16,0.42),Vector3(0,0.08,z),Color("#353341"))
+        for x in range(-17,18,4):
+            Factory.box(world_root,Vector3(1.3,0.22,1.4),Vector3(float(x),0.18,z),Color("#827264"))
+    for p in [Vector3(-18,0,-16),Vector3(18,0,-16),Vector3(-18,0,16),Vector3(18,0,16)]:
+        Factory.box(world_root,Vector3(2.8,4.2,2.8),p+Vector3(0,2.1,0),Color("#65566d"))
+        Factory.box(world_root,Vector3(3.4,0.22,3.4),p+Vector3(0,4.25,0),accent.darkened(0.18))
+        Factory.sphere(world_root,0.35,p+Vector3(0,3.1,0),Color("#64d8f2"))
+    _make_ferrumia_gear(Vector3(0,0,12),accent,Vector3(2.3,0.6,2.3))
+
+func _make_ferrumia_gear(pos:Vector3,accent:Color,size:Vector3)->void:
+    var gear:=Node3D.new()
+    gear.position=pos+Vector3(0,0.22,0)
+    world_root.add_child(gear)
+    var ring:=Factory.torus(gear,size.x*0.25,size.x*0.42,Vector3.ZERO,Color("#b77961"))
+    ring.rotation.x=PI*0.5
+    for i in range(8):
+        var angle:=TAU*float(i)/8.0
+        var tooth:=Factory.box(gear,Vector3(0.34,0.48,0.36),Vector3(cos(angle)*size.x*0.46,0.02,sin(angle)*size.z*0.46),accent)
+        tooth.rotation.y=-angle
+    Factory.cylinder(gear,0.16,0.22,0.32,Vector3(0,0.05,0),Color("#4b4155"))
+
+func _make_aurelio_ruins(accent:Color,ground:Color)->void:
+    # Desert ornaments are blockout landmarks; no temporal puzzle or moving platform is implied.
+    for i in range(5):
+        var ridge:=Factory.sphere(world_root,1.0,Vector3(-18.0+float(i)*9.0,0.08,18.0 if i%2==0 else -18.0),ground.lightened(0.10))
+        ridge.scale=Vector3(5.0,0.18,2.2)
+    for p in [Vector3(-19,0,-16),Vector3(19,0,-15),Vector3(-18,0,16),Vector3(18,0,17)]:
+        _aurelio_pillar(p,accent,Vector3(2.2,3.2,2.2))
+    for p in [Vector3(-3,0,-19),Vector3(0,0,-19),Vector3(3,0,-19)]:
+        Factory.box(world_root,Vector3(1.8,0.35,1.4),p+Vector3(0,1.1,0),Color("#8a644d"))
+        Factory.make_crystal(world_root,p+Vector3(0,1.45,0),accent.lightened(0.08))
+    Factory.sphere(world_root,0.17,Vector3(0,0.16,7),Color("#46aeb2"))
+    Factory.torus(world_root,2.0,2.15,Vector3(0,0.18,7),Color("#ffd988"))
+
+func _aurelio_pillar(pos:Vector3,accent:Color,size:Vector3)->void:
+    var pillar:=Node3D.new()
+    pillar.position=pos
+    world_root.add_child(pillar)
+    Factory.box(pillar,Vector3(size.x*0.72,size.y*0.78,size.z*0.72),Vector3(0,size.y*0.39,0),Color("#906b55"))
+    Factory.box(pillar,Vector3(size.x,0.24,size.z),Vector3(0,size.y*0.82,0),accent.darkened(0.24))
+    Factory.box(pillar,Vector3(size.x*0.34,0.16,size.z*0.38),Vector3(0,size.y*0.45,-size.z*0.38),accent)
+    Factory.sphere(pillar,0.16,Vector3(0,size.y+0.12,0),accent.lightened(0.16))
+
+func _make_vesper_cove(accent:Color,ground:Color)->void:
+    # Water and dock geometry are a navigable-scene blockout, not final art or tide simulation.
+    for lake in [
+        {"pos":Vector3(-12,0.035,2),"scale":Vector3(7.5,0.045,10.0)},
+        {"pos":Vector3(12,0.035,-1),"scale":Vector3(7.0,0.045,9.0)},
+        {"pos":Vector3(0,0.035,21),"scale":Vector3(12.0,0.045,4.5)}
+    ]:
+        var water:=Factory.sphere(world_root,1.0,lake.pos,Color("#287b91"))
+        water.scale=lake.scale
+        Factory.torus(world_root,0.95,1.02,lake.pos+Vector3(0,0.025,0),accent.darkened(0.16)).scale=lake.scale*Vector3(1.04,1.0,1.04)
+    for p in [Vector3(-18,0,11),Vector3(18,0,10),Vector3(-17,0,-15),Vector3(17,0,-16)]:
+        _vesper_coral(p,accent,ground)
+    for p in [Vector3(-3,0,-18),Vector3(4,0,-20),Vector3(8,0,-18)]:
+        Factory.make_crystal(world_root,p+Vector3(0,0.1,0),accent.lightened(0.18))
+
+func _vesper_coral(pos:Vector3,accent:Color,ground:Color)->void:
+    var coral:=Node3D.new()
+    coral.position=pos
+    world_root.add_child(coral)
+    Factory.sphere(coral,0.52,Vector3(0,0.48,0),Color("#dc796f"))
+    for i in range(5):
+        var side:float=-1.0 if i%2==0 else 1.0
+        var branch:=Factory.cylinder(coral,0.09,0.15,0.9+float(i%3)*0.22,Vector3(side*float(i%3)*0.22,1.0+float(i%3)*0.16,0),accent.lightened(float(i%2)*0.12))
+        branch.rotation.z=side*(0.18+float(i%3)*0.12)
+    Factory.box(coral,Vector3(1.15,0.12,1.0),Vector3(0,0.05,0),ground.darkened(0.12))
+
+func _make_memory_lake()->void:
+    var surface:=Factory.sphere(world_root,1.0,Vector3(0,0.06,13),Color("#347f97"))
+    surface.scale=Vector3(5.3,0.045,3.6)
+    Factory.torus(world_root,2.9,3.02,Vector3(0,0.09,13),Color("#57d6c7"))
+    Factory.torus(world_root,1.55,1.62,Vector3(0,0.10,13),Color("#75e5d5"))
+
+func _memory_echo(pos:Vector3)->void:
+    var marker:=Node3D.new()
+    marker.position=pos
+    world_root.add_child(marker)
+    Factory.make_crystal(marker,Vector3(0,0.9,0),Color("#c6fff8"))
+    Factory.torus(marker,0.25,0.36,Vector3(0,0.18,0),Color("#68f5e6"))
+    Factory.sphere(marker,0.12,Vector3(0,1.8,0),Color("#f0fffd"))
 
 func _make_obstacle(obstacle:Dictionary,accent:Color)->void:
     var kind:=str(obstacle.get("shape","rock"))
@@ -90,6 +302,34 @@ func _make_obstacle(obstacle:Dictionary,accent:Color)->void:
             _cactus(pos,accent,maxf(1.0,size.y/1.9))
         "scrap":
             _scrap_stack(pos,accent,size)
+        "anchor":
+            Factory.box(world_root,Vector3(size.x*0.45,size.y,size.z*0.45),pos+Vector3(0,size.y*0.5,0),Color("#555a7b"))
+            Factory.make_crystal(world_root,pos+Vector3(0,size.y*0.82,0),Color("#c5a2ff"))
+            Factory.torus(world_root,size.x*0.35,size.x*0.43,pos+Vector3(0,size.y*0.62,0),accent)
+        "mirror":
+            var panel:=Factory.box(world_root,Vector3(size.x,size.y,size.z),pos+Vector3(0,size.y*0.5,0),Color("#817392"))
+            Factory.box(world_root,Vector3(size.x*0.78,size.y*0.82,0.08),pos+Vector3(0,size.y*0.5,-0.25),Color("#b39bc1"))
+            Factory.torus(world_root,0.42,0.50,pos+Vector3(0,size.y*0.50,-0.18),accent)
+        "snowbank":
+            var bank:=Factory.sphere(world_root,1.0,pos+Vector3(0,size.y*0.42,0),Color("#c9d8ec"))
+            bank.scale=Vector3(size.x*0.5,size.y*0.55,size.z*0.5)
+        "ice":
+            var ice:=Factory.box(world_root,Vector3(size.x,size.y,size.z),pos+Vector3(0,size.y*0.5,0),Color("#91c9e2"))
+            ice.rotation.y=0.14
+        "gear":
+            _make_ferrumia_gear(pos,accent,size)
+        "sandstone":
+            _aurelio_pillar(pos,accent,size)
+        "pier":
+            var dock:=Node3D.new()
+            dock.position=pos
+            world_root.add_child(dock)
+            for i in range(4):
+                Factory.box(dock,Vector3(size.x*0.24,size.y,size.z),Vector3((float(i)-1.5)*size.x*0.24,size.y*0.5,0),Color("#795c55"))
+            for x in [-0.42,0.42]:
+                Factory.cylinder(dock,0.10,0.13,1.35,Vector3(size.x*x,0.68,-size.z*0.35),accent.darkened(0.2))
+        "coral":
+            _vesper_coral(pos,accent,Color("#376e77"))
         "ruin":
             _ruin_pillar(pos,accent,size)
         "root":
@@ -169,6 +409,84 @@ func _make_hq_details()->void:
         world_root.add_child(root_node)
         Factory.cylinder(root_node,0.12,0.16,1.3,Vector3(0,0.65,0),Color("#3f4b61"))
         Factory.make_crystal(root_node,Vector3(0,1.4,0),Color("#7defff"))
+
+func _make_hq_restored_anchors()->void:
+    var saved_flags:Dictionary={}
+    if is_instance_valid(root):
+        var game_state:Variant=root.get("state")
+        if game_state is Node:
+            var save_data:Variant=game_state.get("data")
+            if save_data is Dictionary:
+                var story_data:Variant=save_data.get("story",{})
+                if story_data is Dictionary:
+                    var flags:Variant=story_data.get("flags",{})
+                    if flags is Dictionary:
+                        saved_flags=flags
+
+    var anchors:Array=[
+        {"region":"nimbara","name":"Nimbara","color":Color("#63ead0")},
+        {"region":"aurelio","name":"Aurélio","color":Color("#ffca78")},
+        {"region":"vesper","name":"Vesper","color":Color("#55bde6")},
+        {"region":"ferrumia","name":"Ferrúmia","color":Color("#d087ff")},
+        {"region":"ivern","name":"Ivern","color":Color("#a9dcff")},
+        {"region":"umbral","name":"Umbral","color":Color("#e28be8")}
+    ]
+    for index in range(anchors.size()):
+        var entry:Dictionary=anchors[index]
+        var angle:float=-PI*0.5+TAU*float(index)/float(anchors.size())
+        var point:=Vector3(cos(angle)*8.1,0.12,sin(angle)*8.1)
+        var restored:bool=bool(saved_flags.get(str(entry["region"])+"_slice_complete",false))
+        var tint:Color=entry["color"] if restored else entry["color"].darkened(0.72)
+        var crystal:=Factory.make_crystal(world_root,point,tint)
+        crystal.scale=Vector3.ONE if restored else Vector3(0.72,0.72,0.72)
+        var halo:=Factory.torus(world_root,0.42,0.51,point+Vector3(0,-0.08,0),tint)
+        halo.rotation.x=PI*0.5
+
+func _make_hq_districts()->void:
+    # Static district landmarks give the small blockout base readable destinations.
+    Factory.torus(world_root,4.8,5.05,Vector3(0,0.035,0),Color("#4fb8d8"))
+    for i in range(8):
+        var angle:=TAU*float(i)/8.0
+        var point:=Vector3(cos(angle)*5.35,0.12,sin(angle)*5.35)
+        Factory.make_crystal(world_root,point,Color("#63dfe8").lerp(Color("#c4a3ff"),float(i%2)*0.65))
+
+    _make_hq_restored_anchors()
+
+    # Workshop of the Resonances: a copper workbench and a fixed gear landmark.
+    Factory.box(world_root,Vector3(4.8,0.22,2.2),Vector3(-11,0.31,-5),Color("#716276"))
+    Factory.box(world_root,Vector3(2.6,0.72,1.1),Vector3(-11,0.82,-5.25),Color("#374354"))
+    Factory.make_crystal(world_root,Vector3(-11,1.38,-5.25),Color("#7defff"))
+    _make_ferrumia_gear(Vector3(-13.5,0.1,-6.7),Color("#dfa66d"),Vector3(1.2,0.6,1.2))
+
+    # Floating market: four thin posts, a bright canopy and three stall counters.
+    for x in [9.0,13.0]:
+        for z in [-7.0,-3.0]:
+            Factory.cylinder(world_root,0.07,0.09,2.0,Vector3(x,1.1,z),Color("#8c789b"))
+    Factory.box(world_root,Vector3(4.4,0.18,4.4),Vector3(11,2.12,-5),Color("#5e7194"))
+    Factory.box(world_root,Vector3(1.5,0.65,0.8),Vector3(9.6,0.55,-5.7),Color("#b78667"))
+    Factory.box(world_root,Vector3(1.5,0.65,0.8),Vector3(11.0,0.55,-5.7),Color("#658b91"))
+    Factory.box(world_root,Vector3(1.5,0.65,0.8),Vector3(12.4,0.55,-5.7),Color("#a77b9d"))
+    for point in [Vector3(9,0.3,-4),Vector3(13,0.3,-4)]:
+        Factory.make_crystal(world_root,point,Color("#ffc78a"))
+
+    # Library of the Guardians: stepped shelves and a pair of arch pillars.
+    Factory.box(world_root,Vector3(5.8,0.3,4.0),Vector3(-11,0.22,-14),Color("#394b67"))
+    for side in [-1.0,1.0]:
+        Factory.box(world_root,Vector3(0.38,3.8,0.42),Vector3(-11+side*2.5,2.0,-14),Color("#58668b"))
+    for shelf in range(3):
+        var z:= -15.2+float(shelf)*1.1
+        Factory.box(world_root,Vector3(3.7,0.16,0.22),Vector3(-11,0.7+float(shelf)*0.9,z),Color("#8e7d87"))
+        for book in range(6):
+            var color:=Color("#67b4c5") if (book+shelf)%2==0 else Color("#c18f6d")
+            Factory.box(world_root,Vector3(0.38,0.52,0.25),Vector3(-12.45+float(book)*0.58,1.02+float(shelf)*0.9,z),color)
+
+    # Training garden: moving is still a gameplay task; these targets remain static.
+    Factory.torus(world_root,2.6,2.78,Vector3(11,0.08,11),Color("#a2de8b"))
+    for index in range(3):
+        var x:=9.0+float(index)*2.0
+        Factory.box(world_root,Vector3(0.52,1.65,0.46),Vector3(x,0.88,11),Color("#576b61"))
+        Factory.sphere(world_root,0.38,Vector3(x,1.9,11),Color("#d5bf91"))
+        Factory.sphere(world_root,0.12,Vector3(x,1.95,10.6),Color("#55dcef"))
 
 func _reset()->void:
     if world_root and is_instance_valid(world_root):

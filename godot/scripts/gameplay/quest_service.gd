@@ -1,22 +1,25 @@
 extends Node
 signal updated
+signal started(quest_id:String)
 signal completed(quest_id:String)
 
 var game_state:Node
 var database:Node
-var native_core: AnimeNexusQuestCore
+var native_core
 
 func setup(state:Node,content:Node)->void:
     game_state=state
     database=content
-    native_core=AnimeNexusQuestCore.new()
+    native_core = ClassDB.instantiate("AnimeNexusQuestCore") if ClassDB.class_exists("AnimeNexusQuestCore") else null
 
 func start(id:String)->void:
     var result:Dictionary=native_core.start_quest(game_state.data["quests"],database.QUESTS,id)
     if bool(result.get("started",false)):
         game_state.data["quests"]=result["quests"]
         game_state.quest_changed.emit()
+        game_state.state_changed.emit()
         updated.emit()
+        started.emit(id)
 
 func add_progress(id:String,amount:=1)->void:
     _apply_event("direct",id,amount)
@@ -44,6 +47,7 @@ func complete(id:String)->void:
 
 func _apply_event(event_type:String,subject_id:String,amount:int)->void:
     if game_state==null or database==null or native_core==null:return
+    var active_before:Array=game_state.data["quests"].get("active",[]).duplicate()
     var result:Dictionary=native_core.apply_event(
         game_state.data["quests"],database.QUESTS,event_type,subject_id,amount)
     if not bool(result.get("changed",false)):return
@@ -56,7 +60,11 @@ func _apply_event(event_type:String,subject_id:String,amount:int)->void:
         if quantity>0:game_state.add_item(str(item_id),quantity)
     for quest_id in result.get("completed_now",[]):
         completed.emit(str(quest_id))
+    for quest_id in game_state.data["quests"].get("active",[]):
+        if quest_id not in active_before:
+            started.emit(str(quest_id))
     game_state.quest_changed.emit()
+    game_state.state_changed.emit()
     updated.emit()
 
 func get_quest(id:String)->Dictionary:
@@ -68,7 +76,12 @@ func get_quest(id:String)->Dictionary:
 func active_summary()->String:
     var active:Array=game_state.data["quests"]["active"]
     if active.is_empty():return "Nenhum contrato ativo"
-    var id:=str(active[0])
-    var quest:=get_quest(id)
-    var value:=int(game_state.data["quests"]["progress"].get(id,0))
-    return "%s  %d/%d"%[quest.get("title",id),value,int(quest.get("target",1))]
+    var summaries:Array[String]=[]
+    for value in active:
+        var id:=str(value)
+        var quest:=get_quest(id)
+        if quest.is_empty():continue
+        var progress:=int(game_state.data["quests"]["progress"].get(id,0))
+        summaries.append("%s  %d/%d"%[quest.get("title",id),progress,int(quest.get("target",1))])
+        if summaries.size()>=2:break
+    return "  •  ".join(summaries)

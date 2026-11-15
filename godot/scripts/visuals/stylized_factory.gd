@@ -86,6 +86,58 @@ static func make_hunter(parent: Node3D, body_color: Color, accent: Color, skin: 
     cylinder(root, 0.13, 0.16, 0.58, Vector3(0.22,0.22,0), Color("#252b36"))
     return root
 
+static func make_companion(parent:Node3D,companion_id:String,body_color:Color,accent:Color,skin:Color)->Node3D:
+    var root:=make_hunter(parent,body_color,accent,skin)
+    match companion_id:
+        "akari_solen":
+            var scarf:=box(root,Vector3(0.88,0.13,0.38),Vector3(0,1.76,0.28),accent)
+            scarf.rotation.z=-0.28
+            scarf.add_to_group("companion_sway")
+            var ember_tail:=sphere(root,0.18,Vector3(0.58,1.78,0.42),Color("#ff7d43"))
+            ember_tail.scale=Vector3(1.9,0.45,0.6)
+            ember_tail.add_to_group("companion_sway")
+        "ren_aozora":
+            var wind_ring:=torus(root,0.38,0.47,Vector3(0,2.05,0.12),accent)
+            wind_ring.add_to_group("companion_orbit")
+            var vane:=box(root,Vector3(0.12,0.62,0.16),Vector3(0.63,1.42,0.2),accent)
+            vane.add_to_group("companion_sway")
+            vane.rotation.z=0.42
+        "mira_yukari":
+            var left_prism:=box(root,Vector3(0.30,0.64,0.28),Vector3(-0.55,1.62,0),accent)
+            left_prism.rotation.z=0.35
+            left_prism.add_to_group("companion_sway")
+            var right_prism:=box(root,Vector3(0.30,0.64,0.28),Vector3(0.55,1.62,0),accent)
+            right_prism.rotation.z=-0.35
+            right_prism.add_to_group("companion_sway")
+        "yuna_tsukari":
+            var lunar_ring:=torus(root,0.39,0.46,Vector3(0,1.65,0),accent)
+            lunar_ring.add_to_group("companion_orbit")
+            var lunar_left:=sphere(root,0.15,Vector3(-0.66,2.02,0),accent)
+            lunar_left.add_to_group("companion_orbit_point")
+            var lunar_right:=sphere(root,0.15,Vector3(0.66,2.02,0),accent)
+            lunar_right.add_to_group("companion_orbit_point")
+        "shin_kuroki":
+            var cloak_left:=box(root,Vector3(0.38,1.22,0.18),Vector3(-0.46,1.12,0.27),body_color.darkened(0.22))
+            cloak_left.rotation.z=0.10
+            cloak_left.add_to_group("companion_sway")
+            var cloak_right:=box(root,Vector3(0.38,1.22,0.18),Vector3(0.46,1.12,0.27),body_color.darkened(0.22))
+            cloak_right.rotation.z=-0.10
+            cloak_right.add_to_group("companion_sway")
+        "haru_midori":
+            for leaf in 3:
+                var leaf_mesh:=sphere(root,0.16,Vector3((float(leaf)-1.0)*0.23,2.14,0.12),accent)
+                leaf_mesh.scale=Vector3(1.45,0.52,0.45)
+                leaf_mesh.rotation.z=(float(leaf)-1.0)*0.35
+                leaf_mesh.add_to_group("companion_sway")
+        "eiko_aster":
+            var orbit_a:=torus(root,0.57,0.63,Vector3(0,1.22,0),accent)
+            orbit_a.rotation.z=0.62
+            orbit_a.add_to_group("companion_orbit")
+            var orbit_b:=torus(root,0.62,0.69,Vector3(0,1.22,0),body_color.lightened(0.28))
+            orbit_b.rotation.z=-0.62
+            orbit_b.add_to_group("companion_orbit")
+    return root
+
 static func make_slime(parent: Node3D, color: Color) -> Node3D:
     var root := Node3D.new()
     parent.add_child(root)
@@ -176,21 +228,21 @@ static func make_crystal_stag(parent: Node3D, color: Color, accent: Color) -> No
         shard.scale=Vector3(0.42,0.60,0.42)
     return root
 
-static func make_resonance_anchor(parent:Node3D,pos:Vector3)->Node3D:
+static func make_resonance_anchor(parent:Node3D,pos:Vector3,accent:Color=Color("#69e8cc"))->Node3D:
     var root:=Node3D.new()
     root.name="AncoraDeRessonancia_Blockout"
     root.position=pos
     parent.add_child(root)
     cylinder(root,1.25,1.45,0.32,Vector3(0,0.16,0),Color("#40536a"))
-    torus(root,1.38,1.53,Vector3(0,0.34,0),Color("#69e8cc"))
-    var central:=make_crystal(root,Vector3(0,1.05,0),Color("#71f0d1"))
+    torus(root,1.38,1.53,Vector3(0,0.34,0),accent)
+    var central:=make_crystal(root,Vector3(0,1.05,0),accent.lightened(0.08))
     central.scale=Vector3(1.0,1.45,1.0)
     for side in [-1.0,1.0]:
-        var shard:=make_crystal(root,Vector3(side*0.84,0.60,0.14),Color("#ad91ff"))
+        var shard:=make_crystal(root,Vector3(side*0.84,0.60,0.14),accent.lerp(Color("#ad91ff"),0.42))
         shard.scale=Vector3(0.48,0.78,0.48)
         shard.rotation.z=side*0.25
     var light:=OmniLight3D.new()
-    light.light_color=Color("#78f1d5")
+    light.light_color=accent.lightened(0.10)
     light.light_energy=1.25
     light.omni_range=5.5
     light.position=Vector3(0,1.4,0)

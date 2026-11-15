@@ -10,11 +10,14 @@ const SaveScript=preload("res://scripts/core/save_service.gd")
 const JoystickScript=preload("res://scripts/ui/virtual_joystick.gd")
 const GameRootScript=preload("res://scripts/game_root.gd")
 const EnemyScript=preload("res://scripts/gameplay/enemy_agent.gd")
+const CompanionScript=preload("res://scripts/gameplay/companion_agent.gd")
 const BossScript=preload("res://scripts/gameplay/boss_agent.gd")
 const MapScript=preload("res://scripts/world/map_service.gd")
 const WorldScript=preload("res://scripts/world/world_service.gd")
 const SkillTreeScript=preload("res://scripts/gameplay/skill_tree_service.gd")
 const QuestScript=preload("res://scripts/gameplay/quest_service.gd")
+const InventoryScript=preload("res://scripts/gameplay/inventory_service.gd")
+const StoryScript=preload("res://scripts/gameplay/story_service.gd")
 
 var failures:Array[String]=[]
 
@@ -25,10 +28,15 @@ func _init()->void:
     _test_xp()
     _test_damage()
     _test_native_combat_core()
+    _test_companion_agent_setup()
+    _test_elemental_reaction_runtime()
     _test_loot()
+    _test_crafting_atomicity()
     _test_save()
+    _test_save_slots()
     _test_virtual_joystick()
     _test_nimbara_vertical_slice_data_and_quest()
+    _test_original_prologue_dialogue()
     _test_boss_telegraph()
     _test_static_field_slow()
     if failures.is_empty():
@@ -59,7 +67,7 @@ func _test_damage()->void:
     _expect(damage>=100.0 and damage<=175.0,"Damage: formula outside expected range")
 
 func _test_native_combat_core()->void:
-    var core=AnimeNexusCombatCore.new()
+    var core=ClassDB.instantiate("AnimeNexusCombatCore")
     var normal:Dictionary=core.calculate_damage(100.0,1,0.2,0.5,0.7)
     var critical:Dictionary=core.calculate_damage(100.0,3,0.2,0.5,0.2)
     _expect(is_equal_approx(float(normal["amount"]),120.0),"C++ combat: normal damage formula mismatch")
@@ -68,10 +76,56 @@ func _test_native_combat_core()->void:
     _expect(bool(critical["critical"]),"C++ combat: critical roll was not marked critical")
     var chain:Dictionary=core.resolve_elemental_reaction("thunder","water")
     _expect(str(chain["id"])=="conductive_chain" and float(chain["radius"])>0.0,"C++ combat: thunder/water reaction missing")
+    _expect(is_equal_approx(float(chain["splash_multiplier"]),0.35) and int(chain["max_targets"])==3,"C++ combat: conductive-chain policy mismatch")
     var reverse:Dictionary=core.resolve_elemental_reaction("water","thunder")
     _expect(str(reverse["id"])==str(chain["id"]),"C++ combat: reaction must be order-independent")
+    var ember:Dictionary=core.resolve_elemental_reaction("fire","wind")
+    var frost:Dictionary=core.resolve_elemental_reaction("ice","wind")
+    var lunar:Dictionary=core.resolve_elemental_reaction("moon","nature")
+    var prism:Dictionary=core.resolve_elemental_reaction("light","shadow")
     var singularity:Dictionary=core.resolve_elemental_reaction("gravity","fire")
-    _expect(str(singularity["id"])=="resonance_singularity","C++ combat: gravity combination missing")
+    _expect(float(ember["splash_multiplier"])>0.0 and int(ember["max_targets"])>0,"C++ combat: ember-storm policy missing")
+    _expect(float(frost["slow_duration"])>0.0 and float(frost["slow_factor"])<1.0,"C++ combat: frost-mist policy missing")
+    _expect(float(lunar["heal_ratio"])>0.0,"C++ combat: lunar-bloom healing policy missing")
+    _expect(float(prism["splash_multiplier"])>0.0 and int(prism["max_targets"])>0,"C++ combat: prism-echo policy missing")
+    _expect(str(singularity["id"])=="resonance_singularity" and float(singularity["pull_strength"])>0.0,"C++ combat: gravity combination policy missing")
+    var common_drop:Dictionary=core.resolve_loot(["nimbara_pollen","resonance_shard"],2,"moss_hopper","nimbara",1,1.0,0.20,0.9,0,1)
+    var rare_drop:Dictionary=core.resolve_loot(["nimbara_pollen","resonance_shard"],2,"moss_hopper","nimbara",1,1.0,0.90,0.20,0,1)
+    var epic_drop:Dictionary=core.resolve_loot(["nimbara_pollen","resonance_shard"],2,"moss_hopper","nimbara",1,1.0,0.98,0.9,0,1)
+    var fallback_drop:Dictionary=core.resolve_loot([],1,"unknown","nimbara",1,1.0,0.0,0.9,0,0)
+    _expect(str(common_drop["rarity"])=="common" and int(common_drop["gold"])==20,"C++ loot: common rarity/value mismatch")
+    var inventory_input:Dictionary={"oak_branch":8,"stone":6}
+    var failed_craft:Dictionary=core.apply_craft(inventory_input,{"oak_branch":3,"stone":99},{"memory_bloom":2})
+    var successful_craft:Dictionary=core.apply_craft(inventory_input,{"oak_branch":2,"stone":1},{"memory_bloom":2})
+    _expect(not bool(failed_craft["success"]) and failed_craft["inventory"]==inventory_input,"C++ crafting: failure must preserve the full input inventory")
+    _expect(bool(successful_craft["success"]) and int(successful_craft["inventory"]["oak_branch"])==6,"C++ crafting: successful atomic transaction mismatch")
+    _expect(int(rare_drop["items"]["nimbara_pollen"])==2,"C++ loot: rare bonus quantity mismatch")
+    _expect(epic_drop["items"].size()==2 and int(epic_drop["items"]["resonance_shard"])==2,"C++ loot: epic double-drop mismatch")
+    _expect(str(fallback_drop["items"].keys()[0])=="aether_core","C++ loot: empty table fallback mismatch")
+    var casual:Dictionary=core.difficulty_profile("casual")
+    var adventure:Dictionary=core.difficulty_profile("adventure")
+    var challenge:Dictionary=core.difficulty_profile("challenge")
+    var fallback:Dictionary=core.difficulty_profile("unknown")
+    _expect(float(casual["enemy_damage_multiplier"])<1.0 and float(casual["enemy_health_multiplier"])<1.0,"C++ difficulty: Casual should reduce enemy pressure")
+    _expect(is_equal_approx(float(adventure["reward_multiplier"]),1.0),"C++ difficulty: Aventura should be neutral")
+    _expect(float(challenge["reward_multiplier"])>1.0 and float(challenge["enemy_health_multiplier"])>1.0,"C++ difficulty: Desafio should increase risk and reward")
+    _expect(str(fallback["id"])=="adventure","C++ difficulty: unknown modes must safely fall back")
+    var follow:Dictionary=core.companion_decision(4.0,-1.0,1.0,"follow")
+    var attack:Dictionary=core.companion_decision(4.0,3.0,1.0)
+    var regroup:Dictionary=core.companion_decision(18.0,1.0,1.0)
+    var guard:Dictionary=core.companion_decision(4.0,1.0,0.15)
+    var retreat:Dictionary=core.companion_decision(4.0,1.0,1.0,"retreat")
+    _expect(str(follow["state"])=="follow","C++ companion: follow decision mismatch")
+    _expect(str(attack["state"])=="attack","C++ companion: attack decision mismatch")
+    _expect(str(regroup["state"])=="regroup","C++ companion: leash recovery decision mismatch")
+    _expect(str(guard["state"])=="guard","C++ companion: low-health guard decision mismatch")
+    _expect(str(retreat["state"])=="retreat" and float(retreat["speed_multiplier"])>1.0,"C++ companion: retreat order mismatch")
+    _expect(str(core.companion_decision(4.0,1.0,1.0,"follow")["state"])=="follow","C++ companion: follow order must suppress attacks")
+    _expect(is_equal_approx(core.companion_damage(10.0,3,1.2),13.08),"C++ companion: role/level damage formula mismatch")
+    _expect(is_equal_approx(core.companion_avoidance_turn(false,false,false,true),0.0),"C++ companion: clear path should not steer")
+    _expect(core.companion_avoidance_turn(true,false,true,true)>0.0,"C++ companion: blocked left/right policy mismatch")
+    _expect(core.companion_avoidance_turn(true,true,false,false)<0.0,"C++ companion: open right path should steer right")
+    _expect(core.companion_avoidance_turn(true,true,true,true)>1.0,"C++ companion: fully blocked escape turn mismatch")
     var hunter:Dictionary={"level":1,"xp":0,"xp_to_next":120,"hp":140,"max_hp":140,"max_energy":100.0}
     var progression:Dictionary={"skill_points":0}
     var level_result:Dictionary=core.advance_experience(hunter,progression,300)
@@ -79,6 +133,40 @@ func _test_native_combat_core()->void:
     _expect(int(level_result["levels_gained"])==2 and int(level_result["skill_points"])==2,"C++ progression: level reward mismatch")
     _expect(int(level_result["hp"])==164 and is_equal_approx(float(level_result["max_energy"]),108.0),"C++ progression: level stat growth mismatch")
     
+func _test_elemental_reaction_runtime()->void:
+    var state=StateScript.new()
+    state.reset()
+    var content=ContentScript.new()
+    var enemy=EnemyScript.new()
+    enemy.configure("aether_slime",null,content)
+    var combat=CombatScript.new()
+    combat.setup(state,null)
+    var result:Dictionary=combat.hit(enemy,10.0,false,"thunder")
+    _expect(str(result.get("reaction",{}).get("id",""))=="conductive_chain","Combat: thunder/water reaction did not trigger")
+    _expect(is_equal_approx(float(result.get("amount",0.0)),11.5),"Combat: elemental reaction multiplier was not applied")
+    _expect(is_equal_approx(enemy.hp,enemy.max_hp-11.5),"Combat: reaction damage did not reach the enemy")
+    enemy.free()
+    combat.free()
+    content.free()
+    state.free()
+
+func _test_companion_agent_setup()->void:
+    var state=StateScript.new()
+    state.reset()
+    var owner:=Node3D.new()
+    var combat=CombatScript.new()
+    combat.setup(state,null)
+    var companion=CompanionScript.new()
+    companion.configure(owner,combat,state,"akari_solen","Akari","fire","assault",
+        Color("#9e3940"),Color("#ffb34d"),Vector3(-2,0,2))
+    _expect(str(companion.info().get("element",""))=="fire","Companion: Akari element was not configured")
+    _expect(str(companion.info().get("role",""))=="assault","Companion: assault role was not configured")
+    _expect(companion.title_tag.text=="Akari","Companion: visible identity tag missing")
+    companion.free()
+    combat.free()
+    owner.free()
+    state.free()
+
 func _test_loot()->void:
     var state=StateScript.new()
     state.reset()
@@ -90,15 +178,35 @@ func _test_loot()->void:
     _expect(int(drop.get("gold",0))>0,"Loot: missing gold")
     _expect(not drop.get("items",{}).is_empty(),"Loot: missing item")
 
+func _test_crafting_atomicity()->void:
+    var state=StateScript.new()
+    state.reset()
+    var inventory=InventoryScript.new()
+    inventory.setup(state)
+    var before:Dictionary=state.get_inventory().duplicate(true)
+    var impossible:Dictionary={"requires":{"oak_branch":3,"stone":99},"result":{"memory_bloom":2}}
+    _expect(not inventory.craft(impossible),"Crafting: insufficient materials must fail")
+    _expect(state.get_inventory()==before,"Crafting: failed craft must leave every item unchanged")
+    var valid:Dictionary={"requires":{"oak_branch":2,"stone":1},"result":{"memory_bloom":2}}
+    _expect(inventory.craft(valid),"Crafting: valid recipe was rejected")
+    _expect(int(state.get_inventory()["oak_branch"])==6 and int(state.get_inventory()["stone"])==5,"Crafting: consumed material totals mismatch")
+    _expect(int(state.get_inventory()["memory_bloom"])==2,"Crafting: result was not granted atomically")
+    inventory.free()
+    state.free()
+
 func _test_save()->void:
     var state=StateScript.new()
     state.reset()
+    _expect(str(state.data["settings"]["difficulty"])=="adventure","Save: default difficulty was not initialized")
+    state.data["settings"]["difficulty"]="casual"
     state.data["hunter"]["gold"]=9876
     var save=SaveScript.new()
     save.setup(state)
     save.configure_paths("user://anime_nexus_test_save.json","user://anime_nexus_test_save.bak.json")
     _expect(save.save_now(),"Save: could not write save")
+    _expect(not FileAccess.file_exists("user://anime_nexus_test_save.json.tmp"),"Save: temporary file was left after a successful write")
     state.data["hunter"]["gold"]=1
+    state.data["settings"]["difficulty"]="challenge"
     _expect(save.save_now(),"Save: could not rotate the previous valid save to backup")
     var damaged:=FileAccess.open("user://anime_nexus_test_save.json",FileAccess.WRITE)
     if damaged:
@@ -109,10 +217,67 @@ func _test_save()->void:
     state.data["hunter"]["gold"]=2
     _expect(save.load_now(),"Save: could not reload save")
     _expect(int(state.data["hunter"]["gold"])==9876,"Save: corrupt primary did not recover the previous backup")
+    _expect(str(state.data["settings"]["difficulty"])=="casual","Save: difficulty setting was not persisted")
+    _expect(state.apply_loaded({"schema":4,"hunter":{"gold":444}}),"Save: supported old schema was rejected")
+    _expect(int(state.data["schema"])==8 and int(state.data["hunter"]["gold"])==444,"Save: older schema did not migrate while preserving progress")
+    _expect(str(state.data["settings"]["difficulty"])=="adventure","Save: old schema did not receive the default difficulty")
+    var future:=FileAccess.open("user://anime_nexus_test_save.json",FileAccess.WRITE)
+    if future:
+        future.store_string(JSON.stringify({"schema":999,"hunter":{"gold":999}}))
+        future.close()
+    else:
+        _expect(false,"Save: could not create future-schema recovery fixture")
+    _expect(save.load_now(),"Save: newer incompatible primary did not fall back to the compatible backup")
+    _expect(int(state.data["hunter"]["gold"])==9876,"Save: newer schema data was loaded over the supported backup")
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.json"))
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.bak.json"))
+    var interrupted:=FileAccess.open("user://anime_nexus_test_save.json.tmp",FileAccess.WRITE)
+    if interrupted:
+        interrupted.store_string(JSON.stringify({"schema":8,"hunter":{"gold":333}}))
+        interrupted.close()
+    else:
+        _expect(false,"Save: could not create interrupted-write recovery fixture")
+    _expect(save.load_now(),"Save: completed temporary write was not recovered")
+    _expect(int(state.data["hunter"]["gold"])==333,"Save: temporary recovery loaded the wrong progress")
+    _expect(not FileAccess.file_exists("user://anime_nexus_test_save.json.tmp"),"Save: recovered temporary file was not finalized")
     save.free()
     state.free()
     DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.json"))
     DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.bak.json"))
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.json.tmp"))
+
+func _test_save_slots()->void:
+    var state=StateScript.new()
+    state.reset()
+    var save=SaveScript.new()
+    save.setup(state)
+    var paths:Array=["user://anime_nexus_test_slot_1.json","user://anime_nexus_test_slot_2.json","user://anime_nexus_test_slot_3.json"]
+    save.configure_slot_paths(paths)
+    state.data["hunter"]["gold"]=111
+    _expect(save.save_slot(0),"Save slots: could not write slot 1")
+    state.data["hunter"]["gold"]=222
+    _expect(save.save_slot(1),"Save slots: could not write slot 2")
+    state.data["hunter"]["gold"]=333
+    _expect(not bool(save.slot_summary(2).get("has_save",false)),"Save slots: empty slot 3 should remain empty")
+    _expect(save.load_slot(0),"Save slots: could not load slot 1")
+    _expect(int(state.data["hunter"]["gold"])==111,"Save slots: slot 1 data was overwritten by slot 2")
+    _expect(save.load_slot(1),"Save slots: could not load slot 2")
+    _expect(int(state.data["hunter"]["gold"])==222,"Save slots: slot 2 data mismatch")
+    var future_slot:=FileAccess.open(paths[2],FileAccess.WRITE)
+    if future_slot:
+        future_slot.store_string(JSON.stringify({"schema":999,"hunter":{"gold":999}}))
+        future_slot.close()
+    else:
+        _expect(false,"Save slots: could not create future-version slot")
+    _expect(bool(save.slot_summary(2).get("future_schema",false)),"Save slots: future-version slot was not detected")
+    _expect(not save.save_slot(2),"Save slots: overwrite of future-version save was allowed")
+    _expect(int(save._read(paths[2]).get("schema",0))==999,"Save slots: future-version save was overwritten")
+    save.free()
+    state.free()
+    for path in paths:
+        DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+        DirAccess.remove_absolute(ProjectSettings.globalize_path(str(path)+".bak"))
+        DirAccess.remove_absolute(ProjectSettings.globalize_path(str(path)+".tmp"))
 
 func _test_virtual_joystick()->void:
     var stick=JoystickScript.new()
@@ -134,6 +299,7 @@ func _test_nimbara_vertical_slice_data_and_quest()->void:
     _expect(state.data["hunter"]["name"]=="Kaien Arashi","Slice: default playable character must be Kaien")
     _expect(state.data["loadout"]["weapon"]=="fulgor_gauntlets","Slice: Kaien loadout mismatch")
     _expect(maps.get_map("nimbara")["name"].begins_with("Nimbara"),"Slice: Nimbara map data missing")
+    _expect(maps.get_map("nimbara").get("memory_echoes",[]).size()==3,"Slice: Nimbara memory echoes are not configured")
     _expect(content.MONSTERS.has("moss_hopper") and content.MONSTERS.has("leaf_spark"),"Slice: Nimbara creatures missing")
     _expect(content.BOSSES.has("crystal_stag"),"Slice: Cérvido de Cristal boss data missing")
     for ability_id in ["lightning_step","sky_chain","static_field"]:
@@ -156,10 +322,35 @@ func _test_nimbara_vertical_slice_data_and_quest()->void:
     _expect("nimbara_03" in state.data["quests"]["active"],"Slice: anchor mission did not unlock after boss")
     quests.add_interaction("resonance_anchor")
     _expect("nimbara_03" in state.data["quests"]["completed"],"Slice: anchor interaction did not complete the prologue")
+    quests.start("nimbara_side_01")
+    for i in range(4):quests.add_collect("nimbara_pollen")
+    _expect("nimbara_side_01" in state.data["quests"]["completed"],"Slice: real pollen collection did not complete Liora’s side mission")
+    quests.start("nimbara_side_02")
+    for i in range(3):quests.add_interaction("memory_echo")
+    _expect("nimbara_side_02" in state.data["quests"]["completed"],"Slice: synchronizing three memory echoes did not complete the exploration mission")
     state.free()
     content.free()
     maps.free()
     quests.free()
+
+func _test_original_prologue_dialogue()->void:
+    var state=StateScript.new()
+    state.reset()
+    var story=StoryScript.new()
+    story.setup(state)
+    var first:Dictionary=story.next_line()
+    _expect(str(first["character"])=="Kaien Arashi","Story: original prologue must open with Kaien")
+    var saw_akari:=false
+    var saw_ren:=false
+    for i in range(7):
+        var line:Dictionary=story.next_line()
+        saw_akari=saw_akari or str(line.get("character",""))=="Akari Solen"
+        saw_ren=saw_ren or str(line.get("character",""))=="Ren Aozora"
+    _expect(saw_akari and saw_ren,"Story: prologue must introduce the original allies")
+    _expect(state.data["story"]["journal"].size()==8,"Story: prologue dialogue should persist in the offline journal")
+    _expect(not str(story.next_line().get("text","")).contains("Aetheria"),"Story: unrelated legacy universe must not appear in Anime Nexus")
+    story.free()
+    state.free()
 
 func _test_static_field_slow()->void:
     var content=ContentScript.new()

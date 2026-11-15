@@ -10,7 +10,7 @@ GDScript faz a composição de cenas e conecta eventos/controles com os serviço
 
 | Linguagem | Uso no projeto |
 |---|---|
-| C++17 | Regras de combate, reações elementais e futura lógica de progressão, missões, IA e persistência. |
+| C++17 | Regras de combate, reações elementais, progressão já migrada parcialmente e decisões locais de estado/dano/desvio de companheiros. Missões e demais domínios continuam migrando. |
 | GDScript | Montagem de cenas, sinais, UI e ponte curta para os nós do motor; sem regras duplicadas. |
 | Godot Shader Language | Materiais/shaders estilizados no renderer Mobile. |
 | Java/Kotlin | Plugin Android apenas quando uma API nativa do sistema exigir uma ponte. O app Kotlin legado continua isolado. |
@@ -25,9 +25,19 @@ GDScript faz a composição de cenas e conecta eventos/controles com os serviço
 - `resolve_elemental_reaction`: tabela determinística e sem dependência de ordem entre pares, com ID, multiplicador, raio e estado resultante.
 - `advance_experience`: aplica carry-over, curva de requisitos, ponto de habilidade e crescimento de atributos ao subir de nível.
 
+A criação também passou por `apply_craft`: C++ confere todos os custos, impede quantidades inválidas/overflow e devolve uma nova cópia do inventário só quando todo o débito e a concessão podem ser aplicados.
+
+`resolve_supreme_meter` mantém a carga da suprema entre 0 e 100, rejeita valores não finitos e só consome a carga quando a ativação ocorre com a barra completa. O runtime aplica o perfil local da Tempestade de Safira, acumula carga por golpes e derrotas e atualiza o controle de toque; VFX e temporizador são integração da cena. GDScript troca a referência e emite um único estado de inventário, sem sequência de débitos parciais.
+
+A economia de drops também passou para `resolve_loot`: C++ escolhe raridade, quantidade por raridade, item dentro da tabela, bônus de nível/evento e ouro. GDScript fornece somente os números aleatórios locais e aplica a saída ao inventário; não mantém uma segunda tabela de probabilidades. Uma regressão determinística cobre as raridades e a tabela vazia.
+
+A dificuldade também é definida pela função C++ `difficulty_profile`, que retorna IDs estáveis e multiplicadores de vida, dano e recompensa para Casual, Aventura e Desafio; a preferência é salva localmente. A camada de integração aplica os multiplicadores ao configurar inimigos e chefes, enquanto a velocidade base do mundo continua separada do perfil.
+
+O núcleo de companheiros acrescenta `companion_decision` e `companion_damage`, com critérios determinísticos de seguir, reagrupar, proteger, atacar e obedecer às ordens locais `auto`, `follow` e `retreat`. A navegação de curta distância também é decidida no C++ por `companion_avoidance_turn`: a camada de cena fornece três sondagens de colisão locais e o núcleo escolhe um desvio lateral estável. GDScript executa o raycast e aplica o movimento; se o companheiro continuar bloqueado por dois segundos e já estiver afastado, ele retorna à formação para evitar ficar preso. Isso é steering local de protótipo, não navegação global por navmesh; mapas com obstáculos complexos ainda exigem validação e evolução do sistema.
+
 `AnimeNexusQuestCore` é registrado na mesma biblioteca e expõe `start_quest` e `apply_event`: confere os tipos de objetivos, incrementa progresso, impede reabertura/conclusão duplicada, desbloqueia a próxima missão e calcula XP/materiais. `quest_service.gd` traduz interações do mundo em eventos e atualiza sinais/recompensas.
 
-`combat_service.gd` chama o núcleo para o ataque básico que o jogador usa. O resultado crítico chega ao inimigo e à exibição de dano; `game_state.add_xp` encaminha XP para o cálculo nativo. O wrapper mantém `player_damage()` para compatibilidade temporária. A tabela de combinações elementais está testada em C++, mas ainda não aplica os efeitos às habilidades/inimigos durante a luta.
+`combat_service.gd` chama o núcleo para o ataque básico que o jogador usa. O resultado crítico chega ao inimigo e à exibição de dano; `game_state.add_xp` encaminha XP para o cálculo nativo. O wrapper mantém `player_damage()` para compatibilidade temporária. Ataques básicos e habilidades passam a afinidade da arma ao serviço; a resolução C++ fornece multiplicador, raio, estado e os parâmetros numéricos de splash, limite de alvos, duração/fator de lentidão, cura e atração. GDScript apenas encaminha esses parâmetros à execução no mundo: condução em cadeia, dano de expansão, lentidão, cura local, eco prismático ou atração gravitacional. Inimigos e chefes usam afinidades do catálogo e limitam reativações com um intervalo local. A regressão curta foi adicionada ao runner, mas ainda aguarda execução manual.
 
 ## Build e distribuição
 
@@ -40,7 +50,9 @@ GDScript faz a composição de cenas e conecta eventos/controles com os serviço
 ## Status honesto
 
 - **Implementado no núcleo / Testado no host:** damage/crítico, XP/nível e transições de missão; C++ Linux carregado no Godot 4.7.2 e regras cobertas pelo runner.
-- **Em desenvolvimento:** build arm64 no CI e execução das reações elementais nas habilidades.
+- **Em desenvolvimento:** build arm64 no CI e validação manual Godot da integração de reações elementais.
 - **Planejado:** migração das regras de combate restantes, IA, equipamentos e serialização.
 - **Não declarado como testado:** build Android e testes nativos precisam passar no CI; o teste local não tem Android NDK instalado.
 - Renderização, personagens anime finais, recursos artísticos de produção e a campanha completa continuam pendentes conforme `IMPLEMENTATION_STATUS.md`.
+
+O campo local `hunter.chaos_energy` guarda a carga entre sessões nos três slots; o temporizador da forma ativa não persiste, portanto fechar o jogo encerra a transformação, sem conceder duração gratuita na próxima abertura.

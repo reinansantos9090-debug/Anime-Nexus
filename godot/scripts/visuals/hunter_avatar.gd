@@ -27,6 +27,10 @@ var head: Node3D
 var face: Node3D
 var backpack: Node3D
 var weapon_model: Node3D
+var supreme_aura:Node3D
+var aura_rings:Array[MeshInstance3D]=[]
+var transformation_active:=false
+var transformation_color:=Color("#45caff")
 
 var _bones: Dictionary = {}
 var _base_transforms: Dictionary = {}
@@ -52,6 +56,8 @@ func _ready() -> void:
 func _build() -> void:
     for child in get_children():
         child.free()
+    supreme_aura=null
+    aura_rings.clear()
 
     skeleton = Skeleton3D.new()
     skeleton.name = "Rig"
@@ -67,6 +73,7 @@ func _build() -> void:
     _build_gear()
     _build_weapon()
     _capture_base_transforms()
+    if transformation_active:_create_supreme_aura()
 
 func _create_rig() -> void:
     _bones.clear()
@@ -305,6 +312,23 @@ func respawn() -> void:
     model_root.scale = Vector3.ONE
     _set_animation("idle")
 
+func set_transformation(active:bool,accent:=Color("#45caff"))->void:
+    transformation_active=active
+    transformation_color=accent
+    if not is_instance_valid(model_root):return
+    if active and not is_instance_valid(supreme_aura):_create_supreme_aura()
+    if is_instance_valid(supreme_aura):supreme_aura.visible=active
+
+func _create_supreme_aura()->void:
+    if not is_instance_valid(model_root):return
+    supreme_aura=Node3D.new()
+    supreme_aura.name="TempestadeDeSafira"
+    model_root.add_child(supreme_aura)
+    aura_rings.clear()
+    aura_rings.append(_mesh_torus(supreme_aura,0.78,0.90,Vector3(0,0.12,0),transformation_color))
+    aura_rings.append(_mesh_torus(supreme_aura,0.48,0.56,Vector3(0,1.25,0),Color("#c5f5ff")))
+    supreme_aura.visible=transformation_active
+
 func _set_animation(value: String) -> void:
     if _animation == value:
         return
@@ -320,6 +344,11 @@ func _process(delta: float) -> void:
     _apply_animation(delta)
 
 func _apply_animation(delta: float) -> void:
+    if transformation_active and is_instance_valid(supreme_aura):
+        for i in range(aura_rings.size()):
+            aura_rings[i].rotation.y+=delta*(1.05 if i==0 else -0.78)
+            var pulse:=1.0+sin(_time*3.6+float(i)*PI)*0.035
+            aura_rings[i].scale=Vector3.ONE*pulse
     var speed := _locomotion.length()
     var walk_wave := sin(_time * 11.0) * minf(1.0, speed)
     var breathe := sin(_time * 2.5) * 0.025
