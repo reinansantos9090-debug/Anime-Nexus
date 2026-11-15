@@ -215,6 +215,7 @@ func _ready() -> void:
             "duration":170.0,
             "goal":12,
             "hazard":"correntes de maré",
+            "resonance_anchor":Vector3(0,0,-8.5),
             "ground":Color("#376e77"),
             "accent":Color("#59d8d2"),
             "fog":Color("#527f91"),

@@ -1219,13 +1219,7 @@ func _quest_completed(id:String)->void:
         hud.set_mode("ÂNCORA ESTABILIZADA • CAPÍTULO CONCLUÍDO")
         var next_quest_id:=str(content.CAMPAIGN_NEXT_QUEST.get(region_id,""))
         if not next_quest_id.is_empty() and not quests.get_quest(next_quest_id).is_empty():
-            var side_quests:Array=["nimbara_side_01","nimbara_side_02"]
-            var side_active:=false
-            for side_id in side_quests:
-                if side_id in state.data["quests"].get("active",[]):
-                    side_active=true
-                    break
-            if not side_active:quests.start(next_quest_id)
+            quests.start(next_quest_id)
         call_deferred("_enter_hq")
 
 func _nearest(radius:float)->Node3D:

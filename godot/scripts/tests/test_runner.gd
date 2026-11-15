@@ -40,6 +40,7 @@ func _init()->void:
     _test_aurelio_campaign_chain()
     _test_story_dialogue_completion()
     _test_vesper_region_data()
+    _test_vesper_campaign_chain()
     _test_aurelio_region_data()
     _test_ferrumia_region_data()
     _test_ivern_region_data()
@@ -470,6 +471,45 @@ func _test_story_dialogue_completion()->void:
     _expect(state.data["story"]["journal"].size()==8,"Story: prologue must save all displayed lines locally")
     story.free()
     state.free()
+
+func _test_vesper_campaign_chain()->void:
+    var content=ContentScript.new()
+    var maps=MapScript.new()
+    maps._ready()
+    var expected:Array=["vesper_01","vesper_02","vesper_03","vesper_04","vesper_05","vesper_06","vesper_07","vesper_08"]
+    for index in range(expected.size()):
+        var found:Dictionary={}
+        for quest in content.QUESTS:
+            if str(quest.get("id",""))==expected[index]:
+                found=quest
+                break
+        _expect(not found.is_empty(),"Vesper campaign: missing %s"%expected[index])
+        if found.is_empty():continue
+        _expect(str(found.get("map",""))=="vesper","Vesper campaign: wrong map in %s"%expected[index])
+        if str(found.get("type",""))=="kill":
+            var target_id:=str(found.get("monster",""))
+            _expect(content.MONSTERS.has(target_id),"Vesper campaign: creature missing in %s"%expected[index])
+            _expect(target_id in maps.maps["vesper"].get("enemies",[]),
+                "Vesper campaign: creature absent from region pool in %s"%expected[index])
+        elif str(found.get("type",""))=="collect":
+            var item_id:=str(found.get("item",""))
+            _expect(content.ITEMS.has(item_id),"Vesper campaign: material missing in %s"%expected[index])
+            var drop_available:=false
+            for monster_id in maps.maps["vesper"].get("enemies",[]):
+                if item_id in content.MONSTERS.get(str(monster_id),{}).get("loot",[]):
+                    drop_available=true
+                    break
+            _expect(drop_available,"Vesper campaign: objective material not dropped in Vesper")
+        elif str(found.get("type",""))=="boss":
+            _expect(content.BOSSES.has(str(found.get("boss",""))),"Vesper campaign: boss missing")
+        if index<expected.size()-1:
+            _expect(str(found.get("next",""))==expected[index+1],"Vesper campaign: broken chain at %s"%expected[index])
+    _expect(str(content.REGIONAL_BOSSES.get("vesper",""))=="tide_keeper",
+        "Vesper campaign: wrong regional boss")
+    _expect(str(content.CAMPAIGN_NEXT_QUEST.get("aurelio",""))=="vesper_01",
+        "Vesper campaign: chapter must unlock after Aurelio")
+    content.free()
+    maps.free()
 
 func _test_aurelio_campaign_chain()->void:
     var content=ContentScript.new()

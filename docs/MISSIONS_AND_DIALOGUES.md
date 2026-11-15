@@ -1,6 +1,6 @@
 # Missões e diálogos
 
-As campanhas além de Aurélio e as entradas não marcadas na seção de estado continuam **Planejadas**. As cadeias de Nimbara e Aurélio estão conectadas ao catálogo e ao fluxo offline do protótipo, com objetivos verificáveis, recompensas e diálogos locais; a regressão do runner Godot aguarda disparo manual e o fluxo aguarda validação touch. A tabela abaixo descreve a intenção completa da campanha: as mecânicas detalhadas de puzzle, cenas, arenas e algumas recompensas listadas ainda não estão implementadas só por aparecerem aqui. As missões secundárias Sementes para Liora e Ecos no Lago permanecem jogáveis e aguardam validação manual.
+As campanhas além de Vesper e as entradas não marcadas na seção de estado continuam **Planejadas**. As cadeias de Nimbara, Aurélio e Vesper estão conectadas ao catálogo e ao fluxo offline do protótipo, com objetivos verificáveis, recompensas e diálogos locais; a regressão do runner Godot aguarda disparo manual e o fluxo aguarda validação touch. A tabela abaixo descreve a intenção completa da campanha: as mecânicas detalhadas de puzzle, cenas, arenas e algumas recompensas listadas ainda não estão implementadas só por aparecerem aqui. As missões secundárias Sementes para Liora e Ecos no Lago permanecem jogáveis e aguardam validação manual.
 
 ## Campanha principal — 60 missões
 
