@@ -17,6 +17,7 @@ const ACTIONS := [
     ["companion_order","ORDEM • AUTO","Alternar entre combate, seguir e recuar"],
     ["side_quest","MISSÃO • SEMENTES PARA LIORA","Recolher pólen real deixado pelas criaturas"],
     ["memory_quest","MISSÃO • ECOS NO LAGO","Encontrar três ecos de memória escondidos"],
+    ["kaien_story","HISTÓRIA DE KAIEN • O BRASÃO","Investigar uma pista antiga da família Arashi"],
     ["saves","SALVAMENTOS","Gerenciar três espaços locais"],
     ["difficulty","DIFICULDADE • AVENTURA","Alternar o desafio da campanha offline"]
 ]
@@ -37,8 +38,8 @@ func _build() -> void:
     root.add_child(shade)
 
     panel = Panel.new()
-    panel.size = Vector2(780, 585)
-    panel.position = Vector2(250, 68)
+    panel.size = Vector2(780, 660)
+    panel.position = Vector2(250, 30)
     root.add_child(panel)
 
     var title := Label.new()
@@ -76,7 +77,7 @@ func _build() -> void:
 
     var close := Button.new()
     close.text = "FECHAR"
-    close.position = Vector2(550, 530)
+    close.position = Vector2(550, 612)
     close.size = Vector2(195, 38)
     close.pressed.connect(hide_menu)
     panel.add_child(close)
