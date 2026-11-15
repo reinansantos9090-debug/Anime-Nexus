@@ -153,6 +153,7 @@ func _test_companion_agent_setup()->void:
     _expect(str(companion.info().get("element",""))=="fire","Companion: Akari element was not configured")
     _expect(str(companion.info().get("role",""))=="assault","Companion: assault role was not configured")
     _expect(companion.title_tag.text=="Akari","Companion: visible identity tag missing")
+    _expect(companion.get_child(0).get_child_count()>=8,"Companion: Akari identity blockout accessories were not built")
     companion.free()
     state.data["hunter"]["hp"]=50.0
     state.data["hunter"]["energy"]=10.0

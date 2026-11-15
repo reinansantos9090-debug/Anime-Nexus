@@ -57,7 +57,7 @@ func configure(owner:Node3D,combat:Node,state:Node,id:String,title:String,elemen
     native_core=AnimeNexusCombatCore.new()
     name=id
     global_position=owner.global_position+offset
-    Factory.make_hunter(self,body_color,accent_color,Color("#edc19c"))
+    Factory.make_companion(self,companion_id,body_color,accent_color,Color("#edc19c"))
     title_tag=Label3D.new()
     set_physics_process(true)
     title_tag.text=display_name

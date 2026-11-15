@@ -159,3 +159,9 @@ Runner Godot permanece manual; nenhum teste longo/emulador foi iniciado.
 - Confirmar no runner que os sete aliados têm perfis locais distintos de área/recarga e que o pulso de suporte de Yuna restaura vida e energia quando solicitado.
 - No Android, abrir Formação, rolar a lista até Eiko, escolher dois aliados, fechar e reabrir; conferir seleção persistida e limite de dois.
 - A validação de rolagem/touch é manual e curta; sem emulador ou job longo automático.
+
+
+### Blockouts de aliados (revisão visual manual)
+
+- Na câmera de gameplay, conferir se lenço/chamas da Akari, aro do Ren, prismas da Mira, aro lunar da Yuna, manto do Shin, folhas do Haru e anéis da Eiko mantêm silhuetas legíveis sem se sobrepor ao HUD.
+- São adereços procedurais estáticos de blockout; a revisão confirma legibilidade, não substitui rig, animação nem arte final.

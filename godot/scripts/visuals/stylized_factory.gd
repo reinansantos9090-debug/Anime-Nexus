@@ -86,6 +86,44 @@ static func make_hunter(parent: Node3D, body_color: Color, accent: Color, skin: 
     cylinder(root, 0.13, 0.16, 0.58, Vector3(0.22,0.22,0), Color("#252b36"))
     return root
 
+static func make_companion(parent:Node3D,companion_id:String,body_color:Color,accent:Color,skin:Color)->Node3D:
+    var root:=make_hunter(parent,body_color,accent,skin)
+    match companion_id:
+        "akari_solen":
+            var scarf:=box(root,Vector3(0.88,0.13,0.38),Vector3(0,1.76,0.28),accent)
+            scarf.rotation.z=-0.28
+            var ember_tail:=sphere(root,0.18,Vector3(0.58,1.78,0.42),Color("#ff7d43"))
+            ember_tail.scale=Vector3(1.9,0.45,0.6)
+        "ren_aozora":
+            torus(root,0.38,0.47,Vector3(0,2.05,0.12),accent)
+            var vane:=box(root,Vector3(0.12,0.62,0.16),Vector3(0.63,1.42,0.2),accent)
+            vane.rotation.z=0.42
+        "mira_yukari":
+            var left_prism:=box(root,Vector3(0.30,0.64,0.28),Vector3(-0.55,1.62,0),accent)
+            left_prism.rotation.z=0.35
+            var right_prism:=box(root,Vector3(0.30,0.64,0.28),Vector3(0.55,1.62,0),accent)
+            right_prism.rotation.z=-0.35
+        "yuna_tsukari":
+            torus(root,0.39,0.46,Vector3(0,1.65,0),accent)
+            sphere(root,0.15,Vector3(-0.66,2.02,0),accent)
+            sphere(root,0.15,Vector3(0.66,2.02,0),accent)
+        "shin_kuroki":
+            var cloak_left:=box(root,Vector3(0.38,1.22,0.18),Vector3(-0.46,1.12,0.27),body_color.darkened(0.22))
+            cloak_left.rotation.z=0.10
+            var cloak_right:=box(root,Vector3(0.38,1.22,0.18),Vector3(0.46,1.12,0.27),body_color.darkened(0.22))
+            cloak_right.rotation.z=-0.10
+        "haru_midori":
+            for leaf in 3:
+                var leaf_mesh:=sphere(root,0.16,Vector3((float(leaf)-1.0)*0.23,2.14,0.12),accent)
+                leaf_mesh.scale=Vector3(1.45,0.52,0.45)
+                leaf_mesh.rotation.z=(float(leaf)-1.0)*0.35
+        "eiko_aster":
+            var orbit_a:=torus(root,0.57,0.63,Vector3(0,1.22,0),accent)
+            orbit_a.rotation.z=0.62
+            var orbit_b:=torus(root,0.62,0.69,Vector3(0,1.22,0),body_color.lightened(0.28))
+            orbit_b.rotation.z=-0.62
+    return root
+
 static func make_slime(parent: Node3D, color: Color) -> Node3D:
     var root := Node3D.new()
     parent.add_child(root)
