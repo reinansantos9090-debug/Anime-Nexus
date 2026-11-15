@@ -7,6 +7,7 @@ signal closed
 const CAMPAIGN_EXPEDITIONS:=["nimbara","aurelio","vesper","ferrumia","ivern","umbral","nexus_core"]
 
 var map_service:Node
+var game_state:Node
 var root:Control
 var rows:VBoxContainer
 
@@ -15,8 +16,9 @@ func _ready()->void:
     _build()
     hide_menu()
 
-func setup(service:Node)->void:
+func setup(service:Node,state:Node)->void:
     map_service=service
+    game_state=state
     _populate()
 
 func _build()->void:
@@ -90,7 +92,8 @@ func _populate()->void:
         detail.add_theme_font_size_override("font_size",13)
         info.add_child(detail)
         var enter:=Button.new()
-        var final_region_locked:=map_id=="nexus_core"
+        var world:Dictionary=game_state.data.get("world",{}) if game_state else {}
+        var final_region_locked:=map_id=="nexus_core" and not bool(world.get("nexus_core_unlocked",false))
         enter.text="CAMPANHA PENDENTE" if final_region_locked else "EXPLORAR"
         enter.disabled=final_region_locked
         enter.custom_minimum_size=Vector2(180,46)

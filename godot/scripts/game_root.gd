@@ -161,7 +161,7 @@ func _ready()->void:
     companion_roster_menu.selection_changed.connect(_refresh_companions)
     expedition_menu=ExpeditionMenuScript.new()
     add_child(expedition_menu)
-    expedition_menu.setup(maps)
+    expedition_menu.setup(maps,state)
     expedition_menu.expedition_selected.connect(_select_expedition)
     workshop_menu=WorkshopMenuScript.new()
     add_child(workshop_menu)
@@ -295,6 +295,7 @@ func _enter_expedition()->void:
         map_id="nimbara"
     portal_service.enter_expedition(map_id)
     state.data["world"]["map_id"]=map_id
+    state.state_changed.emit()
     director.start_expedition(map_id)
     world.build_biome(map_id)
     var anchor_return:bool=map_id=="nimbara" and "nimbara_08" in state.data["quests"]["active"]

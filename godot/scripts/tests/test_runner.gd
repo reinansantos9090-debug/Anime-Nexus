@@ -225,6 +225,7 @@ func _test_save()->void:
     _expect(state.apply_loaded({"schema":4,"hunter":{"gold":444},"settings":"invalid","story":{"flags":[],"journal":"invalid"}}),"Save: supported old schema was rejected")
     _expect(int(state.data["schema"])==8 and int(state.data["hunter"]["gold"])==444,"Save: older schema did not migrate while preserving progress")
     _expect(state.data["party"]["companions"].size()==2,"Save: migration did not restore the default local companion roster")
+    _expect(not bool(state.data["world"].get("nexus_core_unlocked",false)),"Save: legacy data must not unlock the final campaign region")
     _expect(str(state.data["settings"]["difficulty"])=="adventure" and is_equal_approx(float(state.data["settings"]["camera_zoom"]),24.0),"Save: old schema did not receive current settings defaults")
     _expect(state.data["story"]["flags"] is Dictionary and bool(state.data["story"]["flags"]["rooftop_unlocked"]),"Save: malformed legacy section replaced default story flags")
     _expect(state.data["story"]["journal"] is Array,"Save: malformed legacy journal replaced the current default list")

@@ -24,7 +24,7 @@ func reset() -> void:
         "inventory": {"aether_core":8,"slime_gel":12,"plasma_fiber":4,"scrap_plate":5,"power_cell":3,"oak_branch":8,"stone":6,"herb":10},
         "quests": {"active":["nimbara_01"],"progress":{},"completed":[]},
         "story": {"chapter":1,"scene":0,"flags":{"tutorial_complete":false,"rooftop_unlocked":true},"journal":[]},
-        "world": {"map_id":"nimbara","day_clock":0.0,"completed_expeditions":0,"completed_rifts":0},
+        "world": {"map_id":"nimbara","day_clock":0.0,"completed_expeditions":0,"completed_rifts":0,"nexus_core_unlocked":false},
         "wardrobe": {"style":"kaien_arashi","unlocked":["kaien_arashi"],"rides":[],"emotes":["wave"]},
         "cores": {"owned":["damage_1","cooldown_1","dodge_1"],"equipped":["damage_1","cooldown_1","dodge_1"]},
         "events": {"research_destroy":0,"transformation_unlocked":false},
