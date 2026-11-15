@@ -936,6 +936,22 @@ func _make_archive_zero_visual(parent:Node3D)->Node3D:
     Factory.torus(visual,1.25,1.38,Vector3(0,2.35,0),Color("#66d8ec"))
     return visual
 
+func _make_prism_primordial_visual(parent:Node3D)->Node3D:
+    var visual:=Node3D.new()
+    parent.add_child(visual)
+    Factory.sphere(visual,0.82,Vector3(0,1.65,0),Color("#4d4972"))
+    Factory.make_crystal(visual,Vector3(0,1.65,0),Color("#f3efff"))
+    Factory.torus(visual,1.22,1.38,Vector3(0,1.65,0),Color("#81f4e4"))
+    Factory.torus(visual,0.78,0.94,Vector3(0,1.65,0),Color("#ff9edb"))
+    var facets:Array=[Color("#6fe9ea"),Color("#a987ff"),Color("#ffc7ee"),Color("#ffe48c")]
+    for i in range(8):
+        var angle:=TAU*float(i)/8.0
+        var radius:=1.58 if i%2==0 else 1.28
+        var height:=1.45 if i%2==0 else 2.05
+        var shard:=Factory.make_crystal(visual,Vector3(cos(angle)*radius,height,sin(angle)*radius),facets[i%facets.size()])
+        shard.scale=Vector3(0.62,1.05,0.62) if i%2==0 else Vector3(0.46,0.82,0.46)
+    return visual
+
 func _make_umbral_enemy_visual(parent:Node3D,monster_id:String)->Node3D:
     var visual:=Node3D.new()
     parent.add_child(visual)
@@ -1154,6 +1170,8 @@ func _spawn_boss(id:String)->void:
         b.attach_visual(Factory.make_colossus(b,Color("#50627e"),Color("#bdeaff")))
     elif id=="mirror_archivist":
         b.attach_visual(Factory.make_colossus(b,Color("#3c354b"),Color("#d994f0")))
+    elif id=="prism_primordial":
+        b.attach_visual(_make_prism_primordial_visual(b))
     else:
         var palette:Dictionary={
             "fire":[Color("#783b38"),Color("#ffad4d")],
@@ -1171,7 +1189,8 @@ func _spawn_boss(id:String)->void:
     b.phase_changed.connect(func(p:int):
         hud.set_mode("CHEFE • FASE %d"%p)
         if is_instance_valid(b):b.scale=Vector3.ONE*(1.0 if p==1 else (1.12 if p==2 else 1.24))
-        vfx.boss_phase(self,b.position,Color("#ff6bd6"))
+        var phase_color:=Color("#8bfff1") if id=="prism_primordial" else Color("#ff6bd6")
+        vfx.boss_phase(self,b.position,phase_color)
     )
     b.summon_requested.connect(func(k:String,n:int):
         for j in range(n):_spawn_enemy(enemies.size()+j,k)
