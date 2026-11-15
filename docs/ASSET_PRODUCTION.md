@@ -198,6 +198,12 @@ GLB é formato de intercâmbio; preservar fonte editável em arquivo de criaçã
 
 
 
+## Selo Lunar de Yuna
+
+| Asset | Finalidade | Região/personagem | Descrição visual / paleta | Especificações | Materiais | Animações | Estado | Origem/licença |
+|---|---|---|---|---|---|---|---|---|
+| Selo Lunar | Marco explorável da introdução pessoal adicional de Yuna | Clareira de Nimbara | Registro pequeno de cristal violeta e branco-pérola dentro de um aro lunar; após a lembrança, recebe luz dourada suave | Geometria procedural leve no ponto `yuna_lunar_seal`, visível em câmera isométrica | Materiais sólidos locais, sem textura externa | Sem animação até o polish | Blockout integrado; modelo, reflexão, símbolo familiar e animação final pendentes | Geometria procedural original do projeto |
+
 ## Prisma de Memória de Mira
 
 | Asset | Finalidade | Região/personagem | Descrição visual / paleta | Especificações | Materiais | Animações | Estado | Origem/licença |

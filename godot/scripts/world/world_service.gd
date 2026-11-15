@@ -115,6 +115,15 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
                 mirror_frame.rotation.x=PI*0.5
                 var mirror_echo:=Factory.torus(world_root,0.54,0.62,mira_point+Vector3(0,1.0,0),mira_color.darkened(0.08))
                 mirror_echo.rotation=Vector3(PI*0.5,0,0.55)
+            if interaction_points.has("yuna_lunar_seal"):
+                var yuna_point:Vector3=interaction_points["yuna_lunar_seal"]
+                var yuna_color:=Color("#ffe8a5") if _story_flag("yuna_family_memory_recovered") else Color("#d9c8ff")
+                var yuna_frame:=Factory.torus(world_root,0.72,0.84,yuna_point+Vector3(0,0.08,0),yuna_color)
+                yuna_frame.rotation.x=PI*0.5
+                var yuna_prism:=Factory.make_crystal(world_root,yuna_point+Vector3(0,0.90,0),yuna_color.lightened(0.08))
+                yuna_prism.scale=Vector3(0.30,0.95,0.30)
+                Factory.sphere(world_root,0.12,yuna_point+Vector3(-0.50,1.30,0),yuna_color)
+                Factory.sphere(world_root,0.12,yuna_point+Vector3(0.50,1.30,0),yuna_color)
             for p in b.get("memory_echoes",[]):
                 _memory_echo(p)
         "verdant_frontier":

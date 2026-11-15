@@ -11,6 +11,7 @@
 - Missão pessoal de Akari: disponibilidade do ponto Flor de Brasa em Nimbara, ação do terminal ligada ao objetivo `interact`, conclusão uma única vez, materiais locais e persistência da flag que muda a flor para dourada ao reconstruir a região.
 - Introdução pessoal de Ren: acesso pelo terminal, ponto `ren_wind_chime`, objetivo de interação, item exclusivo `ren_sky_knot`, flag `ren_chose_to_stay` e leitura da flag pelo mundo após salvar e restaurar. A regressão curta correspondente está no runner manual e ainda não foi executada.
 - Introdução pessoal de Mira: acesso pelo terminal, ponto `mira_memory_prism`, objetivo de interação, item exclusivo `mira_silent_memory`, flag `mira_accepted_silence` e leitura da flag pelo mundo após salvar e restaurar. A regressão curta correspondente está no runner manual e ainda não foi executada.
+- Introdução pessoal de Yuna: acesso pelo terminal, ponto `yuna_lunar_seal`, objetivo de interação, item exclusivo `yuna_family_seal`, flag `yuna_family_memory_recovered` e leitura da flag após salvar/restaurar; regressão curta manual ainda não executada.
 - Crafting: verificar todos os materiais antes de debitar, débito único e rollback se criação falhar.
 - Progressão: XP em limiar exato/múltiplo, limites, migração e desbloqueios.
 

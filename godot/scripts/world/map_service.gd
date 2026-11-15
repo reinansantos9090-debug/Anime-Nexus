@@ -12,7 +12,7 @@ func _ready() -> void:
             "duration":180.0,
             "goal":4,
             "hazard":"raízes da memória",
-            "interaction_points":{"prologue_resonator":Vector3(0,0,-8.5),"akari_flame_bloom":Vector3(-15,0,0),"ren_wind_chime":Vector3(16,0,-2),"mira_memory_prism":Vector3(-18,0,-1)},
+            "interaction_points":{"prologue_resonator":Vector3(0,0,-8.5),"akari_flame_bloom":Vector3(-15,0,0),"ren_wind_chime":Vector3(16,0,-2),"mira_memory_prism":Vector3(-18,0,-1),"yuna_lunar_seal":Vector3(18,0,-5)},
             "ground":Color("#376a59"),
             "accent":Color("#63ead0"),
             "fog":Color("#557f7c"),

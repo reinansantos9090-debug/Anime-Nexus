@@ -21,6 +21,7 @@ const ACTIONS := [
     ["akari_story","HISTÓRIA DE AKARI • A FLOR DE BRASA","Ajudá-la a controlar o fogo sem ferir a floresta"],
     ["ren_story","HISTÓRIA DE REN • O SOM QUE FICA","Ouvir a lembrança deixada numa antiga rota"],
     ["mira_story","HISTÓRIA DE MIRA • A LEMBRANÇA","Escutar um eco sem tentar transformá-lo"],
+    ["yuna_story","HISTÓRIA DE YUNA • O SELO LUNAR","Recuperar uma lembrança dos guardiões da família"],
     ["saves","SALVAMENTOS","Gerenciar três espaços locais"],
     ["difficulty","DIFICULDADE • AVENTURA","Alternar o desafio da campanha offline"]
 ]
