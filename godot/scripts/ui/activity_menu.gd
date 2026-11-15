@@ -59,7 +59,7 @@ func _build() -> void:
         var data = ACTIONS[i]
         var b := Button.new()
         b.text = str(data[1]) + "\n" + str(data[2])
-        b.position = Vector2(32 + (i % 2) * 360, 108 + (i / 2) * 86)
+        b.position = Vector2(32 + (i % 2) * 360, 108 + int(i / 2) * 86)
         b.size = Vector2(338, 70)
         b.add_theme_font_size_override("font_size",16)
         var normal := StyleBoxFlat.new()
