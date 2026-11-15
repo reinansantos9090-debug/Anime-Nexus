@@ -1,6 +1,6 @@
 # Missões e diálogos
 
-Todas as entradas são especificações **Planejadas**, não missões já integradas. Objetivos são condições verificáveis; cada recompensa é offline. Falas curtas abaixo são a fala de contexto principal e devem entrar em diálogo roteado com retorno de estado, não apenas aparecer como texto decorativo.
+As missões da campanha e as entradas não marcadas na seção final são **Planejadas**, não conteúdo já integrado. Objetivos são condições verificáveis; cada recompensa é offline. Falas curtas abaixo são falas de contexto principal e precisam de diálogo roteado com retorno de estado. A missão secundária Sementes para Liora está integrada na slice e aguarda validação manual.
 
 ## Campanha principal — 60 missões
 

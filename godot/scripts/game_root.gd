@@ -77,6 +77,7 @@ var activity_remaining:=0.0
 var activity_goal:=0
 var activity_progress:=0
 var clock:=0.0
+var side_dialogue_active:=false
 
 func _ready()->void:
     state=StateScript.new();add_child(state)
@@ -101,6 +102,7 @@ func _ready()->void:
     vfx=VfxScript.new();add_child(vfx)
     cutscene=CutsceneScript.new();add_child(cutscene)
     cutscene.next_requested.connect(_story)
+    cutscene.closed.connect(_side_dialogue_closed)
     inventory=InventoryScript.new();add_child(inventory);inventory.setup(state)
     audio=AudioScript.new();add_child(audio)
     combat=CombatScript.new();add_child(combat);combat.setup(state,audio,vfx)
@@ -296,22 +298,30 @@ func _enter_versus()->void:
     _spawn_wave(mini(8,perf.max_enemies()))
     hud.set_mode("VERSUS • SIMULAÇÃO OFFLINE")
 
-func _show_side_quest_completion(line:String)->void:
-    hud.set_mode("LIORA • "+line)
+func _side_dialogue_closed()->void:
+    side_dialogue_active=false
+
+func _show_side_quest_dialogue(speaker:String,line:String)->void:
+    if cutscene==null or not is_instance_valid(cutscene):return
+    side_dialogue_active=true
+    cutscene.show_line("NIMBARA • SEMENTES PARA LIORA",speaker,line)
 
 func _start_nimbara_side_quest()->void:
     if mode!="HQ":
         hud.set_mode("MISSÕES SECUNDÁRIAS • CONSULTE NO OBSERVATÓRIO")
+        return
+    if cutscene and cutscene.is_active():
+        hud.set_mode("DIÁLOGO • TERMINE A CENA ATUAL")
         return
     const quest_id:="nimbara_side_01"
     var completed:Array=state.data["quests"].get("completed",[])
     var active:Array=state.data["quests"].get("active",[])
     var quest:Dictionary=quests.get_quest(quest_id)
     if quest_id in completed:
-        hud.set_mode("LIORA • "+str(quest.get("completion_dialogue","A clareira agradece.")))
+        _show_side_quest_dialogue("Liora",str(quest.get("completion_dialogue","A clareira agradece.")))
         return
     if quest_id not in active:quests.start(quest_id)
-    hud.set_mode("LIORA • "+str(quest.get("start_dialogue","Ajude a clareira.")))
+    _show_side_quest_dialogue("Liora",str(quest.get("start_dialogue","Ajude a clareira.")))
 
 func _cycle_companion_order()->void:
     var order:Array=["auto","follow","retreat"]
@@ -702,7 +712,7 @@ func _quest_completed(id:String)->void:
     var q:Dictionary=quests.get_quest(id)
     if not q.is_empty():
         if id=="nimbara_side_01":
-            call_deferred("_show_side_quest_completion",str(q.get("completion_dialogue","A clareira agradece.")))
+            call_deferred("_show_side_quest_dialogue","Liora",str(q.get("completion_dialogue","A clareira agradece.")))
         else:
             hud.set_mode("OBJETIVO CONCLUÍDO • "+str(q.get("title",id)))
     if id.begins_with("chapter_") or id.begins_with("boss_"):
@@ -776,6 +786,9 @@ func _clear_combat()->void:
     shots.clear()
 
 func _story()->void:
+    if side_dialogue_active:
+        if cutscene and cutscene.is_active():cutscene.hide_cutscene()
+        return
     var line:Dictionary=story.next_line()
     if cutscene and is_instance_valid(cutscene):
         cutscene.show_line(story.chapter_title(),str(line["character"]),str(line["text"]))
