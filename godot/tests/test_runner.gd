@@ -16,6 +16,7 @@ const MapScript=preload("res://scripts/world/map_service.gd")
 const WorldScript=preload("res://scripts/world/world_service.gd")
 const SkillTreeScript=preload("res://scripts/gameplay/skill_tree_service.gd")
 const QuestScript=preload("res://scripts/gameplay/quest_service.gd")
+const StoryScript=preload("res://scripts/gameplay/story_service.gd")
 
 var failures:Array[String]=[]
 
@@ -33,6 +34,7 @@ func _init()->void:
     _test_save_slots()
     _test_virtual_joystick()
     _test_nimbara_vertical_slice_data_and_quest()
+    _test_original_prologue_dialogue()
     _test_boss_telegraph()
     _test_static_field_slow()
     if failures.is_empty():
@@ -295,6 +297,25 @@ func _test_nimbara_vertical_slice_data_and_quest()->void:
     content.free()
     maps.free()
     quests.free()
+
+func _test_original_prologue_dialogue()->void:
+    var state=StateScript.new()
+    state.reset()
+    var story=StoryScript.new()
+    story.setup(state)
+    var first:Dictionary=story.next_line()
+    _expect(str(first["character"])=="Kaien Arashi","Story: original prologue must open with Kaien")
+    var saw_akari:=false
+    var saw_ren:=false
+    for i in range(7):
+        var line:Dictionary=story.next_line()
+        saw_akari=saw_akari or str(line.get("character",""))=="Akari Solen"
+        saw_ren=saw_ren or str(line.get("character",""))=="Ren Aozora"
+    _expect(saw_akari and saw_ren,"Story: prologue must introduce the original allies")
+    _expect(state.data["story"]["journal"].size()==8,"Story: prologue dialogue should persist in the offline journal")
+    _expect(not str(story.next_line().get("text","")).contains("Aetheria"),"Story: unrelated legacy universe must not appear in Anime Nexus")
+    story.free()
+    state.free()
 
 func _test_static_field_slow()->void:
     var content=ContentScript.new()

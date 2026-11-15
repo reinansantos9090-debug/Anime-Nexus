@@ -68,3 +68,8 @@ O Observatório recebe caminhos novos, não uma cidade perfeitamente restaurada.
 ## Consequência narrativa visível
 
 Cada Âncora desbloqueia ligação no mapa e muda uma camada da base ou região (flora, luz, personagens, falas e rota). As flags da história devem ser persistentes e testadas. Diálogos completos e objetivos estão em `MISSIONS_AND_DIALOGUES.md`.
+
+
+## Conteúdo narrativo no runtime da slice
+
+O runtime atual apresenta somente o Prólogo — O Primeiro Fragmento, com oito falas de Kaien, Akari, Ren, Iori, Meka e Pia. A conversa fica no diário local. O texto reconhece que os capítulos seguintes ainda exigem produção; Seraphine e Arquivo Zero não aparecem antes das revelações de campanha planejadas. O runner Godot inclui uma regressão curta de elenco e persistência, aguardando execução manual.
