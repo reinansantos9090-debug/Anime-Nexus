@@ -60,8 +60,9 @@ func _process(delta:float)->void:
     if owner_distance>24.0:
         reset_formation()
         owner_distance=global_position.distance_to(owner_actor.global_position)
-    var target:=_nearest_target(7.0) if combat_active else null
-    var enemy_distance:=global_position.distance_to(target.global_position) if target else -1.0
+    var target:Node3D=null
+    if combat_active:target=_nearest_target(7.0)
+    var enemy_distance:float=global_position.distance_to(target.global_position) if target else -1.0
     var hunter:Dictionary=game_state.get_hunter() if game_state else {}
     var hp_ratio:=float(hunter.get("hp",1.0))/maxf(1.0,float(hunter.get("max_hp",1.0)))
     var decision:Dictionary=native_core.companion_decision(owner_distance,enemy_distance,hp_ratio)
