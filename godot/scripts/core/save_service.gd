@@ -95,21 +95,37 @@ func save_now() -> bool:
         return false
     var payload: Dictionary = game_state.data.duplicate(true)
     payload["saved_at_unix"] = Time.get_unix_time_from_system()
-    if FileAccess.file_exists(storage_path):
-        var old := FileAccess.open(storage_path, FileAccess.READ)
-        if old:
-            var backup := FileAccess.open(backup_storage_path, FileAccess.WRITE)
-            if backup:
-                backup.store_string(old.get_as_text())
-                backup.flush()
-                backup.close()
-            old.close()
-    var file := FileAccess.open(storage_path, FileAccess.WRITE)
-    if file == null:
+    var temporary_path:=storage_path+".tmp"
+    var temporary:=FileAccess.open(temporary_path,FileAccess.WRITE)
+    if temporary==null:return false
+    temporary.store_string(JSON.stringify(payload))
+    temporary.flush()
+    temporary.close()
+    if _read(temporary_path).is_empty():
+        DirAccess.remove_absolute(ProjectSettings.globalize_path(temporary_path))
         return false
-    file.store_string(JSON.stringify(payload))
-    file.flush()
-    file.close()
+
+    var previous:=_read(storage_path)
+    if not previous.is_empty():
+        var old_file:=FileAccess.open(storage_path,FileAccess.READ)
+        var backup:=FileAccess.open(backup_storage_path,FileAccess.WRITE)
+        if old_file==null or backup==null:
+            if old_file:old_file.close()
+            if backup:backup.close()
+            return false
+        backup.store_string(old_file.get_as_text())
+        backup.flush()
+        old_file.close()
+        backup.close()
+        if _read(backup_storage_path).is_empty():return false
+
+    if FileAccess.file_exists(storage_path):
+        var remove_error:=DirAccess.remove_absolute(ProjectSettings.globalize_path(storage_path))
+        if remove_error!=OK:return false
+    var rename_error:=DirAccess.rename_absolute(
+        ProjectSettings.globalize_path(temporary_path),
+        ProjectSettings.globalize_path(storage_path))
+    if rename_error!=OK:return false
     dirty = false
     return true
 

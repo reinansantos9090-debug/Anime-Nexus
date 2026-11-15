@@ -126,6 +126,7 @@ func _test_save()->void:
     save.setup(state)
     save.configure_paths("user://anime_nexus_test_save.json","user://anime_nexus_test_save.bak.json")
     _expect(save.save_now(),"Save: could not write save")
+    _expect(not FileAccess.file_exists("user://anime_nexus_test_save.json.tmp"),"Save: temporary file was left after a successful write")
     state.data["hunter"]["gold"]=1
     _expect(save.save_now(),"Save: could not rotate the previous valid save to backup")
     var damaged:=FileAccess.open("user://anime_nexus_test_save.json",FileAccess.WRITE)
@@ -141,6 +142,7 @@ func _test_save()->void:
     state.free()
     DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.json"))
     DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.bak.json"))
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.json.tmp"))
 
 func _test_save_slots()->void:
     var state=StateScript.new()
@@ -164,6 +166,7 @@ func _test_save_slots()->void:
     for path in paths:
         DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
         DirAccess.remove_absolute(ProjectSettings.globalize_path(str(path)+".bak"))
+        DirAccess.remove_absolute(ProjectSettings.globalize_path(str(path)+".tmp"))
 
 func _test_virtual_joystick()->void:
     var stick=JoystickScript.new()
