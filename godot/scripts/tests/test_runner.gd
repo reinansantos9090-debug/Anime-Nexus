@@ -37,6 +37,7 @@ func _init()->void:
     _test_virtual_joystick()
     _test_nimbara_vertical_slice_data_and_quest()
     _test_vesper_region_data()
+    _test_aurelio_region_data()
     _test_boss_telegraph()
     _test_static_field_slow()
     if failures.is_empty():
@@ -337,6 +338,21 @@ func _test_vesper_region_data()->void:
         if content.MONSTERS.has(enemy_id):
             for item_id in content.MONSTERS[enemy_id].get("loot",[]):
                 _expect(content.ITEMS.has(item_id),"Vesper: creature loot has no local item definition: "+str(item_id))
+    maps.free()
+    content.free()
+
+func _test_aurelio_region_data()->void:
+    var maps=MapScript.new()
+    var content=ContentScript.new()
+    var aurelio:Dictionary=maps.get_map("aurelio")
+    var enemies:Array=aurelio.get("enemies",[])
+    _expect(str(aurelio.get("name","")).begins_with("Aurélio"),"Aurélio: expedition map metadata missing")
+    _expect(enemies.size()==6,"Aurélio: expected six local encounter species")
+    for enemy_id in enemies:
+        _expect(content.MONSTERS.has(enemy_id),"Aurélio: local monster definition missing: "+str(enemy_id))
+        if content.MONSTERS.has(enemy_id):
+            for item_id in content.MONSTERS[enemy_id].get("loot",[]):
+                _expect(content.ITEMS.has(item_id),"Aurélio: local loot item missing: "+str(item_id))
     maps.free()
     content.free()
 

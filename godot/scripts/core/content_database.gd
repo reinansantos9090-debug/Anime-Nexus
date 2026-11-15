@@ -92,6 +92,12 @@ const MONSTERS := {
     "void_glider":{"name":"Planador do Vazio","hp":230.0,"damage":44.0,"speed":3.6,"xp":175,"tier":5,"behavior":"flying","loot":["void_membrane","sky_fragment"]},
     "storm_caster":{"name":"Conjurador da Tempestade","hp":205.0,"damage":52.0,"speed":2.0,"xp":190,"tier":5,"behavior":"ranged","loot":["storm_core","prism_fragment"]},
     "chrono_knight":{"name":"Cavaleiro Crono","hp":360.0,"damage":62.0,"speed":2.1,"xp":240,"tier":6,"behavior":"controller","loot":["chrono_gear","gravity_shard"]},
+    "aurelio_crystal":{"element":"light","name":"Cristal Errante","hp":126.0,"damage":22.0,"speed":2.9,"xp":88,"tier":3,"behavior":"orbit","loot":["hourglass_sand","sun_glass"]},
+    "sun_disk_scarab":{"element":"fire","name":"Escaravelho Solar","hp":198.0,"damage":31.0,"speed":3.3,"xp":132,"tier":4,"behavior":"charger","loot":["solar_chitin","hourglass_sand"]},
+    "mirage_duplicator":{"element":"shadow","name":"Miragem Duplicadora","hp":148.0,"damage":29.0,"speed":4.0,"xp":121,"tier":4,"behavior":"stealth","loot":["mirage_thread","sun_glass"]},
+    "dune_watch":{"element":"light","name":"Vigia das Dunas","hp":164.0,"damage":38.0,"speed":1.8,"xp":138,"tier":4,"behavior":"sniper","loot":["sun_glass","solar_chitin"]},
+    "hourglass_wisp":{"element":"gravity","name":"Espírito da Ampulheta","hp":170.0,"damage":32.0,"speed":2.7,"xp":151,"tier":4,"behavior":"controller","loot":["hourglass_sand","temporal_splinter"]},
+    "oasis_guardian":{"element":"nature","name":"Guardião do Oásis","hp":365.0,"damage":43.0,"speed":1.35,"xp":218,"tier":5,"behavior":"guardian","loot":["oasis_seed","temporal_splinter"]},
     "bubble_jumper":{"element":"water","name":"Bolha Saltitante","hp":108.0,"damage":16.0,"speed":3.8,"xp":62,"tier":2,"behavior":"orbit","loot":["vesper_foam","tideglass"]},
     "wandering_coral":{"element":"nature","name":"Coral Errante","hp":205.0,"damage":21.0,"speed":1.8,"xp":108,"tier":3,"behavior":"guardian","loot":["living_coral","tideglass"]},
     "astral_jelly":{"element":"water","name":"Água-viva Astral","hp":128.0,"damage":25.0,"speed":3.5,"xp":96,"tier":3,"behavior":"flying","loot":["vesper_foam","moon_pearl"]},
@@ -119,7 +125,8 @@ const BIOMES := {
     "sunset_desert":{"name":"Deserto do Poente","ground":Color("#d39a57"),"accent":Color("#ffcf7d"),"fog":Color("#f0bd8a")},
     "rust_canyons":{"name":"Cânions de Sucata","ground":Color("#8a5d50"),"accent":Color("#ffc36a"),"fog":Color("#9d7970")},
     "sky_ruins":{"name":"Ruínas do Céu","ground":Color("#6178b1"),"accent":Color("#e0f7ff"),"fog":Color("#b4c9ff")},
-    "vesper":{"name":"Vesper • Arquipélago das Marés","ground":Color("#376e77"),"accent":Color("#59d8d2"),"fog":Color("#527f91")}
+    "vesper":{"name":"Vesper • Arquipélago das Marés","ground":Color("#376e77"),"accent":Color("#59d8d2"),"fog":Color("#527f91")},
+    "aurelio":{"name":"Aurélio • Deserto das Horas","ground":Color("#b78555"),"accent":Color("#ffd17e"),"fog":Color("#d2a487")}
 }
 
 const QUESTS := [
@@ -193,6 +200,12 @@ const ITEMS := {
     "rift_hide":{"name":"Pele da Fenda","value":37},"gravity_shard":{"name":"Estilhaço Gravitacional","value":43},
     "void_membrane":{"name":"Membrana do Vazio","value":48},"storm_core":{"name":"Núcleo de Tempestade","value":50},
     "chrono_gear":{"name":"Engrenagem Crono","value":58},
+    "hourglass_sand":{"name":"Areia de Ampulheta","value":23},
+    "sun_glass":{"name":"Vidro Solar","value":28},
+    "solar_chitin":{"name":"Quitina Solar","value":31},
+    "mirage_thread":{"name":"Fio de Miragem","value":26},
+    "temporal_splinter":{"name":"Estilhaço Temporal","value":39},
+    "oasis_seed":{"name":"Semente do Oásis","value":22},
     "vesper_foam":{"name":"Espuma de Vesper","value":12},
     "tideglass":{"name":"Vidro de Maré","value":24},
     "living_coral":{"name":"Coral Vivo","value":20},

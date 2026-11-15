@@ -87,8 +87,32 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
         "sky_ruins":
             for p in [Vector3(-18,0,-15),Vector3(17,0,-15),Vector3(-17,0,15),Vector3(18,0,15)]:
                 _ruin_pillar(p,accent)
+        "aurelio":
+            _make_aurelio_ruins(accent,ground)
         "vesper":
             _make_vesper_cove(accent,ground)
+
+func _make_aurelio_ruins(accent:Color,ground:Color)->void:
+    # Desert ornaments are blockout landmarks; no temporal puzzle or moving platform is implied.
+    for i in range(5):
+        var ridge:=Factory.sphere(world_root,1.0,Vector3(-18.0+float(i)*9.0,0.08,18.0 if i%2==0 else -18.0),ground.lightened(0.10))
+        ridge.scale=Vector3(5.0,0.18,2.2)
+    for p in [Vector3(-19,0,-16),Vector3(19,0,-15),Vector3(-18,0,16),Vector3(18,0,17)]:
+        _aurelio_pillar(p,accent,Vector3(2.2,3.2,2.2))
+    for p in [Vector3(-3,0,-19),Vector3(0,0,-19),Vector3(3,0,-19)]:
+        Factory.box(world_root,Vector3(1.8,0.35,1.4),p+Vector3(0,1.1,0),Color("#8a644d"))
+        Factory.make_crystal(world_root,p+Vector3(0,1.45,0),accent.lightened(0.08))
+    Factory.sphere(world_root,0.17,Vector3(0,0.16,7),Color("#46aeb2"))
+    Factory.torus(world_root,2.0,2.15,Vector3(0,0.18,7),Color("#ffd988"))
+
+func _aurelio_pillar(pos:Vector3,accent:Color,size:Vector3)->void:
+    var pillar:=Node3D.new()
+    pillar.position=pos
+    world_root.add_child(pillar)
+    Factory.box(pillar,Vector3(size.x*0.72,size.y*0.78,size.z*0.72),Vector3(0,size.y*0.39,0),Color("#906b55"))
+    Factory.box(pillar,Vector3(size.x,0.24,size.z),Vector3(0,size.y*0.82,0),accent.darkened(0.24))
+    Factory.box(pillar,Vector3(size.x*0.34,0.16,size.z*0.38),Vector3(0,size.y*0.45,-size.z*0.38),accent)
+    Factory.sphere(pillar,0.16,Vector3(0,size.y+0.12,0),accent.lightened(0.16))
 
 func _make_vesper_cove(accent:Color,ground:Color)->void:
     # Water and dock geometry are a navigable-scene blockout, not final art or tide simulation.
@@ -144,6 +168,8 @@ func _make_obstacle(obstacle:Dictionary,accent:Color)->void:
             _cactus(pos,accent,maxf(1.0,size.y/1.9))
         "scrap":
             _scrap_stack(pos,accent,size)
+        "sandstone":
+            _aurelio_pillar(pos,accent,size)
         "pier":
             var dock:=Node3D.new()
             dock.position=pos

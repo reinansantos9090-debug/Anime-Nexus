@@ -721,12 +721,52 @@ func _attach_enemy_visual(e:Node3D,behavior:String,index:int)->void:
         e.attach_visual(Factory.make_golem(e,Color("#456b58"),Color("#9cf4d8")))
     elif str(e.monster_id).begins_with("vesper_") or e.monster_id in ["wandering_coral","pearl_crab","tide_spirit","abyssal_sentinel"]:
         e.attach_visual(_make_vesper_enemy_visual(e,str(e.monster_id)))
+    elif str(e.monster_id).begins_with("aurelio_") or e.monster_id in ["sun_disk_scarab","mirage_duplicator","dune_watch","hourglass_wisp","oasis_guardian"]:
+        e.attach_visual(_make_aurelio_enemy_visual(e,str(e.monster_id)))
     elif behavior in ["flying","orbit"]:e.attach_visual(Factory.make_moth(e,base))
     elif behavior in ["guardian","shielded","knockback"]:e.attach_visual(Factory.make_golem(e,base,Color("#e9fcff")))
     elif behavior in ["berserker","crusher"]:e.attach_visual(Factory.make_colossus(e,base,Color("#ffd86b")))
     elif behavior in ["sniper","ranged","turret"]:e.attach_visual(Factory.make_crystal_monster(e,base))
     elif behavior in ["assassin","stealth","teleporter"]:e.attach_visual(Factory.make_hound(e,base))
     else:e.attach_visual(Factory.make_slime(e,base))
+
+func _make_aurelio_enemy_visual(parent:Node3D,monster_id:String)->Node3D:
+    var visual:=Node3D.new()
+    parent.add_child(visual)
+    match monster_id:
+        "aurelio_crystal":
+            Factory.make_crystal(visual,Vector3(0,1.0,0),Color("#ffd582"))
+            Factory.torus(visual,0.38,0.47,Vector3(0,0.8,0),Color("#f2a678"))
+            Factory.sphere(visual,0.12,Vector3(-0.18,1.55,-0.18),Color("#fff2c7"))
+        "sun_disk_scarab":
+            var shell:=Factory.sphere(visual,0.66,Vector3(0,0.72,0),Color("#c87e45"))
+            shell.scale=Vector3(1.1,0.62,1.35)
+            Factory.torus(visual,0.52,0.64,Vector3(0,0.92,0),Color("#ffd278"))
+            for side in [-1.0,1.0]:
+                for leg in range(3):
+                    var limb:=Factory.cylinder(visual,0.06,0.10,0.62,Vector3(side*0.54,0.37,0.36-float(leg)*0.35),Color("#765246"))
+                    limb.rotation.z=side*0.6
+        "mirage_duplicator":
+            var body:=Factory.sphere(visual,0.55,Vector3(0,0.94,0),Color("#b17b9b"))
+            body.scale=Vector3(0.82,1.18,0.72)
+            Factory.sphere(visual,0.20,Vector3(-0.2,1.15,-0.36),Color("#ffe0ae"))
+            Factory.sphere(visual,0.20,Vector3(0.2,1.15,-0.36),Color("#ffe0ae"))
+            var echo:=Factory.sphere(visual,0.36,Vector3(0.62,0.8,0.08),Color("#f6c884"))
+            echo.scale=Vector3(0.68,0.92,0.62)
+        "dune_watch":
+            Factory.make_crystal_monster(visual,Color("#cc9560"))
+            Factory.torus(visual,0.42,0.49,Vector3(0,1.05,0),Color("#ffe19b"))
+        "hourglass_wisp":
+            Factory.torus(visual,0.38,0.48,Vector3(0,1.0,0),Color("#9f84df"))
+            Factory.torus(visual,0.38,0.48,Vector3(0,1.55,0),Color("#ffcf81"))
+            var core:=Factory.sphere(visual,0.36,Vector3(0,1.28,0),Color("#ead7ff"))
+            core.scale=Vector3(0.68,1.25,0.68)
+            Factory.cylinder(visual,0.07,0.18,0.95,Vector3(0,1.28,0),Color("#8a6ab8"))
+        "oasis_guardian":
+            Factory.make_golem(visual,Color("#537b63"),Color("#d9e99a"))
+            Factory.sphere(visual,0.42,Vector3(0,2.1,0.24),Color("#4cbdad"))
+            Factory.make_crystal(visual,Vector3(0,2.45,0.28),Color("#ffe08b"))
+    return visual
 
 func _make_vesper_enemy_visual(parent:Node3D,monster_id:String)->Node3D:
     var visual:=Node3D.new()

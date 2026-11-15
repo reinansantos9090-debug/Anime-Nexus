@@ -83,3 +83,12 @@ Este fluxo requer teste manual no Godot; nenhum job longo/emulador automático s
 - Confirmar que o mapa continua sendo apenas uma expedição de combate: maré dinâmica, barco, subáreas, chefe e assets finais ainda não estão implementados.
 
 O runner permanece manual e não é iniciado por este trabalho.
+
+
+## Contrato de conteúdo de Aurélio (runner manual curto)
+
+- Conferir a expedição, seis IDs de criatura, obstáculos, e que todos os itens de saque existem no catálogo offline.
+- Abrir Aurélio e conferir marcos de arenito/ruínas e as silhuetas blockout durante encontros; conferir saque sem internet.
+- Validar em aparelho quando disponível que os adornos permanecem leves e legíveis; não declarar puzzle temporal, plataforma móvel ou chefe concluído.
+
+O runner Godot segue manual; nenhum teste longo ou emulador será disparado automaticamente.

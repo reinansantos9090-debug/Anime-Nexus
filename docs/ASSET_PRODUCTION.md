@@ -26,7 +26,7 @@
 | BOSS-ZERO | Chefe final | arquivo geométrico abstrato e silhueta humanoide original | 40–60k tris LOD0, shaders simples e pequenos módulos intercambiáveis | 3 fases, estase, salas/memórias, transição, resolução | Planejado; original |
 | BOSS-PRISMA | Chefe secreto | prisma primordial policromático | 40–60k tris, cores em emissive seletivo | ataques que combinam 8 tons, 2+ fases | Planejado; original |
 | EN-NIMBARA | 6 inimigos da floresta | musgo, faísca foliar, mariposa, besouro, cipó e guardião | cada rig 4–18k tris, materiais por espécie | locomoção, ataque, reação, recuo, derrota | Quatro inimigos com meshes/IA blockout integrados; faltam dois e os assets finais; original |
-| EN-AURELIO | 6 inimigos do deserto | cristal, escaravelho, miragem, vigia, ampulheta e guardião | mesma faixa modular, silhuetas distintas | movimento, ataque, telegraph, retorno | Planejado; original |
+| EN-AURELIO | 6 inimigos do deserto | cristal, escaravelho, miragem, vigia, ampulheta e guardião | mesma faixa modular, silhuetas distintas | movimento, ataque, telegraph, retorno | Dados/saques offline e seis silhuetas procedurais de blockout integrados; rigs, animações e modelos finais pendentes; original |
 | EN-VESPER | 6 inimigos costeiros | bolha, coral, água-viva, caranguejo, onda e sentinela | rigs pequenos, água não exige transparência em toda peça | ricochete, onda, guarda, mergulho | Planejado; original |
 | EN-FERRUMIA | 6 inimigos mecânicos | drone, engrenagem, sentinela, autômato, magnético e núcleo | peças reutilizáveis em atlas sem reutilizar silhueta completa | patrulha, tiro, montagem, stagger | Planejado; original |
 | EN-IVERN | 6 inimigos de geada | floco, raposa, cristal, nevasca, guardião e sentinela | rig de criatura e partículas limitadas | pulo, névoa, ataque vertical, retorno | Planejado; original |
@@ -34,7 +34,7 @@
 | EN-NEXO | ecos de cada região | variações narrativas locais dos inimigos aprovados | combinações de material e comportamento; não só troca de cor | ataques combinados e reações próprias | Planejado; original |
 | ENV-OBSERVATORIO | hub principal | pedra suspensa, vidro astral, luz de portal azul | 1 cena modular, 3 setores visíveis, LOD/occlusion | bandeiras, portal, NPCs, luz narrativa | Blockout do hub reutilizado; arte final e áreas funcionais planejadas; original |
 | ENV-NIMBARA | floresta e três subáreas | folhagem verde, bioluminescência turquesa/violeta | kits de árvore, raiz, ruína, lago e trilha; atlas 2K por região | vento/folha/água em ciclos baratos | Blockout da clareira com trilha, árvores, raízes, cristais e Âncora; subáreas e arte final planejadas; original |
-| ENV-AURELIO | deserto/templo/oásis | duna dourada, pedra coral, céu violeta | módulos de ruína e plataforma; terreno com rota | poeira, mecanismo, faixa de calor | Planejado; original |
+| ENV-AURELIO | deserto/templo/oásis | duna dourada, pedra coral, céu violeta | módulos de ruína e plataforma; terreno com rota | poeira, mecanismo, faixa de calor | Expedição blockout selecionável com marcos de arenito, cristas decorativas e fragmentos do templo; puzzles temporais, plataformas e arte final pendentes; original |
 | ENV-VESPER | porto/ilhas/caverna | água cobalto, coral, pontes de luz | kit de costa, cavernas, skiff e farol | maré, água, barco e ponte | Blockout costeiro procedural com enseadas, cais e corais acessível como expedição; maré interativa, subáreas e arte final pendentes; original |
 | ENV-FERRUMIA | cidade/trilhos/torre | cobre, magenta, azul elétrico | kit modular, plataformas, elevadores e cabos | trilhos/elevadores e máquinas | Planejado; original |
 | ENV-IVERN | vale/templo/picos | neve pérola, aurora lilás/dourada | terreno, cristais e pontes; material neve mobile | neve leve, corrente de vento e aurora | Planejado; original |
@@ -57,12 +57,12 @@ Cada linha corresponde a um modelo distinto. Especificação comum: GLB com LOD0
 | EN-NIM-BESOURO | Besouro Safira; carapaça arredondada com placas, azul-cobalto/prata | Nimbara | Planejado; original |
 | EN-NIM-CIPO | Cipó Ecoante; corpo de videira articulada com flores, verde-escuro/violeta | Nimbara | Planejado; original |
 | EN-NIM-GUARDIAO | Guardião de Raízes; tronco móvel de raízes e cristais, madeira/verde/âmbar | Nimbara | Planejado; original |
-| EN-AUR-CRISTAL | Cristal Errante; prisma flutuante com fendas luminosas, ouro/coral | Aurélio | Planejado; original |
-| EN-AUR-ESCARAVELHO | Escaravelho Solar; casco em disco solar e pernas rápidas, âmbar/azul-noturno | Aurélio | Planejado; original |
-| EN-AUR-MIRAGEM | Miragem Duplicadora; silhueta de vidro arenoso com núcleo duplo, coral/violeta | Aurélio | Planejado; original |
-| EN-AUR-VIGIA | Vigia das Dunas; manto de areia e lança de cristal, dourado/índigo | Aurélio | Planejado; original |
-| EN-AUR-AMPULHETA | Espírito da Ampulheta; corpo de areia em espiral, cobre/roxo | Aurélio | Planejado; original |
-| EN-AUR-GUARDIAO | Guardião do Oásis; massa de pedra e raízes aquáticas, turquesa/dourado | Aurélio | Planejado; original |
+| EN-AUR-CRISTAL | Cristal Errante; prisma flutuante com fendas luminosas, ouro/coral | Aurélio | Silhueta procedural de blockout no runtime; rig/animações/modelo final pendentes; original |
+| EN-AUR-ESCARAVELHO | Escaravelho Solar; casco em disco solar e pernas rápidas, âmbar/azul-noturno | Aurélio | Silhueta procedural de blockout no runtime; rig/animações/modelo final pendentes; original |
+| EN-AUR-MIRAGEM | Miragem Duplicadora; silhueta de vidro arenoso com núcleo duplo, coral/violeta | Aurélio | Silhueta procedural de blockout no runtime; rig/animações/modelo final pendentes; original |
+| EN-AUR-VIGIA | Vigia das Dunas; manto de areia e lança de cristal, dourado/índigo | Aurélio | Silhueta procedural de blockout no runtime; rig/animações/modelo final pendentes; original |
+| EN-AUR-AMPULHETA | Espírito da Ampulheta; corpo de areia em espiral, cobre/roxo | Aurélio | Silhueta procedural de blockout no runtime; rig/animações/modelo final pendentes; original |
+| EN-AUR-GUARDIAO | Guardião do Oásis; massa de pedra e raízes aquáticas, turquesa/dourado | Aurélio | Silhueta procedural de blockout no runtime; rig/animações/modelo final pendentes; original |
 | EN-VES-BOLHA | Bolha Saltitante; corpo translúcido estilizado e anéis de espuma, azul/coral | Vesper | Blockout procedural próprio integrado no encontro; modelo rigado, animações e VFX finais pendentes; original |
 | EN-VES-CORAL | Coral Errante; colônia que anda sobre ramificações, coral/creme | Vesper | Blockout procedural próprio integrado no encontro; modelo rigado, animações e VFX finais pendentes; original |
 | EN-VES-AGUAVIVA | Água-Viva Astral; sino flutuante com pontos luminosos, cobalto/rosa | Vesper | Blockout procedural próprio integrado no encontro; modelo rigado, animações e VFX finais pendentes; original |

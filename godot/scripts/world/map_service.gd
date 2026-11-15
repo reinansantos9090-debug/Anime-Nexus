@@ -1,5 +1,5 @@
 extends Node
-## Seven offline expedition maps. Each biome owns its encounter pool,
+## Eight offline expedition maps. Each biome owns its encounter pool,
 ## difficulty, obstacle layout and environmental hazard.
 
 var maps: Dictionary = {}
@@ -120,6 +120,26 @@ func _ready() -> void:
                 {"shape":"ruin","pos":Vector3(10,0,9),"size":Vector3(2.2,3.7,2.2)},
                 {"shape":"ruin","pos":Vector3(0,0,-12),"size":Vector3(2.0,2.8,2.4)},
                 {"shape":"ruin","pos":Vector3(0,0,11),"size":Vector3(3.0,2.4,2.0)}
+            ]
+        },
+        "aurelio": {
+            "name":"Aurélio • Deserto das Horas",
+            "difficulty":1.18,
+            "duration":175.0,
+            "goal":12,
+            "hazard":"ecos de areia temporal",
+            "ground":Color("#b78555"),
+            "accent":Color("#ffd17e"),
+            "fog":Color("#d2a487"),
+            "enemies":["aurelio_crystal","sun_disk_scarab","mirage_duplicator","dune_watch","hourglass_wisp","oasis_guardian"],
+            "obstacles":[
+                {"shape":"sandstone","pos":Vector3(-12,0,-9),"size":Vector3(3.0,3.4,2.7)},
+                {"shape":"sandstone","pos":Vector3(12,0,-9),"size":Vector3(2.7,4.0,2.4)},
+                {"shape":"ruin","pos":Vector3(-9,0,9),"size":Vector3(2.4,3.0,2.2)},
+                {"shape":"ruin","pos":Vector3(9,0,10),"size":Vector3(2.2,3.6,2.2)},
+                {"shape":"crystal","pos":Vector3(-2,0,-15),"size":Vector3(1.1,2.7,1.1)},
+                {"shape":"cactus","pos":Vector3(14,0,2),"size":Vector3(0.9,2.2,0.9)},
+                {"shape":"sandstone","pos":Vector3(0,0,13),"size":Vector3(4.0,1.7,2.4)}
             ]
         },
         "vesper": {
