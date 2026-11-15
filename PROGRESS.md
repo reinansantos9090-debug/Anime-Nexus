@@ -19,6 +19,8 @@ Branch de desenvolvimento atual: `dev/anime-nexus-vertical-slice`.
 
 ## Validação executada
 
+- GitHub Actions run `43700129700` concluiu com sucesso a lane curta `android-host` no commit `4a6b11a`; incluiu unit tests e APK do host legado Kotlin/Aetheria. O job Godot Android foi ignorado por ser manual, então a regressão nova de Kaien e os marcos visuais ainda aguardam execução pelo fluxo manual.
+
 - Godot 4.7.2: extensão C++ Linux carregada e runner `ANIME_NEXUS_TESTS: PASS`; testes incluem joystick, loadout, dados Nimbara, missão/boss/Âncora, Campo Estático, dano/crítico, reações elementais e XP/nível. Ainda há warnings de recursos em uso ao encerrar o runner.
 - Godot 4.6.3: smoke run headless por 180 frames encerrou sem erros de script. Render visual, toque real, APK atual e instalação ainda não foram verificados.
 - GitHub Actions run `43410319631`, commit `c66eec5d78ce2c89d6b589c7b224587093081748`: testes unitários Kotlin, build APK do host, testes Godot 4.7.2 e export Android **passaram**. Foram anexados artifacts Kotlin e Godot; a [execução 43410319631](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43410319631) tem os dois.
