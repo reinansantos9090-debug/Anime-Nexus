@@ -8,7 +8,7 @@
 - IA: todos estados permitidos, retorno à região inicial, companion que recupera caminho e nunca causa dano a aliado.
 - Objetivos de missão: contagem, conclusão única, pré-requisitos, recompensa e save sem duplicação.
 - Missão pessoal de Kaien: entrada do terminal, disponibilidade dos Musgos Saltadores em Nimbara, três abates, bloqueio de conclusão antecipada, recompensa C++ e ligação da ação da interface ao serviço de missão; salvar e restaurar o progresso parcial após um abate, concluir a missão e verificar que progresso e Brasão Arashi são gravados juntos antes de continuar.
-- Missão pessoal de Akari: disponibilidade do ponto Flor de Brasa em Nimbara, ação do terminal ligada ao objetivo `interact`, conclusão uma única vez e recebimento dos materiais locais.
+- Missão pessoal de Akari: disponibilidade do ponto Flor de Brasa em Nimbara, ação do terminal ligada ao objetivo `interact`, conclusão uma única vez, materiais locais e persistência da flag que muda a flor para dourada ao reconstruir a região.
 - Crafting: verificar todos os materiais antes de debitar, débito único e rollback se criação falhar.
 - Progressão: XP em limiar exato/múltiplo, limites, migração e desbloqueios.
 
