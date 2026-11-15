@@ -359,6 +359,8 @@ func _make_hq_districts()->void:
         var point:=Vector3(cos(angle)*5.35,0.12,sin(angle)*5.35)
         Factory.make_crystal(world_root,point,Color("#63dfe8").lerp(Color("#c4a3ff"),float(i%2)*0.65))
 
+    _make_hq_restored_anchors()
+
     # Workshop of the Resonances: a copper workbench and a fixed gear landmark.
     Factory.box(world_root,Vector3(4.8,0.22,2.2),Vector3(-11,0.31,-5),Color("#716276"))
     Factory.box(world_root,Vector3(2.6,0.72,1.1),Vector3(-11,0.82,-5.25),Color("#374354"))
