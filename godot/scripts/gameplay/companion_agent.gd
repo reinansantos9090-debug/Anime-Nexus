@@ -31,6 +31,9 @@ var slow_factor:=0.55
 var support_heal_ratio:=0.20
 var support_energy_restore:=12.0
 var support_threshold:=0.68
+var presentation_time:=0.0
+var orbit_accessories:Array[Node3D]=[]
+var sway_accessories:Array[Node3D]=[]
 
 func configure(owner:Node3D,combat:Node,state:Node,id:String,title:String,element_id:String,role_id:String,
         body:Color,accent:Color,offset:Vector3,skill_power_value:=1.0,skill_radius_value:=4.0,
@@ -57,7 +60,10 @@ func configure(owner:Node3D,combat:Node,state:Node,id:String,title:String,elemen
     native_core=AnimeNexusCombatCore.new()
     name=id
     global_position=owner.global_position+offset
-    Factory.make_companion(self,companion_id,body_color,accent_color,Color("#edc19c"))
+    var visual_root:Node3D=Factory.make_companion(self,companion_id,body_color,accent_color,Color("#edc19c"))
+    for accessory in visual_root.get_children():
+        if accessory.is_in_group("companion_orbit"):orbit_accessories.append(accessory)
+        elif accessory.is_in_group("companion_sway"):sway_accessories.append(accessory)
     title_tag=Label3D.new()
     set_physics_process(true)
     title_tag.text=display_name
@@ -72,6 +78,15 @@ func set_combat_active(active:bool)->void:
 func reset_formation()->void:
     if is_instance_valid(owner_actor):
         global_position=owner_actor.global_position+formation_offset
+
+func _process(delta:float)->void:
+    presentation_time+=delta
+    for index in orbit_accessories.size():
+        if is_instance_valid(orbit_accessories[index]):
+            orbit_accessories[index].rotate_y(delta*(0.75+float(index)*0.14))
+    for index in sway_accessories.size():
+        if is_instance_valid(sway_accessories[index]):
+            sway_accessories[index].rotation.z+=sin(presentation_time*1.8+float(index))*delta*0.22
 
 func _physics_process(delta:float)->void:
     if not is_instance_valid(owner_actor):return
