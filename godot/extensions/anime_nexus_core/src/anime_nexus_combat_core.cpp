@@ -48,37 +48,53 @@ Dictionary AnimeNexusCombatCore::resolve_elemental_reaction(const String &elemen
     reaction["damage_multiplier"] = 1.0;
     reaction["radius"] = 0.0;
     reaction["status"] = "none";
+    reaction["splash_multiplier"] = 0.0;
+    reaction["max_targets"] = 0;
+    reaction["slow_duration"] = 0.0;
+    reaction["slow_factor"] = 1.0;
+    reaction["heal_ratio"] = 0.0;
+    reaction["pull_strength"] = 0.0;
 
     if (a == "thunder" && b == "water") {
         reaction["id"] = "conductive_chain";
         reaction["damage_multiplier"] = 1.15;
         reaction["radius"] = 4.0;
         reaction["status"] = "chain_to_nearby_targets";
+        reaction["splash_multiplier"] = 0.35;
+        reaction["max_targets"] = 3;
     } else if (a == "fire" && b == "wind") {
         reaction["id"] = "ember_storm";
         reaction["damage_multiplier"] = 1.1;
         reaction["radius"] = 1.4;
         reaction["status"] = "expanded_burning_area";
+        reaction["splash_multiplier"] = 0.30;
+        reaction["max_targets"] = 4;
     } else if (a == "ice" && b == "wind") {
         reaction["id"] = "frost_mist";
         reaction["damage_multiplier"] = 1.0;
         reaction["radius"] = 3.0;
         reaction["status"] = "slow_and_obscure";
+        reaction["slow_duration"] = 2.4;
+        reaction["slow_factor"] = 0.48;
     } else if (a == "moon" && b == "nature") {
         reaction["id"] = "lunar_bloom";
         reaction["damage_multiplier"] = 1.0;
         reaction["radius"] = 3.5;
         reaction["status"] = "boost_allied_healing";
+        reaction["heal_ratio"] = 0.06;
     } else if (a == "light" && b == "shadow") {
         reaction["id"] = "prism_echo";
         reaction["damage_multiplier"] = 1.2;
         reaction["radius"] = 2.5;
         reaction["status"] = "create_magic_reflections";
+        reaction["splash_multiplier"] = 0.25;
+        reaction["max_targets"] = 2;
     } else if (a == "gravity" || b == "gravity") {
         reaction["id"] = "resonance_singularity";
         reaction["damage_multiplier"] = 1.0;
         reaction["radius"] = 2.0;
         reaction["status"] = "concentrate_effects";
+        reaction["pull_strength"] = 0.28;
     }
 
     return reaction;

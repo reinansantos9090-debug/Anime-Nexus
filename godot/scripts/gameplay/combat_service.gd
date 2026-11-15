@@ -50,21 +50,24 @@ func _apply_reaction(target:Node3D,reaction:Dictionary,damage:float)->void:
         vfx_service.reaction_feedback(effect_parent,position,reaction_id,radius)
     match reaction_id:
         "conductive_chain":
-            _splash_nearby(target,radius,damage*0.35,3)
+            _splash_nearby(target,radius,damage*float(reaction.get("splash_multiplier",0.0)),int(reaction.get("max_targets",0)))
         "ember_storm":
-            _splash_nearby(target,radius+1.0,damage*0.30,4)
+            _splash_nearby(target,radius+1.0,damage*float(reaction.get("splash_multiplier",0.0)),int(reaction.get("max_targets",0)))
         "frost_mist":
-            if target.has_method("apply_slow"):target.apply_slow(2.4,0.48)
-            _slow_nearby(target,radius)
+            var slow_duration:=float(reaction.get("slow_duration",0.0))
+            var slow_factor:=float(reaction.get("slow_factor",1.0))
+            if target.has_method("apply_slow"):target.apply_slow(slow_duration,slow_factor)
+            _slow_nearby(target,radius,slow_duration,slow_factor)
         "lunar_bloom":
             if game_state:
                 var hunter:Dictionary=game_state.get_hunter()
-                hunter["hp"]=minf(float(hunter.get("max_hp",1.0)),float(hunter.get("hp",1.0))+float(hunter.get("max_hp",1.0))*0.06)
+                var heal_amount:=float(hunter.get("max_hp",1.0))*float(reaction.get("heal_ratio",0.0))
+                hunter["hp"]=minf(float(hunter.get("max_hp",1.0)),float(hunter.get("hp",1.0))+heal_amount)
                 game_state.state_changed.emit()
         "prism_echo":
-            _splash_nearby(target,radius,damage*0.25,2)
+            _splash_nearby(target,radius,damage*float(reaction.get("splash_multiplier",0.0)),int(reaction.get("max_targets",0)))
         "resonance_singularity":
-            _pull_nearby(target,radius)
+            _pull_nearby(target,radius,float(reaction.get("pull_strength",0.0)))
 
 func _splash_nearby(origin:Node3D,radius:float,damage:float,limit:int)->void:
     var tree:=get_tree()
@@ -81,23 +84,23 @@ func _splash_nearby(origin:Node3D,radius:float,damage:float,limit:int)->void:
             affected+=1
             if affected>=limit:break
 
-func _slow_nearby(origin:Node3D,radius:float)->void:
+func _slow_nearby(origin:Node3D,radius:float,duration:float,factor:float)->void:
     var tree:=get_tree()
     if tree==null:return
     for candidate in tree.get_nodes_in_group("enemy_agents"):
-        if not is_instance_valid(candidate) or candidate==origin or not (candidate is Node3D):continue
+        if not is_instance_valid(candidate) or candidate==origin or not candidate is Node3D:continue
         var enemy:=candidate as Node3D
         if enemy.global_position.distance_to(origin.global_position)<=radius and enemy.has_method("apply_slow"):
-            enemy.apply_slow(2.4,0.48)
+            enemy.apply_slow(duration,factor)
 
-func _pull_nearby(origin:Node3D,radius:float)->void:
+func _pull_nearby(origin:Node3D,radius:float,strength:float)->void:
     var tree:=get_tree()
     if tree==null:return
     for candidate in tree.get_nodes_in_group("enemy_agents"):
-        if not is_instance_valid(candidate) or candidate==origin or not (candidate is Node3D):continue
+        if not is_instance_valid(candidate) or candidate==origin or not candidate is Node3D:continue
         var enemy:=candidate as Node3D
         if enemy.global_position.distance_to(origin.global_position)<=radius:
-            enemy.global_position=enemy.global_position.lerp(origin.global_position,0.28)
+            enemy.global_position=enemy.global_position.lerp(origin.global_position,strength)
 
 func spawn_impact(parent: Node3D, position: Vector3, color := Color("#ffe16a")) -> void:
     var fx := GPUParticles3D.new()
