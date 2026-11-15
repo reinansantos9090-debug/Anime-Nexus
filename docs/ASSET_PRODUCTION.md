@@ -197,4 +197,9 @@ GLB é formato de intercâmbio; preservar fonte editável em arquivo de criaçã
 | Seis cristais das Âncoras | Tornar visível no hub o progresso persistido da campanha | Praça das Constelações; Nimbara, Aurélio, Vesper, Ferrúmia, Ivern e Umbral | Seis prismas ao redor do portal, com cores de cada mundo; ficam menores e escurecidos até a respectiva Âncora ser restaurada | Instâncias leves de cristal procedural e halo; estado reconstruído das flags locais `<região>_slice_complete` ao montar o Observatório | Materiais estilizados já usados pelo projeto; nenhum arquivo externo | Sem animação contínua; brilho e escala refletem estado salvo | Blockout funcional integrado; materiais e animação finais pendentes | Geometria procedural original do projeto |
 
 
+
+## Flor de Brasa
+
+| Asset | Finalidade | Região/personagem | Descrição visual / paleta | Especificações | Materiais | Animações | Estado | Origem/licença |
+|---|---|---|---|---|---|---|---|---|
 | Flor de Brasa | Marco de missão interativo para a história pessoal de Akari | Clareira de Nimbara | Flor procedural pequena, cinco pétalas cor de brasa e núcleo dourado; contraste contra o verde/ciano da floresta | Usa a malha leve de flor procedural existente em `world_service.gd`, posicionada no ponto interativo `akari_flame_bloom` | Material opaco de acento coral, sem textura externa | Sem animação no blockout; resposta final de luz e gesto de interação pendente | Blockout visual integrado; modelo e efeito finais pendentes | Geometria procedural original do projeto |
