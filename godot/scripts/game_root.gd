@@ -173,7 +173,10 @@ func _ready()->void:
 
     world.build_hq()
     _apply_quality(perf.current())
-    quests.start("nimbara_01")
+    var active_quests:Array=state.data.get("quests",{}).get("active",[])
+    if active_quests.is_empty():
+        var completed_quests:Array=state.data.get("quests",{}).get("completed",[])
+        quests.start("nimbara_01" if "prologue_01" in completed_quests else "prologue_01")
     hud.set_mode("OBSERVATÓRIO DE ÍRIS • PORTAL CENTRAL")
     if int(state.data["story"].get("chapter",1))==1 and int(state.data["story"].get("scene",0))==0:
         _story()
