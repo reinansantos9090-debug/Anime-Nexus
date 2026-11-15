@@ -18,6 +18,7 @@ const ACTIONS := [
     ["side_quest","MISSÃO • SEMENTES PARA LIORA","Recolher pólen real deixado pelas criaturas"],
     ["memory_quest","MISSÃO • ECOS NO LAGO","Encontrar três ecos de memória escondidos"],
     ["kaien_story","HISTÓRIA DE KAIEN • O BRASÃO","Investigar uma pista antiga da família Arashi"],
+    ["akari_story","HISTÓRIA DE AKARI • A FLOR DE BRASA","Ajudá-la a controlar o fogo sem ferir a floresta"],
     ["saves","SALVAMENTOS","Gerenciar três espaços locais"],
     ["difficulty","DIFICULDADE • AVENTURA","Alternar o desafio da campanha offline"]
 ]
