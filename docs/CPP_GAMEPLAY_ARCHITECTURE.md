@@ -27,7 +27,7 @@ GDScript faz a composição de cenas e conecta eventos/controles com os serviço
 
 `AnimeNexusQuestCore` é registrado na mesma biblioteca e expõe `start_quest` e `apply_event`: confere os tipos de objetivos, incrementa progresso, impede reabertura/conclusão duplicada, desbloqueia a próxima missão e calcula XP/materiais. `quest_service.gd` traduz interações do mundo em eventos e atualiza sinais/recompensas.
 
-`combat_service.gd` chama o núcleo para o ataque básico que o jogador usa. O resultado crítico chega ao inimigo e à exibição de dano; `game_state.add_xp` encaminha XP para o cálculo nativo. O wrapper mantém `player_damage()` para compatibilidade temporária. A tabela de combinações elementais está testada em C++, mas ainda não aplica os efeitos às habilidades/inimigos durante a luta.
+`combat_service.gd` chama o núcleo para o ataque básico que o jogador usa. O resultado crítico chega ao inimigo e à exibição de dano; `game_state.add_xp` encaminha XP para o cálculo nativo. O wrapper mantém `player_damage()` para compatibilidade temporária. Ataques básicos e habilidades passam a afinidade da arma ao serviço; a resolução C++ fornece multiplicador, raio e estado. O serviço aplica condução em cadeia, dano de expansão, lentidão de névoa, cura local, eco prismático ou atração gravitacional. Inimigos e chefes usam afinidades do catálogo e limitam reativações com um intervalo local. A regressão curta foi adicionada ao runner, mas ainda aguarda execução manual.
 
 ## Build e distribuição
 
@@ -40,7 +40,7 @@ GDScript faz a composição de cenas e conecta eventos/controles com os serviço
 ## Status honesto
 
 - **Implementado no núcleo / Testado no host:** damage/crítico, XP/nível e transições de missão; C++ Linux carregado no Godot 4.7.2 e regras cobertas pelo runner.
-- **Em desenvolvimento:** build arm64 no CI e execução das reações elementais nas habilidades.
+- **Em desenvolvimento:** build arm64 no CI e validação manual Godot da integração de reações elementais.
 - **Planejado:** migração das regras de combate restantes, IA, equipamentos e serialização.
 - **Não declarado como testado:** build Android e testes nativos precisam passar no CI; o teste local não tem Android NDK instalado.
 - Renderização, personagens anime finais, recursos artísticos de produção e a campanha completa continuam pendentes conforme `IMPLEMENTATION_STATUS.md`.

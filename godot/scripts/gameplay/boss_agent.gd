@@ -18,6 +18,7 @@ func configure_boss(id:String,target_node:Node3D,database:Node,scale:=1.0)->void
     behavior="boss"
     stats={
         "name":boss_stats["name"],
+        "element":str(boss_stats.get("element","none")),
         "hp":float(boss_stats["hp"])*difficulty,
         "damage":float(boss_stats["projectile_damage"])*difficulty,
         "speed":float(boss_stats["speed"]),

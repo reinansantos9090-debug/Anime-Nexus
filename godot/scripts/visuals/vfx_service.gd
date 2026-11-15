@@ -72,6 +72,18 @@ func telegraph_circle(parent:Node3D,pos:Vector3,radius:float,duration:float,colo
     tween.set_parallel(false)
     tween.tween_callback(indicator.queue_free)
 
+func reaction_feedback(parent:Node3D,pos:Vector3,reaction_id:String,radius:float)->void:
+    var color:=Color("#a9eaff")
+    match reaction_id:
+        "conductive_chain":color=Color("#7ceaff")
+        "ember_storm":color=Color("#ff9a55")
+        "frost_mist":color=Color("#a7e8ff")
+        "lunar_bloom":color=Color("#d6b4ff")
+        "prism_echo":color=Color("#ff8fe7")
+        "resonance_singularity":color=Color("#a88bff")
+    ring(parent,pos,maxf(0.65,minf(radius,3.2)),color,0.32)
+    burst(parent,pos+Vector3(0,0.7,0),color,8.0)
+
 func death(parent:Node3D,pos:Vector3,color:=Color("#9ea7b8"))->void:
     burst(parent,pos+Vector3(0,0.8,0),color,20.0)
     ring(parent,pos,0.65,color,0.28)

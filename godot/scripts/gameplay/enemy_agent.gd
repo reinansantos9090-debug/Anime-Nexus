@@ -21,6 +21,7 @@ var special_timer:=2.0
 var stun_timer:=0.0
 var slow_timer:=0.0
 var slow_factor:=0.45
+var elemental_reaction_cooldown:=0.0
 var wander_timer:=0.0
 var difficulty:=1.0
 var visual:Node3D
@@ -51,6 +52,7 @@ func _process(delta:float)->void:
     special_timer=maxf(0.0,special_timer-delta)
     stun_timer=maxf(0.0,stun_timer-delta)
     slow_timer=maxf(0.0,slow_timer-delta)
+    elemental_reaction_cooldown=maxf(0.0,elemental_reaction_cooldown-delta)
     wander_timer-=delta
     if stun_timer>0.0:
         state=State.STUNNED
@@ -202,6 +204,15 @@ func take_damage(amount:float,critical:=false)->void:
         if behavior=="splitter":summon_requested.emit("aether_slime",2)
         if behavior=="bomber":area_requested.emit(global_position,4.6,float(stats.get("damage",10.0))*1.65)
         defeated.emit(self,int(round(float(stats.get("xp",10))*difficulty)))
+
+func elemental_affinity()->String:
+    return str(stats.get("element","none"))
+
+func can_trigger_elemental_reaction()->bool:
+    return state!=State.DEAD and elemental_reaction_cooldown<=0.0 and elemental_affinity()!="none"
+
+func begin_elemental_reaction_cooldown(duration:=0.85)->void:
+    elemental_reaction_cooldown=maxf(elemental_reaction_cooldown,duration)
 
 func apply_slow(duration:float,factor:=0.45)->void:
     if state==State.DEAD:return

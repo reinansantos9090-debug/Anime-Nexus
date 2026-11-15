@@ -3,19 +3,19 @@ extends Node
 ## runtime service; there are no disposable catalog rows or numbered filler.
 
 const WEAPONS := {
-    "fulgor_gauntlets":{"name":"Manoplas Fulgor","damage":27.0,"rate":0.30,"range":4.2,"type":"melee","kit":"cone","abilities":["lightning_step","sky_chain","static_field"]},
-    "volt_blades":{"name":"Lâminas Voltáicas","damage":24.0,"rate":0.24,"range":3.4,"type":"melee","kit":"cone","abilities":["volt_dash","arc_burst"]},
-    "toxic_bow":{"name":"Arco Tóxico","damage":34.0,"rate":0.55,"range":16.0,"type":"ranged","kit":"poison_shot","abilities":["venom_volley","toxic_trap"]},
-    "pulse_cannon":{"name":"Canhão Pulsar","damage":46.0,"rate":0.72,"range":18.0,"type":"ranged","kit":"shotgun","abilities":["pulse_beam","overcharge"]},
-    "scrap_hammer":{"name":"Martelo Sucateiro","damage":58.0,"rate":0.88,"range":4.0,"type":"melee","kit":"slam","abilities":["quake","magnet_smash"]},
-    "aether_lance":{"name":"Lança de Aether","damage":31.0,"rate":0.35,"range":5.8,"type":"melee","kit":"thrust","abilities":["lance_charge","aether_prism"]},
-    "orbit_orbs":{"name":"Orbes Orbitais","damage":21.0,"rate":0.18,"range":10.0,"type":"ranged","kit":"orbit","abilities":["orb_swarm","gravity_well"]},
-    "frost_repeater":{"name":"Repetidor Glacial","damage":39.0,"rate":0.42,"range":15.0,"type":"ranged","kit":"rapid","abilities":["frost_barrage","frost_zone"]},
-    "ember_scythes":{"name":"Foices Ígneas","damage":44.0,"rate":0.36,"range":4.4,"type":"melee","kit":"spin","abilities":["ember_ring","blazing_dash"]},
-    "storm_bow":{"name":"Arco de Trovão","damage":36.0,"rate":0.48,"range":17.0,"type":"ranged","kit":"chain","abilities":["thunder_chain","storm_field"]},
-    "gravity_matrix":{"name":"Matriz Gravitacional","damage":52.0,"rate":0.66,"range":12.0,"type":"ranged","kit":"field","abilities":["singularity","gravity_lock"]},
-    "venom_nova":{"name":"Lâmina Veneno-Nova","damage":41.0,"rate":0.30,"range":4.2,"type":"melee","kit":"toxic_combo","abilities":["venom_burst","corrosive_edge"]},
-    "prism_staff":{"name":"Bastão Prisma","damage":33.0,"rate":0.38,"range":16.0,"type":"ranged","kit":"beam","abilities":["prism_nova","prism_barrier"]}
+    "fulgor_gauntlets":{"element":"thunder","name":"Manoplas Fulgor","damage":27.0,"rate":0.30,"range":4.2,"type":"melee","kit":"cone","abilities":["lightning_step","sky_chain","static_field"]},
+    "volt_blades":{"element":"thunder","name":"Lâminas Voltáicas","damage":24.0,"rate":0.24,"range":3.4,"type":"melee","kit":"cone","abilities":["volt_dash","arc_burst"]},
+    "toxic_bow":{"element":"nature","name":"Arco Tóxico","damage":34.0,"rate":0.55,"range":16.0,"type":"ranged","kit":"poison_shot","abilities":["venom_volley","toxic_trap"]},
+    "pulse_cannon":{"element":"light","name":"Canhão Pulsar","damage":46.0,"rate":0.72,"range":18.0,"type":"ranged","kit":"shotgun","abilities":["pulse_beam","overcharge"]},
+    "scrap_hammer":{"element":"gravity","name":"Martelo Sucateiro","damage":58.0,"rate":0.88,"range":4.0,"type":"melee","kit":"slam","abilities":["quake","magnet_smash"]},
+    "aether_lance":{"element":"wind","name":"Lança de Aether","damage":31.0,"rate":0.35,"range":5.8,"type":"melee","kit":"thrust","abilities":["lance_charge","aether_prism"]},
+    "orbit_orbs":{"element":"gravity","name":"Orbes Orbitais","damage":21.0,"rate":0.18,"range":10.0,"type":"ranged","kit":"orbit","abilities":["orb_swarm","gravity_well"]},
+    "frost_repeater":{"element":"ice","name":"Repetidor Glacial","damage":39.0,"rate":0.42,"range":15.0,"type":"ranged","kit":"rapid","abilities":["frost_barrage","frost_zone"]},
+    "ember_scythes":{"element":"fire","name":"Foices Ígneas","damage":44.0,"rate":0.36,"range":4.4,"type":"melee","kit":"spin","abilities":["ember_ring","blazing_dash"]},
+    "storm_bow":{"element":"thunder","name":"Arco de Trovão","damage":36.0,"rate":0.48,"range":17.0,"type":"ranged","kit":"chain","abilities":["thunder_chain","storm_field"]},
+    "gravity_matrix":{"element":"gravity","name":"Matriz Gravitacional","damage":52.0,"rate":0.66,"range":12.0,"type":"ranged","kit":"field","abilities":["singularity","gravity_lock"]},
+    "venom_nova":{"element":"shadow","name":"Lâmina Veneno-Nova","damage":41.0,"rate":0.30,"range":4.2,"type":"melee","kit":"toxic_combo","abilities":["venom_burst","corrosive_edge"]},
+    "prism_staff":{"element":"light","name":"Bastão Prisma","damage":33.0,"rate":0.38,"range":16.0,"type":"ranged","kit":"beam","abilities":["prism_nova","prism_barrier"]}
 }
 
 const ABILITIES := {
@@ -49,27 +49,27 @@ const ABILITIES := {
 }
 
 const MONSTERS := {
-    "moss_hopper":{"name":"Musgo Saltador","hp":92.0,"damage":13.0,"speed":3.5,"xp":42,"tier":1,"behavior":"charger","loot":["nimbara_pollen","resonance_shard"]},
+    "moss_hopper":{"element":"nature","name":"Musgo Saltador","hp":92.0,"damage":13.0,"speed":3.5,"xp":42,"tier":1,"behavior":"charger","loot":["nimbara_pollen","resonance_shard"]},
     "leaf_spark":{"name":"Faísca Foliar","hp":74.0,"damage":11.0,"speed":3.1,"xp":38,"tier":1,"behavior":"orbit","loot":["nimbara_pollen","resonance_shard"]},
     "crystal_stagling":{"name":"Filhote Prismal","hp":155.0,"damage":19.0,"speed":2.3,"xp":74,"tier":2,"behavior":"shielded","loot":["resonance_shard","memory_bloom"]},
     "root_guardian":{"name":"Guardião de Raízes","hp":370.0,"damage":32.0,"speed":1.25,"xp":180,"tier":4,"behavior":"guardian","loot":["memory_bloom","resonance_shard"]},
-    "aether_slime":{"name":"Slime de Aether","hp":55.0,"damage":8.0,"speed":2.4,"xp":25,"tier":1,"behavior":"melee","loot":["aether_core","slime_gel"]},
+    "aether_slime":{"element":"water","name":"Slime de Aether","hp":55.0,"damage":8.0,"speed":2.4,"xp":25,"tier":1,"behavior":"melee","loot":["aether_core","slime_gel"]},
     "neon_stalker":{"name":"Perseguidor Neon","hp":85.0,"damage":14.0,"speed":3.7,"xp":42,"tier":2,"behavior":"charger","loot":["plasma_fiber","aether_core"]},
     "thornling":{"name":"Broto Espinhado","hp":72.0,"damage":11.0,"speed":2.8,"xp":34,"tier":1,"behavior":"mine_layer","loot":["thorn_fiber","herb"]},
     "briar_charger":{"name":"Investidor de Sarça","hp":118.0,"damage":22.0,"speed":4.8,"xp":68,"tier":2,"behavior":"charger","loot":["thorn_fiber","aether_core"]},
     "moss_mender":{"name":"Musgo Reparador","hp":105.0,"damage":7.0,"speed":2.0,"xp":62,"tier":2,"behavior":"healer","loot":["herb","moss_core"]},
-    "gale_moth":{"name":"Mariposa do Vendaval","hp":95.0,"damage":18.0,"speed":4.0,"xp":70,"tier":2,"behavior":"flying","loot":["wing_dust","plasma_fiber"]},
+    "gale_moth":{"element":"wind","name":"Mariposa do Vendaval","hp":95.0,"damage":18.0,"speed":4.0,"xp":70,"tier":2,"behavior":"flying","loot":["wing_dust","plasma_fiber"]},
     "crystal_sentinel":{"name":"Sentinela Cristalina","hp":310.0,"damage":32.0,"speed":1.3,"xp":120,"tier":4,"behavior":"shielded","loot":["crystal_shard","aether_core"]},
-    "rift_hound":{"name":"Cão da Fenda","hp":130.0,"damage":21.0,"speed":4.4,"xp":78,"tier":3,"behavior":"assassin","loot":["rift_hide","aether_core"]},
+    "rift_hound":{"element":"shadow","name":"Cão da Fenda","hp":130.0,"damage":21.0,"speed":4.4,"xp":78,"tier":3,"behavior":"assassin","loot":["rift_hide","aether_core"]},
     "phase_moth":{"name":"Mariposa Fásica","hp":115.0,"damage":25.0,"speed":4.6,"xp":92,"tier":3,"behavior":"teleporter","loot":["phase_dust","crystal_shard"]},
-    "prism_oracle":{"name":"Oráculo Prisma","hp":145.0,"damage":29.0,"speed":2.4,"xp":110,"tier":3,"behavior":"ranged","loot":["prism_fragment","phase_dust"]},
-    "frost_spitter":{"name":"Cuspidor Glacial","hp":170.0,"damage":34.0,"speed":1.9,"xp":130,"tier":4,"behavior":"sniper","loot":["frost_core","crystal_shard"]},
+    "prism_oracle":{"element":"light","name":"Oráculo Prisma","hp":145.0,"damage":29.0,"speed":2.4,"xp":110,"tier":3,"behavior":"ranged","loot":["prism_fragment","phase_dust"]},
+    "frost_spitter":{"element":"ice","name":"Cuspidor Glacial","hp":170.0,"damage":34.0,"speed":1.9,"xp":130,"tier":4,"behavior":"sniper","loot":["frost_core","crystal_shard"]},
     "echo_blinker":{"name":"Eco Saltador","hp":125.0,"damage":27.0,"speed":3.2,"xp":105,"tier":3,"behavior":"splitter","loot":["echo_shard","aether_core"]},
     "dune_bomber":{"name":"Bombardeiro das Dunas","hp":132.0,"damage":38.0,"speed":2.1,"xp":118,"tier":4,"behavior":"bomber","loot":["sunstone","power_cell"]},
     "solar_scarab":{"name":"Escaravelho Solar","hp":155.0,"damage":23.0,"speed":3.6,"xp":95,"tier":3,"behavior":"shielded","loot":["sunstone","herb"]},
     "sand_sniper":{"name":"Atirador do Poente","hp":105.0,"damage":46.0,"speed":1.5,"xp":125,"tier":4,"behavior":"sniper","loot":["sunstone","plasma_fiber"]},
     "mirage_runner":{"name":"Corredor Miragem","hp":142.0,"damage":31.0,"speed":5.2,"xp":126,"tier":4,"behavior":"stealth","loot":["mirage_cloth","aether_core"]},
-    "ember_beetle":{"name":"Besouro Braseiro","hp":190.0,"damage":35.0,"speed":2.4,"xp":135,"tier":4,"behavior":"berserker","loot":["ember_scale","power_cell"]},
+    "ember_beetle":{"element":"fire","name":"Besouro Braseiro","hp":190.0,"damage":35.0,"speed":2.4,"xp":135,"tier":4,"behavior":"berserker","loot":["ember_scale","power_cell"]},
     "burrower":{"name":"Escavador Solar","hp":210.0,"damage":39.0,"speed":2.6,"xp":150,"tier":5,"behavior":"teleporter","loot":["sunstone","ember_scale"]},
     "scrap_golem":{"name":"Golem de Sucata Cósmica","hp":240.0,"damage":24.0,"speed":1.5,"xp":95,"tier":3,"behavior":"knockback","loot":["scrap_plate","power_cell"]},
     "magnet_turret":{"name":"Torreta Magnética","hp":155.0,"damage":42.0,"speed":0.0,"xp":125,"tier":4,"behavior":"turret","loot":["magnet_core","power_cell"]},
@@ -79,22 +79,22 @@ const MONSTERS := {
     "repair_drone":{"name":"Drone Reparador","hp":115.0,"damage":10.0,"speed":2.8,"xp":72,"tier":3,"behavior":"healer","loot":["repair_chip","power_cell"]},
     "sky_watcher":{"name":"Vigia Celeste","hp":180.0,"damage":48.0,"speed":2.2,"xp":160,"tier":5,"behavior":"ranged","loot":["sky_fragment","prism_fragment"]},
     "rift_assassin":{"name":"Assassino da Fenda","hp":165.0,"damage":58.0,"speed":5.8,"xp":180,"tier":5,"behavior":"assassin","loot":["rift_hide","phase_dust"]},
-    "gravity_wisp":{"name":"Fagulha Gravitacional","hp":140.0,"damage":36.0,"speed":4.5,"xp":135,"tier":4,"behavior":"orbit","loot":["gravity_shard","aether_core"]},
+    "gravity_wisp":{"element":"gravity","name":"Fagulha Gravitacional","hp":140.0,"damage":36.0,"speed":4.5,"xp":135,"tier":4,"behavior":"orbit","loot":["gravity_shard","aether_core"]},
     "void_glider":{"name":"Planador do Vazio","hp":230.0,"damage":44.0,"speed":3.6,"xp":175,"tier":5,"behavior":"flying","loot":["void_membrane","sky_fragment"]},
     "storm_caster":{"name":"Conjurador da Tempestade","hp":205.0,"damage":52.0,"speed":2.0,"xp":190,"tier":5,"behavior":"ranged","loot":["storm_core","prism_fragment"]},
     "chrono_knight":{"name":"Cavaleiro Crono","hp":360.0,"damage":62.0,"speed":2.1,"xp":240,"tier":6,"behavior":"controller","loot":["chrono_gear","gravity_shard"]}
 }
 
 const BOSSES := {
-    "crystal_stag":{"name":"Cérvido de Cristal","hp":2150.0,"phase2_ratio":0.68,"phase3_ratio":0.34,"speed":2.05,"projectile_damage":43.0,"summon_interval":10.0,"summon_id":"moss_hopper","patterns":["roots","charge","summon","nova"],"arena":"clareira_luminar"},
-    "overload_titan":{"name":"Titã de Sobrecarga","hp":1800.0,"phase2_ratio":0.68,"phase3_ratio":0.32,"speed":1.9,"projectile_damage":38.0,"summon_interval":10.0,"summon_id":"aether_slime","patterns":["burst","charge","summon","nova"],"arena":"rift_dome"},
-    "thorn_warden":{"name":"Guardião dos Espinhos","hp":2100.0,"phase2_ratio":0.70,"phase3_ratio":0.35,"speed":1.65,"projectile_damage":44.0,"summon_interval":8.0,"summon_id":"thornling","patterns":["roots","burst","summon","charge"],"arena":"emerald_grove"},
-    "skybreaker":{"name":"Quebra-Céus Aether","hp":2450.0,"phase2_ratio":0.66,"phase3_ratio":0.30,"speed":2.35,"projectile_damage":52.0,"summon_interval":7.0,"summon_id":"gale_moth","patterns":["beam","rain","summon","charge"],"arena":"sky_ruins"},
-    "ember_behemoth":{"name":"Behemoth Incandescente","hp":2700.0,"phase2_ratio":0.72,"phase3_ratio":0.34,"speed":1.8,"projectile_damage":58.0,"summon_interval":9.0,"summon_id":"ember_beetle","patterns":["nova","charge","summon","ring"],"arena":"sunset_crater"},
-    "rift_hydra":{"name":"Hidra do Vazio","hp":2900.0,"phase2_ratio":0.70,"phase3_ratio":0.33,"speed":1.7,"projectile_damage":64.0,"summon_interval":8.0,"summon_id":"rift_hound","patterns":["triple","summon","teleport","nova"],"arena":"void_lake"},
-    "chrono_colossus":{"name":"Colosso Crono","hp":3200.0,"phase2_ratio":0.74,"phase3_ratio":0.36,"speed":1.4,"projectile_damage":70.0,"summon_interval":9.0,"summon_id":"chrono_knight","patterns":["timewave","charge","summon","ring"],"arena":"chrono_gate"},
-    "prism_archon":{"name":"Arconte Prismático","hp":3500.0,"phase2_ratio":0.72,"phase3_ratio":0.38,"speed":1.75,"projectile_damage":76.0,"summon_interval":8.0,"summon_id":"prism_oracle","patterns":["beam","rain","summon","prism"],"arena":"prism_sanctum"},
-    "void_harvester":{"name":"Ceifador do Vazio","hp":3900.0,"phase2_ratio":0.68,"phase3_ratio":0.34,"speed":2.05,"projectile_damage":84.0,"summon_interval":7.0,"summon_id":"void_glider","patterns":["harvest","dash","summon","nova"],"arena":"beyond_echo"}
+    "crystal_stag":{"element":"nature","name":"Cérvido de Cristal","hp":2150.0,"phase2_ratio":0.68,"phase3_ratio":0.34,"speed":2.05,"projectile_damage":43.0,"summon_interval":10.0,"summon_id":"moss_hopper","patterns":["roots","charge","summon","nova"],"arena":"clareira_luminar"},
+    "overload_titan":{"element":"thunder","name":"Titã de Sobrecarga","hp":1800.0,"phase2_ratio":0.68,"phase3_ratio":0.32,"speed":1.9,"projectile_damage":38.0,"summon_interval":10.0,"summon_id":"aether_slime","patterns":["burst","charge","summon","nova"],"arena":"rift_dome"},
+    "thorn_warden":{"element":"nature","name":"Guardião dos Espinhos","hp":2100.0,"phase2_ratio":0.70,"phase3_ratio":0.35,"speed":1.65,"projectile_damage":44.0,"summon_interval":8.0,"summon_id":"thornling","patterns":["roots","burst","summon","charge"],"arena":"emerald_grove"},
+    "skybreaker":{"element":"wind","name":"Quebra-Céus Aether","hp":2450.0,"phase2_ratio":0.66,"phase3_ratio":0.30,"speed":2.35,"projectile_damage":52.0,"summon_interval":7.0,"summon_id":"gale_moth","patterns":["beam","rain","summon","charge"],"arena":"sky_ruins"},
+    "ember_behemoth":{"element":"fire","name":"Behemoth Incandescente","hp":2700.0,"phase2_ratio":0.72,"phase3_ratio":0.34,"speed":1.8,"projectile_damage":58.0,"summon_interval":9.0,"summon_id":"ember_beetle","patterns":["nova","charge","summon","ring"],"arena":"sunset_crater"},
+    "rift_hydra":{"element":"shadow","name":"Hidra do Vazio","hp":2900.0,"phase2_ratio":0.70,"phase3_ratio":0.33,"speed":1.7,"projectile_damage":64.0,"summon_interval":8.0,"summon_id":"rift_hound","patterns":["triple","summon","teleport","nova"],"arena":"void_lake"},
+    "chrono_colossus":{"element":"gravity","name":"Colosso Crono","hp":3200.0,"phase2_ratio":0.74,"phase3_ratio":0.36,"speed":1.4,"projectile_damage":70.0,"summon_interval":9.0,"summon_id":"chrono_knight","patterns":["timewave","charge","summon","ring"],"arena":"chrono_gate"},
+    "prism_archon":{"element":"light","name":"Arconte Prismático","hp":3500.0,"phase2_ratio":0.72,"phase3_ratio":0.38,"speed":1.75,"projectile_damage":76.0,"summon_interval":8.0,"summon_id":"prism_oracle","patterns":["beam","rain","summon","prism"],"arena":"prism_sanctum"},
+    "void_harvester":{"element":"shadow","name":"Ceifador do Vazio","hp":3900.0,"phase2_ratio":0.68,"phase3_ratio":0.34,"speed":2.05,"projectile_damage":84.0,"summon_interval":7.0,"summon_id":"void_glider","patterns":["harvest","dash","summon","nova"],"arena":"beyond_echo"}
 }
 
 const BIOMES := {

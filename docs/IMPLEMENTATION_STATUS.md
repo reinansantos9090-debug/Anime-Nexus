@@ -1,14 +1,14 @@
 # Estado de implementação auditado
 
-Data da auditoria: 13 nov. 2026, branch `dev/anime-nexus-vertical-slice`, base `87e54dc`.
+Data da auditoria: 15 nov. 2026, branch `dev/anime-nexus-vertical-slice`.
 
 | Sistema alvo | Categoria | Evidência / pendência |
 |---|---|---|
-| C++ como linguagem principal do jogo | Em desenvolvimento | GDExtensions `AnimeNexusCombatCore` e `AnimeNexusQuestCore` já são chamadas pelo ataque básico, progressão de XP/nível e ciclo de progresso/conclusão/recompensa de missões. A tabela de reações está testada, mas seus efeitos ainda não são disparados no combate. Linux release compilado localmente; Godot 4.7.2 headless passou testes. Android arm64 ainda aguarda CI, e IA, economia, equipamentos e save continuam em GDScript. |
+| C++ como linguagem principal do jogo | Em desenvolvimento | GDExtensions `AnimeNexusCombatCore` e `AnimeNexusQuestCore` já são chamadas pelo ataque básico, progressão de XP/nível e ciclo de progresso/conclusão/recompensa de missões. A tabela C++ já é consultada nos ataques e habilidades do jogador: o multiplicador entra no dano, e os estados de condução, expansão de área, lentidão/névoa, cura, eco e atração têm efeitos locais. Uma regressão curta foi adicionada ao runner Godot; ela ainda aguarda execução manual e não é validada pelo job Android Kotlin. Linux release compilado localmente; Godot 4.7.2 headless passou testes. Android arm64 ainda aguarda CI, e IA, economia, equipamentos e save continuam em GDScript. |
 | GDScript | Implementado (camada de integração) | Atualmente conecta cenas, UI, nós, sinais e chamadas do núcleo nativo. Parte da lógica de jogo ainda reside nos serviços GDScript e deve migrar antes de declarar C++ como fonte autoritativa de todos os subsistemas. |
 | App Android nativo | Implementado (host do protótipo) | Activity Kotlin e manifest; nome/pacote/orientação atuais não são finais |
 | OpenGL ES e loop de combate Kotlin | Implementado (protótipo Aetheria) | engine/render/AI/combat/session/HUD em `app/src/main/java/.../game3d`; geometria procedural |
-| Godot Android export | Testado | workflow Godot 4.7.2 validou runner e exportou APK debug da slice (run `43409376899`); instalação/touch em aparelho pendentes |
+| Godot Android export | Testado em revisão anterior | workflow Godot 4.7.2 exportou APK da slice em run `43409376899`; o workflow longo atual é manual e ainda não foi executado para esta integração |
 | Godot + GDExtension C++ | Em desenvolvimento | Godot mantém renderer/cenas/física; C++17 é o domínio autoritativo em migração. A arquitetura e funções iniciais estão em `CPP_GAMEPLAY_ARCHITECTURE.md`; falta CI Android/arm64 e migração dos demais domínios. |
 | Câmera isométrica | Implementado (protótipo) | câmera ortográfica diagonal com acompanhamento suave; zoom, ocultação de obstáculos e teste visual em aparelho pendentes |
 | Kaien | Em desenvolvimento | avatar procedural blockout com cores, cabelo e manoplas distintivos; sem modelo anime final, rig/skinning ou animações de produção |
@@ -36,9 +36,9 @@ Data da auditoria: 13 nov. 2026, branch `dev/anime-nexus-vertical-slice`, base `
 
 Só mover uma linha para **Testado** depois de evidência de build correspondente, caminho de UI, comportamento funcional, save e execução sem internet quando aplicável. Capturas/vídeos precisam vir da build instalada; render de editor/conceito não basta.
 
-## Execução de CI mais recente
+## Evidência histórica e validação desta revisão
 
-Run `43410319631`, commit `c66eec5d78ce2c89d6b589c7b224587093081748`: `android-host` passou unit tests e `assembleDebug`, e `godot-android` passou validação e export Android; os testes de fallback do save corrompido também passaram. Artifacts dos dois APKs estão na [execução 43410319631](https://github.com/reinansantos9090-debug/Anime-Nexus/actions/runs/43410319631). APKs não foram instalados em aparelho. O APK Godot é a slice Anime Nexus em blockout; o APK Kotlin é o protótipo Aetheria legado.
+A run `43410319631` é evidência histórica: passou o host Kotlin e o export Godot, sem instalação em aparelho. Na revisão atual, a regra automática executa apenas `android-host`; `godot-android` é manual por causa da compilação nativa longa. O job automático Kotlin não valida scripts Godot, GDExtension ou a integração das reações. Nenhuma execução manual foi disparada nesta revisão.
 
 ## Núcleo C++ em andamento
 

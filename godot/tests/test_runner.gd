@@ -25,6 +25,7 @@ func _init()->void:
     _test_xp()
     _test_damage()
     _test_native_combat_core()
+    _test_elemental_reaction_runtime()
     _test_loot()
     _test_save()
     _test_virtual_joystick()
@@ -79,6 +80,23 @@ func _test_native_combat_core()->void:
     _expect(int(level_result["levels_gained"])==2 and int(level_result["skill_points"])==2,"C++ progression: level reward mismatch")
     _expect(int(level_result["hp"])==164 and is_equal_approx(float(level_result["max_energy"]),108.0),"C++ progression: level stat growth mismatch")
     
+func _test_elemental_reaction_runtime()->void:
+    var state=StateScript.new()
+    state.reset()
+    var content=ContentScript.new()
+    var enemy=EnemyScript.new()
+    enemy.configure("aether_slime",null,content)
+    var combat=CombatScript.new()
+    combat.setup(state,null)
+    var result:Dictionary=combat.hit(enemy,10.0,false,"thunder")
+    _expect(str(result.get("reaction",{}).get("id",""))=="conductive_chain","Combat: thunder/water reaction did not trigger")
+    _expect(is_equal_approx(float(result.get("amount",0.0)),11.5),"Combat: elemental reaction multiplier was not applied")
+    _expect(is_equal_approx(enemy.hp,enemy.max_hp-11.5),"Combat: reaction damage did not reach the enemy")
+    enemy.free()
+    combat.free()
+    content.free()
+    state.free()
+
 func _test_loot()->void:
     var state=StateScript.new()
     state.reset()

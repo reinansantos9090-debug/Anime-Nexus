@@ -97,7 +97,7 @@ func _ready()->void:
     cutscene.next_requested.connect(_story)
     inventory=InventoryScript.new();add_child(inventory);inventory.setup(state)
     audio=AudioScript.new();add_child(audio)
-    combat=CombatScript.new();add_child(combat);combat.setup(state,audio)
+    combat=CombatScript.new();add_child(combat);combat.setup(state,audio,vfx)
 
     var hunter_scene:PackedScene=load("res://scenes/player/Hunter.tscn")
     player=hunter_scene.instantiate() if hunter_scene else HunterAvatar.new()
@@ -305,9 +305,10 @@ func _attack()->void:
         var attack:Dictionary=combat.player_attack(weapon,int(state.get_hunter()["level"]),bonus,crit)
         var amount:float=float(attack["amount"])
         var critical:bool=bool(attack["critical"])
-        combat.hit(target,amount,critical)
+        var hit_result:Dictionary=combat.hit(target,amount,critical,str(weapon.get("element","none")))
+        var displayed_amount:=float(hit_result.get("amount",amount))
         vfx.hit_burst(self,target.position+Vector3(0,1,0),Color("#ffe16a"))
-        vfx.floating_number(self,target.position+Vector3(0,1.5,0),amount,critical)
+        vfx.floating_number(self,target.position+Vector3(0,1.5,0),displayed_amount,critical)
     var speed_bonus:float=_core("attack_speed")+skill_tree.bonus("attack_speed")
     var cooldown_bonus:=clampf(_core("cooldown")+skill_tree.bonus("cooldown"),0.0,0.75)
     var wait:float=float(weapon["rate"])*(1.0-cooldown_bonus)/(1.0+speed_bonus)
@@ -332,12 +333,13 @@ func _ability(i:int)->void:
         str(ability.get("effect","area")),
         float(ability.get("power",1.0)),
         float(ability.get("radius",4.0)),
-        int(ability.get("count",5))
+        int(ability.get("count",5)),
+        str(weapon.get("element","none"))
     )
     var cooldown:=float(ability["cooldown"])*(1.0-clampf(_core("cooldown")+skill_tree.bonus("cooldown"),0.0,0.75))
     get_tree().create_timer(maxf(0.20,cooldown)).timeout.connect(func():skills[i]=true)
 
-func _execute_ability(effect:String,power:float,radius:float,target_limit:=5)->void:
+func _execute_ability(effect:String,power:float,radius:float,target_limit:=5,element:="none")->void:
     var origin:=player.position
     match effect:
         "dash":
@@ -345,24 +347,24 @@ func _execute_ability(effect:String,power:float,radius:float,target_limit:=5)->v
             if target:
                 var dir:Vector3=(target.position-player.position).normalized()
                 player.position=target.position-dir*1.8
-                combat.hit(target,55.0*power)
+                combat.hit(target,55.0*power,false,element)
             vfx.skill_burst(self,player.position,Color("#66eaff"))
         "area","pull_area":
             for e in enemies.duplicate():
                 if is_instance_valid(e) and e.position.distance_to(origin)<=radius:
-                    combat.hit(e,48.0*power)
+                    combat.hit(e,48.0*power,false,element)
                     if effect=="pull_area":
                         e.position=e.position.lerp(origin,0.20)
             if boss and is_instance_valid(boss) and boss.position.distance_to(origin)<=radius:
-                combat.hit(boss,65.0*power)
+                combat.hit(boss,65.0*power,false,element)
             vfx.skill_burst(self,origin,Color("#b990ff"))
         "slow_area":
             for e in enemies.duplicate():
                 if is_instance_valid(e) and e.position.distance_to(origin)<=radius:
-                    combat.hit(e,35.0*power)
+                    combat.hit(e,35.0*power,false,element)
                     if e.has_method("apply_slow"):e.apply_slow(3.0,0.42)
             if boss and is_instance_valid(boss) and boss.position.distance_to(origin)<=radius:
-                combat.hit(boss,48.0*power)
+                combat.hit(boss,48.0*power,false,element)
                 if boss.has_method("apply_slow"):boss.apply_slow(2.2,0.58)
             vfx.skill_burst(self,origin,Color("#68e5ee"))
         "chain":
@@ -380,7 +382,7 @@ func _execute_ability(effect:String,power:float,radius:float,target_limit:=5)->v
                         nearest=candidate
                         nearest_distance=distance
                 if nearest==null:break
-                combat.hit(nearest,43.0*power if nearest!=boss else 72.0*power)
+                combat.hit(nearest,43.0*power if nearest!=boss else 72.0*power,false,element)
                 vfx.hit_burst(self,nearest.position+Vector3(0,1.0,0),Color("#69ebff"))
                 cursor=nearest.position
                 candidates.erase(nearest)
@@ -389,11 +391,11 @@ func _execute_ability(effect:String,power:float,radius:float,target_limit:=5)->v
             var count:=0
             for e in enemies.duplicate():
                 if is_instance_valid(e) and e.position.distance_to(origin)<=radius:
-                    combat.hit(e,43.0*power)
+                    combat.hit(e,43.0*power,false,element)
                     count+=1
                     if count>=8:break
             if boss and is_instance_valid(boss) and boss.position.distance_to(origin)<=radius:
-                combat.hit(boss,72.0*power)
+                combat.hit(boss,72.0*power,false,element)
             vfx.skill_burst(self,origin,Color("#7defff"))
         "barrier":
             invulnerability=maxf(invulnerability,2.5)
