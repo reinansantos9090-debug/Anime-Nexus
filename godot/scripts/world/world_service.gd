@@ -76,7 +76,12 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
                 _memory_bloom(p,accent)
             var interaction_points:Dictionary=b.get("interaction_points",{})
             if interaction_points.has("akari_flame_bloom"):
-                _memory_bloom(interaction_points["akari_flame_bloom"],Color("#ff8b59"))
+                var ember_point:Vector3=interaction_points["akari_flame_bloom"]
+                _memory_bloom(ember_point,Color("#ff8b59"))
+                var ember_ring:=Factory.torus(world_root,0.48,0.57,ember_point+Vector3(0,0.06,0),Color("#ff9a61"))
+                ember_ring.rotation.x=PI*0.5
+                var ember_marker:=Factory.make_crystal(world_root,ember_point+Vector3(0,0.62,0),Color("#ff9a61"))
+                ember_marker.scale=Vector3(0.34,0.34,0.34)
             for p in b.get("memory_echoes",[]):
                 _memory_echo(p)
         "verdant_frontier":
