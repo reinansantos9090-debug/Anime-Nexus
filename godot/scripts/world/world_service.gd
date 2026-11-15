@@ -35,6 +35,7 @@ func build_hq() -> void:
     Factory.box(world_root,Vector3(8,0.4,5),Vector3(11,0.05,-5),Color("#394762"))
     Factory.box(world_root,Vector3(3.5,0.24,3.5),Vector3(0,0.12,8),Color("#32425c"))
     _make_hq_details()
+    _make_hq_districts()
 
 func build_biome(id: String) -> void:
     _reset()
@@ -349,6 +350,50 @@ func _make_hq_details()->void:
         world_root.add_child(root_node)
         Factory.cylinder(root_node,0.12,0.16,1.3,Vector3(0,0.65,0),Color("#3f4b61"))
         Factory.make_crystal(root_node,Vector3(0,1.4,0),Color("#7defff"))
+
+func _make_hq_districts()->void:
+    # Static district landmarks give the small blockout base readable destinations.
+    Factory.torus(world_root,4.8,5.05,Vector3(0,0.035,0),Color("#4fb8d8"))
+    for i in range(8):
+        var angle:=TAU*float(i)/8.0
+        var point:=Vector3(cos(angle)*5.35,0.12,sin(angle)*5.35)
+        Factory.make_crystal(world_root,point,Color("#63dfe8").lerp(Color("#c4a3ff"),float(i%2)*0.65))
+
+    # Workshop of the Resonances: a copper workbench and a fixed gear landmark.
+    Factory.box(world_root,Vector3(4.8,0.22,2.2),Vector3(-11,0.31,-5),Color("#716276"))
+    Factory.box(world_root,Vector3(2.6,0.72,1.1),Vector3(-11,0.82,-5.25),Color("#374354"))
+    Factory.make_crystal(world_root,Vector3(-11,1.38,-5.25),Color("#7defff"))
+    _make_ferrumia_gear(Vector3(-13.5,0.1,-6.7),Color("#dfa66d"),Vector3(1.2,0.6,1.2))
+
+    # Floating market: four thin posts, a bright canopy and three stall counters.
+    for x in [-13.0,-9.0]:
+        for z in [-7.0,-3.0]:
+            Factory.cylinder(world_root,0.07,0.09,2.0,Vector3(x,1.1,z),Color("#8c789b"))
+    Factory.box(world_root,Vector3(4.4,0.18,4.4),Vector3(11,2.12,-5),Color("#5e7194"))
+    Factory.box(world_root,Vector3(1.5,0.65,0.8),Vector3(9.6,0.55,-5.7),Color("#b78667"))
+    Factory.box(world_root,Vector3(1.5,0.65,0.8),Vector3(11.0,0.55,-5.7),Color("#658b91"))
+    Factory.box(world_root,Vector3(1.5,0.65,0.8),Vector3(12.4,0.55,-5.7),Color("#a77b9d"))
+    for point in [Vector3(9,0.3,-4),Vector3(13,0.3,-4)]:
+        Factory.make_crystal(world_root,point,Color("#ffc78a"))
+
+    # Library of the Guardians: stepped shelves and a pair of arch pillars.
+    Factory.box(world_root,Vector3(5.8,0.3,4.0),Vector3(-11,0.22,-14),Color("#394b67"))
+    for side in [-1.0,1.0]:
+        Factory.box(world_root,Vector3(0.38,3.8,0.42),Vector3(-11+side*2.5,2.0,-14),Color("#58668b"))
+    for shelf in range(3):
+        var z:= -15.2+float(shelf)*1.1
+        Factory.box(world_root,Vector3(3.7,0.16,0.22),Vector3(-11,0.7+float(shelf)*0.9,z),Color("#8e7d87"))
+        for book in range(6):
+            var color:=Color("#67b4c5") if (book+shelf)%2==0 else Color("#c18f6d")
+            Factory.box(world_root,Vector3(0.38,0.52,0.25),Vector3(-12.45+float(book)*0.58,1.02+float(shelf)*0.9,z),color)
+
+    # Training garden: moving is still a gameplay task; these targets remain static.
+    Factory.torus(world_root,2.6,2.78,Vector3(11,0.08,11),Color("#a2de8b"))
+    for index in range(3):
+        var x:=9.0+float(index)*2.0
+        Factory.box(world_root,Vector3(0.52,1.65,0.46),Vector3(x,0.88,11),Color("#576b61"))
+        Factory.sphere(world_root,0.38,Vector3(x,1.9,11),Color("#d5bf91"))
+        Factory.sphere(world_root,0.12,Vector3(x,1.95,10.6),Color("#55dcef"))
 
 func _reset()->void:
     if world_root and is_instance_valid(world_root):
