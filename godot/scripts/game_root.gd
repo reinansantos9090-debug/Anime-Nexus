@@ -1300,7 +1300,6 @@ func _quest_completed(id:String)->void:
     if id=="epilogue_01":
         state.data["story"]["flags"]["nexus_campaign_epilogue_complete"]=true
         state.story_changed.emit()
-        save.save_now()
         call_deferred("_enter_hq")
     if id=="epilogue_02":
         state.data["story"]["flags"]["prism_primordial_defeated"]=true
@@ -1319,7 +1318,7 @@ func _quest_completed(id:String)->void:
         var next_quest_id:=str(content.CAMPAIGN_NEXT_QUEST.get(region_id,""))
         if not next_quest_id.is_empty() and not quests.get_quest(next_quest_id).is_empty():
             quests.start(next_quest_id)
-        call_deferred("_enter_hq")
+        call_deferred("_enter_hq")    if save:save.save_now()
 
 func _nearest(radius:float)->Node3D:
     var best:Node3D=null
