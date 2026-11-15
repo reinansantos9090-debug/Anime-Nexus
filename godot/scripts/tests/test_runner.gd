@@ -760,6 +760,18 @@ func _test_kaien_personal_side_quest()->void:
     _expect(save_service.load_now(),"Kaien side story: could not restore saved quest")
     _expect("nimbara_side_03" in saved_state.data["quests"]["active"],"Kaien side story: active quest was lost after reload")
     _expect(int(saved_state.data["quests"]["progress"].get("nimbara_side_03",0))==1,"Kaien side story: partial progress was lost after reload")
+    quest_service.add_kill("moss_hopper")
+    quest_service.add_kill("moss_hopper")
+    _expect("nimbara_side_03" in saved_state.data["quests"]["completed"],"Kaien side story: service did not complete after the remaining target defeats")
+    var completion_root=GameRootScript.new()
+    completion_root.state=saved_state
+    completion_root.quests=quest_service
+    completion_root.save=save_service
+    completion_root._quest_completed("nimbara_side_03")
+    var persisted:Dictionary=save_service._read("user://anime_nexus_kaien_quest.json")
+    _expect("nimbara_side_03" in persisted.get("quests",{}).get("completed",[]),"Kaien side story: completion callback did not persist before returning to play")
+    _expect(int(persisted.get("inventory",{}).get("arashi_crest",0))==1,"Kaien side story: recovered crest was not saved with completion")
+    completion_root.free()
     quest_service.free()
     save_service.free()
     saved_state.free()
