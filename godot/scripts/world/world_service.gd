@@ -351,6 +351,38 @@ func _make_hq_details()->void:
         Factory.cylinder(root_node,0.12,0.16,1.3,Vector3(0,0.65,0),Color("#3f4b61"))
         Factory.make_crystal(root_node,Vector3(0,1.4,0),Color("#7defff"))
 
+func _make_hq_restored_anchors()->void:
+    var saved_flags:Dictionary={}
+    if is_instance_valid(root):
+        var game_state:Variant=root.get("state")
+        if game_state is Node:
+            var save_data:Variant=game_state.get("data")
+            if save_data is Dictionary:
+                var story_data:Variant=save_data.get("story",{})
+                if story_data is Dictionary:
+                    var flags:Variant=story_data.get("flags",{})
+                    if flags is Dictionary:
+                        saved_flags=flags
+
+    var anchors:Array=[
+        {"region":"nimbara","name":"Nimbara","color":Color("#63ead0")},
+        {"region":"aurelio","name":"Aurélio","color":Color("#ffca78")},
+        {"region":"vesper","name":"Vesper","color":Color("#55bde6")},
+        {"region":"ferrumia","name":"Ferrúmia","color":Color("#d087ff")},
+        {"region":"ivern","name":"Ivern","color":Color("#a9dcff")},
+        {"region":"umbral","name":"Umbral","color":Color("#e28be8")}
+    ]
+    for index in range(anchors.size()):
+        var entry:Dictionary=anchors[index]
+        var angle:float=-PI*0.5+TAU*float(index)/float(anchors.size())
+        var point:=Vector3(cos(angle)*8.1,0.12,sin(angle)*8.1)
+        var restored:bool=bool(saved_flags.get(str(entry["region"])+"_slice_complete",false))
+        var tint:Color=entry["color"] if restored else entry["color"].darkened(0.72)
+        var crystal:=Factory.make_crystal(world_root,point,tint)
+        crystal.scale=Vector3.ONE if restored else Vector3(0.72,0.72,0.72)
+        var halo:=Factory.torus(world_root,0.42,0.51,point+Vector3(0,-0.08,0),tint)
+        halo.rotation.x=PI*0.5
+
 func _make_hq_districts()->void:
     # Static district landmarks give the small blockout base readable destinations.
     Factory.torus(world_root,4.8,5.05,Vector3(0,0.035,0),Color("#4fb8d8"))
