@@ -44,6 +44,7 @@ func _init()->void:
     _test_ivern_region_data()
     _test_umbral_region_data()
     _test_nexus_region_data()
+    _test_regional_boss_catalog()
     _test_boss_telegraph()
     _test_static_field_slow()
     if failures.is_empty():
@@ -468,6 +469,21 @@ func _test_story_dialogue_completion()->void:
     _expect(state.data["story"]["journal"].size()==8,"Story: prologue must save all displayed lines locally")
     story.free()
     state.free()
+
+func _test_regional_boss_catalog()->void:
+    var content=ContentScript.new()
+    var maps=MapScript.new()
+    maps._ready()
+    for region_id in content.REGIONAL_BOSSES.keys():
+        _expect(maps.maps.has(region_id),"Regional boss: map missing for %s"%region_id)
+        _expect(content.BOSSES.has(str(content.REGIONAL_BOSSES[region_id])),
+            "Regional boss: catalog entry missing for %s"%region_id)
+    _expect(str(content.REGIONAL_BOSSES.get("nimbara",""))=="crystal_stag",
+        "Regional boss: Nimbara must preserve the campaign Cérvido encounter")
+    _expect(str(content.REGIONAL_BOSSES.get("nexus_core",""))=="archive_zero",
+        "Regional boss: final region must route to Arquivo Zero")
+    content.free()
+    maps.free()
 
 func _test_boss_telegraph()->void:
     var boss=BossScript.new()

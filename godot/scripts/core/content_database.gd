@@ -148,6 +148,21 @@ const BOSSES := {
     "void_harvester":{"element":"shadow","name":"Ceifador do Vazio","hp":3900.0,"phase2_ratio":0.68,"phase3_ratio":0.34,"speed":2.05,"projectile_damage":84.0,"summon_interval":7.0,"summon_id":"void_glider","patterns":["harvest","dash","summon","nova"],"arena":"beyond_echo"}
 }
 
+const REGIONAL_BOSSES := {
+    "nimbara":"crystal_stag",
+    "aurelio":"chrono_colossus",
+    "vesper":"rift_hydra",
+    "ferrumia":"overload_titan",
+    "ivern":"skybreaker",
+    "umbral":"void_harvester",
+    "nexus_core":"archive_zero",
+    "verdant_frontier":"thorn_warden",
+    "crystal_forest":"prism_archon",
+    "sunset_desert":"ember_behemoth",
+    "rust_canyons":"overload_titan",
+    "sky_ruins":"skybreaker"
+}
+
 const BIOMES := {
     "nimbara":{"name":"Nimbara • Floresta das Memórias","ground":Color("#477b68"),"accent":Color("#71f0d1"),"fog":Color("#577f83")},
     "verdant_frontier":{"name":"Fronteira Esmeralda","ground":Color("#4ea66f"),"accent":Color("#8bd8ff"),"fog":Color("#9fe4c3")},

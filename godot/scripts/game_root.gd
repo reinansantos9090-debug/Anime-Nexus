@@ -231,7 +231,13 @@ func _portal()->void:
     match mode:
         "HQ":_open_expedition_selection()
         "EXPEDITION":_enter_rift()
-        "RIFT":_enter_expedition() if "nimbara_08" in state.data["quests"]["active"] else _enter_versus()
+        "RIFT":
+            if "nimbara_08" in state.data["quests"]["active"]:
+                _enter_expedition()
+            elif boss==null or not is_instance_valid(boss):
+                _enter_hq()
+            else:
+                hud.set_mode("RIFT • DERROTE O CHEFE PARA RETORNAR AO OBSERVATÓRIO")
         "VERSUS":_enter_hq()
         _: _enter_hq()
 
@@ -353,21 +359,28 @@ func _enter_rift()->void:
     if "nimbara_08" in active_quests:
         hud.set_mode("MISSÃO • INTERAJA COM A ÂNCORA DE RESSONÂNCIA")
         return
+    var region_id:=str(state.data.get("world",{}).get("map_id","nimbara"))
+    if not maps.maps.has(region_id):
+        region_id="nimbara"
+    if region_id=="nexus_core" and not bool(state.data["world"].get("nexus_core_unlocked",false)):
+        hud.set_mode("NÚCLEO DO NEXO • A CAMPANHA AINDA NÃO DESBLOQUEOU ESTA REGIÃO")
+        return
+    var boss_id:=str(content.REGIONAL_BOSSES.get(region_id,"crystal_stag"))
+    if not content.BOSSES.has(boss_id):
+        hud.set_mode("RIFT • CONFIGURAÇÃO DE CHEFE INDISPONÍVEL")
+        return
+    var first_nimbara_boss:bool="nimbara_07" in active_quests
     mode="RIFT"
-    var first_nimbara_boss:bool="nimbara_07" in state.data["quests"]["active"]
-    portal_service.enter_rift("nimbara" if first_nimbara_boss else "rift_dome")
-    director.start_rift("rift_dome")
-    world.build_biome("nimbara" if first_nimbara_boss else "crystal_forest")
+    portal_service.enter_rift(region_id)
+    director.start_rift(region_id)
+    world.build_biome(region_id)
     activity_remaining=0.0
     activity_progress=0
     activity_goal=1
     _set_companion_combat(true)
-    _spawn_wave(mini(4,perf.max_enemies()) if first_nimbara_boss else perf.max_enemies())
-    var ids:Array=content.BOSSES.keys()
-    ids.sort()
-    var boss_id:="crystal_stag" if first_nimbara_boss else str(ids[portal_step%ids.size()])
+    _spawn_wave(mini(4,perf.max_enemies()) if first_nimbara_boss else mini(6,perf.max_enemies()))
     _spawn_boss(boss_id)
-    hud.set_mode("RIFT • "+str(content.BOSSES[boss_id]["name"]))
+    hud.set_mode("CHEFE • "+str(content.BOSSES[boss_id]["name"])+" • "+str(maps.get_map(region_id)["name"]))
 
 func _enter_versus()->void:
     mode="VERSUS"
@@ -1053,11 +1066,25 @@ func _spawn_boss(id:String)->void:
     var b:Node3D=boss_scene.instantiate() if boss_scene else BossScript.new()
     add_child(b)
     b.position=player.position+Vector3(0,0,-10)
-    var boss_map:="nimbara" if id=="crystal_stag" else ("nexus_core" if id=="archive_zero" else "sky_ruins")
+    var boss_map:=str(state.data.get("world",{}).get("map_id","nimbara"))
+    if not maps.maps.has(boss_map):boss_map="nimbara"
     b.configure_boss(id,player,content,maps.difficulty(boss_map),state.difficulty_profile())
     if id=="crystal_stag":b.attach_visual(Factory.make_crystal_stag(b,Color("#416a80"),Color("#70f5dc")))
     elif id=="archive_zero":b.attach_visual(_make_archive_zero_visual(b))
-    else:b.attach_visual(Factory.make_colossus(b,Color("#7d5ce8"),Color("#ffd86b")))
+    else:
+        var palette:Dictionary={
+            "fire":[Color("#783b38"),Color("#ffad4d")],
+            "wind":[Color("#426c6a"),Color("#83e8dc")],
+            "ice":[Color("#4b6380"),Color("#bfeaff")],
+            "shadow":[Color("#3e354b"),Color("#d68af0")],
+            "gravity":[Color("#50466f"),Color("#ffb6e4")],
+            "light":[Color("#6b5d83"),Color("#ffe48c")],
+            "thunder":[Color("#485378"),Color("#69dfff")],
+            "nature":[Color("#496847"),Color("#b8ed83")],
+            "water":[Color("#3c607a"),Color("#69e2df")]
+        }
+        var colors:Array=palette.get(str(content.BOSSES[id].get("element","gravity")),palette["gravity"])
+        b.attach_visual(Factory.make_colossus(b,colors[0],colors[1]))
     b.phase_changed.connect(func(p:int):
         hud.set_mode("CHEFE • FASE %d"%p)
         if is_instance_valid(b):b.scale=Vector3.ONE*(1.0 if p==1 else (1.12 if p==2 else 1.24))
