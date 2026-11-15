@@ -2,6 +2,7 @@ extends Node3D
 const StateScript=preload("res://scripts/core/game_state.gd")
 const SaveScript=preload("res://scripts/core/save_service.gd")
 const SaveSlotsMenuScript=preload("res://scripts/ui/save_slots_menu.gd")
+const WorkshopMenuScript=preload("res://scripts/ui/workshop_menu.gd")
 const ContentScript=preload("res://scripts/core/content_database.gd")
 const PerfScript=preload("res://scripts/core/performance_service.gd")
 const WorldScript=preload("res://scripts/world/world_service.gd")
@@ -56,6 +57,7 @@ var portal_service:Node
 var director:Node
 var operations_menu:CanvasLayer
 var save_slots_menu:CanvasLayer
+var workshop_menu:CanvasLayer
 var companion_roster_menu:CanvasLayer
 var player:Node3D
 var camera:Camera3D
@@ -145,6 +147,10 @@ func _ready()->void:
     add_child(companion_roster_menu)
     companion_roster_menu.setup(state,content)
     companion_roster_menu.selection_changed.connect(_refresh_companions)
+    workshop_menu=WorkshopMenuScript.new()
+    add_child(workshop_menu)
+    workshop_menu.setup(content,inventory)
+    workshop_menu.crafted.connect(_workshop_crafted)
 
     world.build_hq()
     _apply_quality(perf.current())
@@ -404,13 +410,10 @@ func _run_operation(action_id:String)->void:
             hud.set_mode("ÁRVORE • "+unlocked_skill+" • "+skill_tree.summary())
             audio.level_up()
         "craft":
-            var crafted:=false
-            for recipe in content.RECIPES:
-                if inventory.craft(recipe):
-                    crafted=true
-                    hud.set_mode("OFICINA • FABRICADO: "+str(recipe["name"]))
-                    break
-            if not crafted:hud.set_mode("OFICINA • MATERIAIS INSUFICIENTES")
+            if mode=="HQ" and workshop_menu:
+                workshop_menu.show_menu()
+            else:
+                hud.set_mode("OFICINA • VOLTE AO OBSERVATÓRIO DE ÍRIS")
         "history":_story()
         "saves":
             if save_slots_menu:save_slots_menu.show_menu()
@@ -420,6 +423,16 @@ func _run_operation(action_id:String)->void:
         "side_quest":_start_optional_quest("nimbara_side_01")
         "memory_quest":_start_optional_quest("nimbara_side_02")
         "companion_order":_cycle_companion_order()
+
+func _workshop_crafted(recipe_id:String,success:bool)->void:
+    if not success:
+        hud.set_mode("OFICINA • MATERIAIS INSUFICIENTES")
+        return
+    for recipe in content.RECIPES:
+        if str(recipe.get("id",""))==recipe_id:
+            hud.set_mode("OFICINA • CRIADO: "+str(recipe.get("name",recipe_id)))
+            audio.level_up()
+            return
 
 func _cycle_weapon()->void:
     var ids:Array=content.WEAPONS.keys()

@@ -10,6 +10,7 @@ var action_buttons:Dictionary={}
 
 const ACTIONS := [
     ["expedition","EXPEDIÇÃO • NIMBARA","Continuar a missão da Clareira Luminar"],
+    ["craft","OFICINA • MEKA","Ver receitas e criar itens com materiais locais"],
     ["rift","CHEFE • CÉRVIDO","Enfrentar o guardião da primeira Âncora"],
     ["history","DIÁLOGOS","Continuar o prólogo de Kaien"],
     ["companions","COMPANHEIROS","Escolher até dois aliados offline"],

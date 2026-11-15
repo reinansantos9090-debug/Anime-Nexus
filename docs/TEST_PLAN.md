@@ -56,3 +56,11 @@ A verificação Godot/C++/APK continua no workflow manual; nenhum teste de emula
 - Confirmar a recompensa e que a ação de interação desaparece após completar.
 
 Este fluxo requer teste manual no Godot; nenhum job longo/emulador automático será adicionado.
+
+
+## Oficina de crafting
+
+- Abrir a Oficina pelo terminal no Observatório e conferir nome, materiais exigidos, resultado e estado do botão em cada receita.
+- Criar uma receita com materiais suficientes e confirmar que o saldo e o resultado atualizam sem fechar a oficina.
+- Tentar criar sem saldo; o botão deve permanecer desabilitado e nenhum item pode ser debitado.
+- Voltar a uma expedição; a oficina só pode abrir no Observatório.
