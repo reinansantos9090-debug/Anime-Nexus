@@ -741,6 +741,7 @@ func _test_kaien_personal_side_quest()->void:
     quest_state=completion.get("quests",{})
     _expect("nimbara_side_03" in quest_state.get("completed",[]),"Kaien side story: third target defeat did not complete quest")
     _expect(int(completion.get("items_reward",{}).get("resonance_shard",0))==3,"Kaien side story: local completion reward mismatch")
+    _expect(int(completion.get("items_reward",{}).get("arashi_crest",0))==1,"Kaien side story: recovered family crest was not granted as a real inventory item")
     var menu_file:=FileAccess.open("res://scripts/ui/activity_menu.gd",FileAccess.READ)
     _expect(menu_file!=null,"Kaien side story: operations menu source should be readable")
     if menu_file:
