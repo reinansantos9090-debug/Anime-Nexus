@@ -218,7 +218,7 @@ func _portal()->void:
     match mode:
         "HQ":_enter_expedition()
         "EXPEDITION":_enter_rift()
-        "RIFT":_enter_expedition() if "nimbara_03" in state.data["quests"]["active"] else _enter_versus()
+        "RIFT":_enter_expedition() if "nimbara_08" in state.data["quests"]["active"] else _enter_versus()
         "VERSUS":_enter_hq()
         _: _enter_hq()
 
@@ -244,13 +244,20 @@ func _enter_expedition()->void:
     var ids:Array=maps.maps.keys()
     ids.sort()
     var map_id:=str(ids[portal_step%ids.size()])
-    if int(state.data["world"].get("completed_expeditions",0))==0 or "nimbara_03" in state.data["quests"]["active"] or "nimbara_side_01" in state.data["quests"]["active"] or "nimbara_side_02" in state.data["quests"]["active"]:
+    var required_map:=""
+    for active_id in state.data["quests"].get("active",[]):
+        var active_quest:Dictionary=quests.get_quest(str(active_id))
+        if not str(active_quest.get("map","")).is_empty():
+            required_map=str(active_quest["map"])
+            break
+    if not required_map.is_empty():map_id=required_map
+    if int(state.data["world"].get("completed_expeditions",0))==0 or "nimbara_08" in state.data["quests"]["active"] or "nimbara_side_01" in state.data["quests"]["active"] or "nimbara_side_02" in state.data["quests"]["active"]:
         map_id="nimbara"
     portal_service.enter_expedition(map_id)
     state.data["world"]["map_id"]=map_id
     director.start_expedition(map_id)
     world.build_biome(map_id)
-    var anchor_return:bool=map_id=="nimbara" and "nimbara_03" in state.data["quests"]["active"]
+    var anchor_return:bool=map_id=="nimbara" and "nimbara_08" in state.data["quests"]["active"]
     activity_remaining=0.0 if anchor_return else maps.duration(map_id)
     activity_goal=0 if anchor_return else maps.activity_goal(map_id)
     activity_progress=0
@@ -258,16 +265,16 @@ func _enter_expedition()->void:
     for companion in companions:
         if is_instance_valid(companion):companion.reset_formation()
     _set_companion_combat(true)
-    _spawn_wave(0 if anchor_return else mini(16,perf.max_enemies()))
     quests.add_map(map_id)
-    var has_nimbara_interaction:= "nimbara_03" in state.data["quests"]["active"] or "nimbara_side_02" in state.data["quests"]["active"]
+    _spawn_wave(0 if anchor_return else mini(16,perf.max_enemies()))
+    var has_nimbara_interaction:= "nimbara_06" in state.data["quests"]["active"] or "nimbara_08" in state.data["quests"]["active"] or "nimbara_side_02" in state.data["quests"]["active"]
     hud.set_interaction_visible(map_id=="nimbara" and has_nimbara_interaction)
     hud.set_mode("NIMBARA • APROXIME-SE DA ÂNCORA" if anchor_return else "EXPEDIÇÃO • %s • 0/%d"%[maps.get_map(map_id)["name"],activity_goal])
 
 func _interact()->void:
     if mode!="EXPEDITION":return
     var active:Array=state.data["quests"].get("active",[])
-    if "nimbara_03" in active:
+    if "nimbara_08" in active:
         var anchor_position:=Vector3(0,0,-8.5)
         if player.position.distance_to(anchor_position)>3.2:
             hud.set_mode("ÂNCORA • APROXIME-SE DO CRISTAL NO CENTRO DA CLAREIRA")
@@ -276,7 +283,7 @@ func _interact()->void:
         hud.set_interaction_visible(false)
         audio.level_up()
         return
-    if "nimbara_side_02" in active and str(portal_service.destination)=="nimbara":
+    if ("nimbara_06" in active or "nimbara_side_02" in active) and str(portal_service.destination)=="nimbara":
         var positions:Array=maps.get_map("nimbara").get("memory_echoes",[])
         for index in range(positions.size()):
             var marker_position:Vector3=positions[index]
@@ -288,22 +295,25 @@ func _interact()->void:
             state.set_story_flag(flag_id,true)
             quests.add_interaction("memory_echo")
             audio.level_up()
-            var progress:=int(state.data["quests"]["progress"].get("nimbara_side_02",0))
+            var echo_quest_id:="nimbara_06" if "nimbara_06" in active else "nimbara_side_02"
+            var progress:=int(state.data["quests"]["progress"].get(echo_quest_id,0))
             hud.set_mode("ECO DE MEMÓRIA • %d/3"%progress)
-            if "nimbara_side_02" not in state.data["quests"]["active"]:
+            if "nimbara_06" not in state.data["quests"]["active"] and "nimbara_side_02" not in state.data["quests"]["active"]:
                 hud.set_interaction_visible(false)
             return
         hud.set_mode("ECO DE MEMÓRIA • APROXIME-SE DE UM CRISTAL PÁLIDO")
 
 func _enter_rift()->void:
-    if "nimbara_01" in state.data["quests"]["active"]:
-        hud.set_mode("MISSÃO • CONCLUA A VOZ DAS RAÍZES ANTES DO CHEFE")
-        return
-    if "nimbara_03" in state.data["quests"]["active"]:
+    var active_quests:Array=state.data["quests"].get("active",[])
+    for mission_id in ["nimbara_01","nimbara_02","nimbara_03","nimbara_04","nimbara_05","nimbara_06"]:
+        if mission_id in active_quests:
+            hud.set_mode("MISSÃO • CONCLUA O OBJETIVO ATUAL DE NIMBARA")
+            return
+    if "nimbara_08" in active_quests:
         hud.set_mode("MISSÃO • INTERAJA COM A ÂNCORA DE RESSONÂNCIA")
         return
     mode="RIFT"
-    var first_nimbara_boss:bool="nimbara_02" in state.data["quests"]["active"]
+    var first_nimbara_boss:bool="nimbara_07" in state.data["quests"]["active"]
     portal_service.enter_rift("nimbara" if first_nimbara_boss else "rift_dome")
     director.start_rift("rift_dome")
     world.build_biome("nimbara" if first_nimbara_boss else "crystal_forest")
@@ -685,10 +695,30 @@ func _use_gadget()->void:
 
 func _spawn_wave(count:int)->void:
     _clear_combat()
-    var pool:Array=maps.enemy_pool(str(portal_service.destination))
+    var map_id:=str(portal_service.destination)
+    var pool:Array=maps.enemy_pool(map_id)
     if pool.is_empty():pool=content.MONSTERS.keys()
-    for i in mini(count,perf.max_enemies()):
-        _spawn_enemy(i,str(pool[i%pool.size()]))
+    var objective_monster:=""
+    var objective_count:=0
+    for active_id in state.data["quests"].get("active",[]):
+        var quest:Dictionary=quests.get_quest(str(active_id))
+        if str(quest.get("map",""))!="" and str(quest.get("map",""))!=map_id:continue
+        var quest_type:=str(quest.get("type",""))
+        if quest_type=="kill":
+            objective_monster=str(quest.get("monster",""))
+            objective_count=maxi(0,int(quest.get("target",1))-int(state.data["quests"]["progress"].get(str(active_id),0)))
+        elif quest_type=="collect":
+            var item_id:=str(quest.get("item",""))
+            for candidate in pool:
+                if item_id in content.MONSTERS.get(str(candidate),{}).get("loot",[]):
+                    objective_monster=str(candidate)
+                    objective_count=mini(3,maxi(0,int(quest.get("target",1))-int(state.data["quests"]["progress"].get(str(active_id),0)))
+                    break
+        if not objective_monster.is_empty():break
+    var spawn_count:=mini(count,perf.max_enemies())
+    for i in spawn_count:
+        var spawn_id:=objective_monster if i<mini(objective_count,spawn_count) else str(pool[i%pool.size()])
+        _spawn_enemy(i,spawn_id)
 
 func _spawn_enemy(i:int,id:="")->void:
     var pool:Array=maps.enemy_pool(str(portal_service.destination))
@@ -1068,16 +1098,18 @@ func _boss_down(b:Node3D,x:int)->void:
 func _quest_completed(id:String)->void:
     var q:Dictionary=quests.get_quest(id)
     if not q.is_empty():
-        if id.begins_with("nimbara_side_"):
+        if q.has("completion_dialogue"):
+            call_deferred("_show_local_quest_dialogue",str(q.get("title",id)),str(q.get("speaker","Kaien Arashi")),str(q["completion_dialogue"]))
+        elif id.begins_with("nimbara_side_"):
             call_deferred("_show_local_quest_dialogue",str(q.get("title",id)),str(q.get("speaker","Liora")),str(q.get("completion_dialogue","A clareira agradece.")))
         else:
             hud.set_mode("OBJETIVO CONCLUÍDO • "+str(q.get("title",id)))
     if id.begins_with("chapter_") or id.begins_with("boss_"):
         _story()
-    if id=="nimbara_03":
+    if id=="nimbara_08":
         state.data["story"]["flags"]["nimbara_slice_complete"]=true
         save.save_now()
-        hud.set_mode("ÂNCORA ESTABILIZADA • PRÓLOGO DA SLICE CONCLUÍDO")
+        hud.set_mode("ÂNCORA ESTABILIZADA • CAPÍTULO NIMBARA CONCLUÍDO")
         call_deferred("_enter_hq")
 
 func _nearest(radius:float)->Node3D:

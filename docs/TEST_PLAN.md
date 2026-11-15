@@ -128,3 +128,13 @@ Runner Godot permanece manual; nenhum teste longo/emulador automático foi adici
 - O mapa de expedição não conclui a campanha: âncoras interativas, cenas, escolha narrativa, arena definitiva, áudio e arte final estão pendentes.
 
 Runner e export Godot continuam manuais; nenhum teste longo/emulador foi iniciado.
+
+
+## Cadeia principal de Nimbara (runner manual curto)
+
+- Conferir a sequência `nimbara_01` a `nimbara_08: Musgos, Faíscas, saque de Flores da Memória, retorno ao mapa, Guardião de Raízes, três ecos, Cérvido e Âncora.
+- No jogo, confirmar que o Portal direciona ao mapa exigido e que waves priorizam a criatura ligada ao objetivo kill/collect.
+- Confirmar os três ecos individualmente, a entrada RIFT apenas na missão do Cérvido e o retorno ao Observatório após estabilizar a Âncora.
+- Conferir o diálogo contextual de conclusão de cada etapa e persistência do progresso offline.
+
+Runner Godot permanece manual; nenhum teste longo/emulador foi iniciado.

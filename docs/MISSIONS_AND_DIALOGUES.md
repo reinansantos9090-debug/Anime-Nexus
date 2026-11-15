@@ -1,6 +1,6 @@
 # Missões e diálogos
 
-As missões da campanha e as entradas não marcadas na seção final são **Planejadas**, não conteúdo já integrado. Objetivos são condições verificáveis; cada recompensa é offline. Falas curtas abaixo são falas de contexto principal e precisam de diálogo roteado com retorno de estado. As missões secundárias Sementes para Liora e Ecos no Lago estão integradas na slice e aguardam validação manual.
+As campanhas além de Nimbara e as entradas não marcadas na seção de estado continuam **Planejadas**. A cadeia inicial de oito missões de Nimbara agora usa objetivos verificáveis, recompensas locais, encadeamento offline e falas de conclusão no protótipo; o fluxo aguarda runner Godot manual e validação touch. As missões secundárias Sementes para Liora e Ecos no Lago permanecem jogáveis e aguardam validação manual.
 
 ## Campanha principal — 60 missões
 
@@ -175,3 +175,8 @@ Cada missão usa ID estável, pré-requisitos, objetivo serializável, condiçã
 
 
 **Ecos no Lago** — na margem do Lago das Memórias, Liora pede para sincronizar três ecos de memória distintos. Cada cristal tem uma posição e uma flag persistida própria; a mesma estação não pode contar duas vezes. O objetivo é avançado pelo evento `interact` do núcleo C++ e concede 220 XP, três Flores da Memória e dois Fragmentos de Ressonância. A conversa e o layout dos marcadores são originais; a interação visual aguarda validação manual.
+
+
+## Estado integrado da campanha
+
+A sequência Nimbara `nimbara_01` a `nimbara_08` está integrada no protótipo como cadeia offline: combater Musgos, combater Faíscas, coletar Flores da Memória, retornar à clareira, derrotar o Guardião de Raízes, sincronizar três ecos, enfrentar o Cérvido e estabilizar a Âncora. O alvo da missão ativa direciona o mapa de expedição e as waves de combate para a criatura necessária quando aplicável. Cada etapa tem fala de conclusão. O runner de regras foi atualizado, mas aguarda execução manual; o fluxo por toque também aguarda validação. As missões restantes dos oito capítulos permanecem planejadas.
