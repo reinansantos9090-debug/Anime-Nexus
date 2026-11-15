@@ -1298,6 +1298,8 @@ func _quest_completed(id:String)->void:
             hud.set_mode("OBJETIVO CONCLUÍDO • "+str(q.get("title",id)))
     if id.begins_with("chapter_") or id.begins_with("boss_"):
         _story()
+    if id=="nimbara_side_04":
+        state.set_story_flag("akari_flame_stabilized",true)
     if id=="epilogue_01":
         state.data["story"]["flags"]["nexus_campaign_epilogue_complete"]=true
         state.story_changed.emit()
