@@ -1,6 +1,6 @@
 # Missões e diálogos
 
-As seis campanhas regionais têm oito missões cada, o desfecho tem seis, o prólogo quatro e o epílogo duas: 60 missões estão ligadas ao fluxo offline. O runner Godot/GDExtension está no workflow manual e não foi executado nesta atualização; a CI curta não o substitui. Uma missão pessoal da lista está integrada: SQ-K-1, a pista de Kaien descrita abaixo; as outras 47 da lista permanecem planejadas. Além dela, duas tarefas adicionais de Nimbara — Sementes para Liora e Ecos no Lago — estão jogáveis. Puzzles, cenas, recompensas e eventos continuam em diferentes estados de implementação.
+As seis campanhas regionais têm oito missões cada, o desfecho tem seis, o prólogo quatro e o epílogo duas: 60 missões estão ligadas ao fluxo offline. O runner Godot/GDExtension está no workflow manual e não foi executado nesta atualização; a CI curta não o substitui. Duas missões pessoais da lista estão integradas: SQ-K-1, a pista de Kaien, e SQ-A-4, a missão da Flor de Brasa para Akari; as outras 46 da lista permanecem planejadas. Além delas, duas tarefas adicionais de Nimbara — Sementes para Liora e Ecos no Lago — estão jogáveis. Puzzles, cenas, recompensas e eventos continuam em diferentes estados de implementação.
 
 ## Campanha principal — 60 missões
 
@@ -126,7 +126,7 @@ Cada arco de personagem oferece seis formatos diferentes; as recompensas são re
 | SQ-A-1 Akari, porto | Ajudar aprendiz a recuperar forno apagado por maré | Anel Braseiro cosmético | Akari: “Ninguém precisa competir para merecer calor.” |
 | SQ-A-2 Akari, arena | Sobreviver a ondas sem derrubar alvos de treino | maestria Orbe Fênix | Orin: “Controle também é parte do espetáculo.” |
 | SQ-A-3 Akari, Ferrúmia | Encontrar lenço perdido em trilho móvel | visual Lenço de Brasa | Meka: “Ele ficou preso no lugar mais quente da oficina.” |
-| SQ-A-4 Akari, Nimbara | Apagar incêndio mágico preservando três plantas raras | Pó de Nimbara | Haru: “Você protegeu a floresta sem apagar seu fogo.” |
+| SQ-A-4 Akari, Nimbara — runtime `nimbara_side_04` | Aceitar a missão pessoal no terminal do Observatório, seguir o sinal até a Flor de Brasa e interagir com ela em Nimbara enquanto Akari contém a própria Ressonância | duas Escamas Incandescentes e uma Flor da Memória | Akari: “Eu sei que consigo controlar o fogo. O que não sei é pedir ajuda antes de perder o controle.”; conclusão: “Desta vez eu não precisei provar que consigo fazer tudo sozinha.” |
 | SQ-A-5 Akari, Observatório | Preparar festival e pedir três contribuições aos amigos | emote Festival | Ren: “Esta festa precisa de alguém que saiba dividir o palco.” |
 | SQ-A-6 Akari, Umbral | Derrotar reflexo de perfeccionismo sem receber três acertos | registro de personagem | Akari: “Posso falhar e ainda continuar aqui.” |
 | SQ-R-1 Ren, Vesper | Recolher três velas antes que o vento as leve ao mar | Colar Céu-Livre | Nami: “O vento levou a pressa; você trouxe a luz.” |
