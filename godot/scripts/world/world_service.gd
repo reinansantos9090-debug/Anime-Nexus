@@ -366,7 +366,7 @@ func _make_hq_districts()->void:
     _make_ferrumia_gear(Vector3(-13.5,0.1,-6.7),Color("#dfa66d"),Vector3(1.2,0.6,1.2))
 
     # Floating market: four thin posts, a bright canopy and three stall counters.
-    for x in [-13.0,-9.0]:
+    for x in [9.0,13.0]:
         for z in [-7.0,-3.0]:
             Factory.cylinder(world_root,0.07,0.09,2.0,Vector3(x,1.1,z),Color("#8c789b"))
     Factory.box(world_root,Vector3(4.4,0.18,4.4),Vector3(11,2.12,-5),Color("#5e7194"))
