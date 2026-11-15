@@ -139,7 +139,7 @@ func _test_save()->void:
     _expect(save.load_now(),"Save: could not reload save")
     _expect(int(state.data["hunter"]["gold"])==9876,"Save: corrupt primary did not recover the previous backup")
     _expect(state.apply_loaded({"schema":4,"hunter":{"gold":444}}),"Save: supported old schema was rejected")
-    _expect(int(state.data["schema"])==int(state.SCHEMA) and int(state.data["hunter"]["gold"])==444,"Save: older schema did not migrate while preserving progress")
+    _expect(int(state.data["schema"])==8 and int(state.data["hunter"]["gold"])==444,"Save: older schema did not migrate while preserving progress")
     var future:=FileAccess.open("user://anime_nexus_test_save.json",FileAccess.WRITE)
     if future:
         future.store_string(JSON.stringify({"schema":999,"hunter":{"gold":999}}))
