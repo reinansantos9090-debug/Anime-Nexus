@@ -37,6 +37,7 @@ func _init()->void:
     _test_save_slots()
     _test_virtual_joystick()
     _test_nimbara_vertical_slice_data_and_quest()
+    _test_kaien_personal_side_quest()
     _test_aurelio_campaign_chain()
     _test_story_dialogue_completion()
     _test_vesper_region_data()
@@ -707,6 +708,52 @@ func _test_ferrumia_campaign_chain()->void:
         "Ferrúmia campaign: chapter must unlock after Vesper")
     content.free()
     maps.free()
+
+func _test_kaien_personal_side_quest()->void:
+    var content=ContentScript.new()
+    var maps=MapScript.new()
+    maps._ready()
+    var quest:Dictionary={}
+    for row in content.QUESTS:
+        if str(row.get("id",""))=="nimbara_side_03":
+            quest=row
+            break
+    _expect(not quest.is_empty(),"Kaien side story: quest record missing")
+    _expect(str(quest.get("type",""))=="kill" and str(quest.get("monster",""))=="moss_hopper","Kaien side story: objective must target Nimbara Musgos Saltadores")
+    _expect(str(quest.get("map",""))=="nimbara" and bool(quest.get("optional",false)),"Kaien side story: optional Nimbara routing metadata missing")
+    _expect(str(quest.get("start_dialogue","")).contains("minha mãe"),"Kaien side story: family clue opening dialogue missing")
+    _expect(str(quest.get("completion_dialogue","")).contains("guardiões"),"Kaien side story: Nexo reveal dialogue missing")
+    _expect(str(quest.get("monster","")) in maps.maps["nimbara"].get("enemies",[]),"Kaien side story: target is absent from local encounter pool")
+    for reward_id in quest.get("rewards",{}).keys():
+        _expect(content.ITEMS.has(str(reward_id)),"Kaien side story: reward is not in local item catalog")
+
+    var core:=AnimeNexusQuestCore.new()
+    var quest_state:Dictionary={"active":[],"completed":[],"progress":{}}
+    var start_result:Dictionary=core.start_quest(quest_state,content.QUESTS,"nimbara_side_03")
+    quest_state=start_result.get("quests",{})
+    _expect(bool(start_result.get("started",false)),"Kaien side story: quest did not start")
+    for hit_index in range(2):
+        var progress_result:Dictionary=core.apply_event(quest_state,content.QUESTS,"kill","moss_hopper",1)
+        quest_state=progress_result.get("quests",{})
+        _expect("nimbara_side_03" in quest_state.get("active",[]),"Kaien side story: quest completed before three target defeats")
+    _expect(int(quest_state.get("progress",{}).get("nimbara_side_03",0))==2,"Kaien side story: kill progress was not persisted in quest state")
+    var completion:Dictionary=core.apply_event(quest_state,content.QUESTS,"kill","moss_hopper",1)
+    quest_state=completion.get("quests",{})
+    _expect("nimbara_side_03" in quest_state.get("completed",[]),"Kaien side story: third target defeat did not complete quest")
+    _expect(int(completion.get("items_reward",{}).get("resonance_shard",0))==3,"Kaien side story: local completion reward mismatch")
+    var menu_file:=FileAccess.open("res://scripts/ui/activity_menu.gd",FileAccess.READ)
+    _expect(menu_file!=null,"Kaien side story: operations menu source should be readable")
+    if menu_file:
+        _expect(menu_file.get_as_text().contains('["kaien_story"'),"Kaien side story: operations menu entry missing")
+        menu_file.close()
+    var root_file:=FileAccess.open("res://scripts/game_root.gd",FileAccess.READ)
+    _expect(root_file!=null,"Kaien side story: game root source should be readable")
+    if root_file:
+        _expect(root_file.get_as_text().contains('"kaien_story":_start_optional_quest("nimbara_side_03")'),"Kaien side story: menu action is not connected to the local quest service")
+        root_file.close()
+    core.free()
+    maps.free()
+    content.free()
 
 func _test_aurelio_campaign_chain()->void:
     var content=ContentScript.new()
