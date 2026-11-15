@@ -29,6 +29,8 @@ void AnimeNexusCombatCore::_bind_methods() {
             &AnimeNexusCombatCore::resolve_loot);
     ClassDB::bind_method(D_METHOD("apply_craft", "inventory", "cost", "results"),
             &AnimeNexusCombatCore::apply_craft);
+    ClassDB::bind_method(D_METHOD("resolve_supreme_meter", "current_charge", "gain", "activate"),
+            &AnimeNexusCombatCore::resolve_supreme_meter);
 }
 
 Dictionary AnimeNexusCombatCore::calculate_damage(double weapon_damage, int character_level,
@@ -312,6 +314,23 @@ Dictionary AnimeNexusCombatCore::apply_craft(const Dictionary &inventory, const 
     outcome["inventory"] = updated;
     outcome["reason"] = "ok";
     return outcome;
+}
+
+
+Dictionary AnimeNexusCombatCore::resolve_supreme_meter(double current_charge, double gain,
+        bool activate) const {
+    const double safe_current = std::isfinite(current_charge)
+            ? std::clamp(current_charge, 0.0, 100.0) : 0.0;
+    const double safe_gain = std::isfinite(gain) ? std::max(0.0, gain) : 0.0;
+    const bool ready = safe_current >= 100.0;
+    const bool activated = activate && ready;
+
+    Dictionary result;
+    result["charge"] = activated ? 0.0 : (activate ? safe_current
+            : std::clamp(safe_current + safe_gain, 0.0, 100.0));
+    result["ready"] = activated || (!activate && (ready || safe_current + safe_gain >= 100.0));
+    result["activated"] = activated;
+    return result;
 }
 
 Dictionary AnimeNexusCombatCore::advance_experience(const Dictionary &hunter,

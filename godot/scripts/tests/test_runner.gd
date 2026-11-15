@@ -27,6 +27,7 @@ func _init()->void:
     _test_xp()
     _test_damage()
     _test_native_combat_core()
+    _test_supreme_meter()
     _test_companion_agent_setup()
     _test_elemental_reaction_runtime()
     _test_loot()
@@ -103,6 +104,18 @@ func _test_native_combat_core()->void:
     _expect(int(level_result["levels_gained"])==2 and int(level_result["skill_points"])==2,"C++ progression: level reward mismatch")
     _expect(int(level_result["hp"])==164 and is_equal_approx(float(level_result["max_energy"]),108.0),"C++ progression: level stat growth mismatch")
     
+func _test_supreme_meter()->void:
+    var core=AnimeNexusCombatCore.new()
+    var half:Dictionary=core.resolve_supreme_meter(0.0,42.5,false)
+    _expect(is_equal_approx(float(half["charge"]),42.5) and not bool(half["ready"]),"Supreme: partial charge mismatch")
+    var cap:Dictionary=core.resolve_supreme_meter(97.0,12.0,false)
+    _expect(is_equal_approx(float(cap["charge"]),100.0) and bool(cap["ready"]),"Supreme: meter did not clamp at full charge")
+    var denied:Dictionary=core.resolve_supreme_meter(99.0,0.0,true)
+    _expect(not bool(denied["activated"]) and is_equal_approx(float(denied["charge"]),99.0),"Supreme: activation below full charge was accepted")
+    var used:Dictionary=core.resolve_supreme_meter(100.0,0.0,true)
+    _expect(bool(used["activated"]) and is_equal_approx(float(used["charge"]),0.0),"Supreme: ready activation did not consume charge")
+    core.free()
+
 func _test_elemental_reaction_runtime()->void:
     var state=StateScript.new()
     state.reset()
@@ -172,6 +185,7 @@ func _test_save()->void:
     var state=StateScript.new()
     state.reset()
     state.data["hunter"]["gold"]=9876
+    state.data["hunter"]["chaos_energy"]=65.0
     var save=SaveScript.new()
     save.setup(state)
     save.configure_paths("user://anime_nexus_test_save.json","user://anime_nexus_test_save.bak.json")
@@ -188,6 +202,7 @@ func _test_save()->void:
     state.data["hunter"]["gold"]=2
     _expect(save.load_now(),"Save: could not reload save")
     _expect(int(state.data["hunter"]["gold"])==9876,"Save: corrupt primary did not recover the previous backup")
+    _expect(is_equal_approx(float(state.data["hunter"].get("chaos_energy",0.0)),65.0),"Save: supreme meter was not persisted locally")
     _expect(state.apply_loaded({"schema":4,"hunter":{"gold":444}}),"Save: supported old schema was rejected")
     _expect(int(state.data["schema"])==8 and int(state.data["hunter"]["gold"])==444,"Save: older schema did not migrate while preserving progress")
     _expect(state.data["party"]["companions"].size()==2,"Save: migration did not restore the default local companion roster")

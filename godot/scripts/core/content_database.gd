@@ -7,6 +7,10 @@ const COMPANIONS := {
     "ren_aozora":{"name":"Ren Aozora","element":"wind","role":"controller","body":Color("#3b7770"),"accent":Color("#75e7d0")}
 }
 
+const TRANSFORMATIONS := {
+    "kaien_sapphire_storm":{"name":"Tempestade de Safira","duration":10.0,"damage_multiplier":1.35,"cooldown_multiplier":0.68,"color":Color("#45caff")}
+}
+
 const WEAPONS := {
     "fulgor_gauntlets":{"element":"thunder","name":"Manoplas Fulgor","damage":27.0,"rate":0.30,"range":4.2,"type":"melee","kit":"cone","abilities":["lightning_step","sky_chain","static_field"]},
     "volt_blades":{"element":"thunder","name":"Lâminas Voltáicas","damage":24.0,"rate":0.24,"range":3.4,"type":"melee","kit":"cone","abilities":["volt_dash","arc_burst"]},

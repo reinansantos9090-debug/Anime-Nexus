@@ -25,7 +25,9 @@ GDScript faz a composição de cenas e conecta eventos/controles com os serviço
 - `resolve_elemental_reaction`: tabela determinística e sem dependência de ordem entre pares, com ID, multiplicador, raio e estado resultante.
 - `advance_experience`: aplica carry-over, curva de requisitos, ponto de habilidade e crescimento de atributos ao subir de nível.
 
-A criação também passou por `apply_craft`: C++ confere todos os custos, impede quantidades inválidas/overflow e devolve uma nova cópia do inventário só quando todo o débito e a concessão podem ser aplicados. GDScript troca a referência e emite um único estado de inventário, sem sequência de débitos parciais.
+A criação também passou por `apply_craft`: C++ confere todos os custos, impede quantidades inválidas/overflow e devolve uma nova cópia do inventário só quando todo o débito e a concessão podem ser aplicados.
+
+`resolve_supreme_meter` mantém a carga da suprema entre 0 e 100, rejeita valores não finitos e só consome a carga quando a ativação ocorre com a barra completa. O runtime aplica o perfil local da Tempestade de Safira, acumula carga por golpes e derrotas e atualiza o controle de toque; VFX e temporizador são integração da cena. GDScript troca a referência e emite um único estado de inventário, sem sequência de débitos parciais.
 
 A economia de drops também passou para `resolve_loot`: C++ escolhe raridade, quantidade por raridade, item dentro da tabela, bônus de nível/evento e ouro. GDScript fornece somente os números aleatórios locais e aplica a saída ao inventário; não mantém uma segunda tabela de probabilidades. Uma regressão determinística cobre as raridades e a tabela vazia.
 
@@ -52,3 +54,5 @@ O núcleo de companheiros acrescenta `companion_decision` e `companion_damage`, 
 - **Planejado:** migração das regras de combate restantes, IA, equipamentos e serialização.
 - **Não declarado como testado:** build Android e testes nativos precisam passar no CI; o teste local não tem Android NDK instalado.
 - Renderização, personagens anime finais, recursos artísticos de produção e a campanha completa continuam pendentes conforme `IMPLEMENTATION_STATUS.md`.
+
+O campo local `hunter.chaos_energy` guarda a carga entre sessões nos três slots; o temporizador da forma ativa não persiste, portanto fechar o jogo encerra a transformação, sem conceder duração gratuita na próxima abertura.

@@ -80,6 +80,8 @@ var activity_goal:=0
 var activity_progress:=0
 var clock:=0.0
 var side_dialogue_active:=false
+var supreme_active:=false
+var supreme_remaining:=0.0
 
 func _ready()->void:
     state=StateScript.new();add_child(state)
@@ -124,6 +126,8 @@ func _ready()->void:
     hud=HudScript.new();add_child(hud);hud.setup(state,quests)
     hud.attack_pressed.connect(_attack)
     hud.ability_pressed.connect(_ability)
+    hud.supreme_pressed.connect(_activate_supreme)
+    hud.set_supreme_charge(float(state.get_hunter().get("chaos_energy",0.0)))
     hud.portal_pressed.connect(_portal)
     hud.interact_pressed.connect(_interact)
     hud.inventory_pressed.connect(func():hud.set_mode("INVENTÁRIO • "+inventory.summary()))
@@ -455,6 +459,61 @@ func _cycle_weapon()->void:
     if player.has_method("equip_weapon"):player.equip_weapon(next)
     hud.set_mode("ARSENAL • %s • %.0f DANO"%[str(weapon["name"]),float(weapon["damage"])])
 
+func _gain_supreme_charge(amount:float)->void:
+    if supreme_active or amount<=0.0 or state==null or state.native_core==null:return
+    var hunter:Dictionary=state.get_hunter()
+    var result:Dictionary=state.native_core.resolve_supreme_meter(float(hunter.get("chaos_energy",0.0)),amount,false)
+    hunter["chaos_energy"]=float(result.get("charge",0.0))
+    if hud:hud.set_supreme_charge(float(hunter["chaos_energy"]))
+    state.state_changed.emit()
+
+func _player_hit(target:Node3D,amount:float,critical:=false,element:="none")->Dictionary:
+    if not is_instance_valid(target):return {}
+    var final_amount:=amount
+    if supreme_active:
+        var form:Dictionary=content.TRANSFORMATIONS.get("kaien_sapphire_storm",{})
+        final_amount*=float(form.get("damage_multiplier",1.0))
+    var result:Dictionary=combat.hit(target,final_amount,critical,element)
+    var dealt:=float(result.get("amount",0.0))
+    if dealt>0.0:_gain_supreme_charge(minf(6.0,maxf(1.5,dealt*0.045)))
+    return result
+
+func _activate_supreme()->void:
+    if supreme_active or dead_timer>0.0:return
+    if mode=="HQ":
+        hud.set_mode("TEMPESTADE DE SAFIRA • DISPONÍVEL DURANTE COMBATE")
+        return
+    var hunter:Dictionary=state.get_hunter()
+    var form:Dictionary=content.TRANSFORMATIONS.get("kaien_sapphire_storm",{})
+    if form.is_empty():return
+    var outcome:Dictionary=state.native_core.resolve_supreme_meter(float(hunter.get("chaos_energy",0.0)),0.0,true)
+    if not bool(outcome.get("activated",false)):
+        hud.set_mode("RESSONÂNCIA • %d%%"%roundi(float(outcome.get("charge",0.0))))
+        return
+    hunter["chaos_energy"]=float(outcome.get("charge",0.0))
+    supreme_active=true
+    supreme_remaining=float(form.get("duration",10.0))
+    hud.set_supreme_charge(0.0,true,supreme_remaining)
+    hud.set_mode("TEMPESTADE DE SAFIRA • RESSONÂNCIA DESPERTA")
+    if player.has_method("set_transformation"):player.set_transformation(true,form.get("color",Color("#45caff")))
+    vfx.skill_burst(self,player.position,form.get("color",Color("#45caff")))
+    vfx.ring(self,player.position+Vector3(0,0.04,0),3.6,Color("#8aeaff"),0.62)
+    audio.skill()
+    state.state_changed.emit()
+
+func _tick_supreme(delta:float)->void:
+    if not supreme_active:return
+    supreme_remaining=maxf(0.0,supreme_remaining-delta)
+    if supreme_remaining<=0.0:
+        supreme_active=false
+        if is_instance_valid(player) and player.has_method("set_transformation"):player.set_transformation(false)
+        var position:=player.position if is_instance_valid(player) else Vector3.ZERO
+        vfx.ring(self,position+Vector3(0,0.04,0),2.4,Color("#45caff"),0.38)
+        hud.set_supreme_charge(float(state.get_hunter().get("chaos_energy",0.0)))
+        hud.set_mode("RESSONÂNCIA • A TEMPESTADE DE SAFIRA SE DISSIPOU")
+    else:
+        hud.set_supreme_charge(float(state.get_hunter().get("chaos_energy",0.0)),true,supreme_remaining)
+
 func _attack()->void:
     if not attack_ready or dead_timer>0.0:return
     attack_ready=false
@@ -467,7 +526,7 @@ func _attack()->void:
         var attack:Dictionary=combat.player_attack(weapon,int(state.get_hunter()["level"]),bonus,crit)
         var amount:float=float(attack["amount"])
         var critical:bool=bool(attack["critical"])
-        var hit_result:Dictionary=combat.hit(target,amount,critical,str(weapon.get("element","none")))
+        var hit_result:Dictionary=_player_hit(target,amount,critical,str(weapon.get("element","none")))
         var displayed_amount:=float(hit_result.get("amount",amount))
         vfx.hit_burst(self,target.position+Vector3(0,1,0),Color("#ffe16a"))
         vfx.floating_number(self,target.position+Vector3(0,1.5,0),displayed_amount,critical)
@@ -499,6 +558,9 @@ func _ability(i:int)->void:
         str(weapon.get("element","none"))
     )
     var cooldown:=float(ability["cooldown"])*(1.0-clampf(_core("cooldown")+skill_tree.bonus("cooldown"),0.0,0.75))
+    if supreme_active:
+        var form:Dictionary=content.TRANSFORMATIONS.get("kaien_sapphire_storm",{})
+        cooldown*=float(form.get("cooldown_multiplier",1.0))
     get_tree().create_timer(maxf(0.20,cooldown)).timeout.connect(func():skills[i]=true)
 
 func _execute_ability(effect:String,power:float,radius:float,target_limit:=5,element:="none")->void:
@@ -509,24 +571,24 @@ func _execute_ability(effect:String,power:float,radius:float,target_limit:=5,ele
             if target:
                 var dir:Vector3=(target.position-player.position).normalized()
                 player.position=target.position-dir*1.8
-                combat.hit(target,55.0*power,false,element)
+                _player_hit(target,55.0*power,false,element)
             vfx.skill_burst(self,player.position,Color("#66eaff"))
         "area","pull_area":
             for e in enemies.duplicate():
                 if is_instance_valid(e) and e.position.distance_to(origin)<=radius:
-                    combat.hit(e,48.0*power,false,element)
+                    _player_hit(e,48.0*power,false,element)
                     if effect=="pull_area":
                         e.position=e.position.lerp(origin,0.20)
             if boss and is_instance_valid(boss) and boss.position.distance_to(origin)<=radius:
-                combat.hit(boss,65.0*power,false,element)
+                _player_hit(boss,65.0*power,false,element)
             vfx.skill_burst(self,origin,Color("#b990ff"))
         "slow_area":
             for e in enemies.duplicate():
                 if is_instance_valid(e) and e.position.distance_to(origin)<=radius:
-                    combat.hit(e,35.0*power,false,element)
+                    _player_hit(e,35.0*power,false,element)
                     if e.has_method("apply_slow"):e.apply_slow(3.0,0.42)
             if boss and is_instance_valid(boss) and boss.position.distance_to(origin)<=radius:
-                combat.hit(boss,48.0*power,false,element)
+                _player_hit(boss,48.0*power,false,element)
                 if boss.has_method("apply_slow"):boss.apply_slow(2.2,0.58)
             vfx.skill_burst(self,origin,Color("#68e5ee"))
         "chain":
@@ -544,7 +606,7 @@ func _execute_ability(effect:String,power:float,radius:float,target_limit:=5,ele
                         nearest=candidate
                         nearest_distance=distance
                 if nearest==null:break
-                combat.hit(nearest,43.0*power if nearest!=boss else 72.0*power,false,element)
+                _player_hit(nearest,43.0*power if nearest!=boss else 72.0*power,false,element)
                 vfx.hit_burst(self,nearest.position+Vector3(0,1.0,0),Color("#69ebff"))
                 cursor=nearest.position
                 candidates.erase(nearest)
@@ -553,11 +615,11 @@ func _execute_ability(effect:String,power:float,radius:float,target_limit:=5,ele
             var count:=0
             for e in enemies.duplicate():
                 if is_instance_valid(e) and e.position.distance_to(origin)<=radius:
-                    combat.hit(e,43.0*power,false,element)
+                    _player_hit(e,43.0*power,false,element)
                     count+=1
                     if count>=8:break
             if boss and is_instance_valid(boss) and boss.position.distance_to(origin)<=radius:
-                combat.hit(boss,72.0*power,false,element)
+                _player_hit(boss,72.0*power,false,element)
             vfx.skill_burst(self,origin,Color("#7defff"))
         "barrier":
             invulnerability=maxf(invulnerability,2.5)
@@ -705,6 +767,7 @@ func _shot(origin:Vector3,target:Vector3,damage:float)->void:
     shots.append(p)
 
 func _enemy_down(e:Node3D,x:int)->void:
+    _gain_supreme_charge(8.0)
     var monster_id:=str(e.monster_id)
     state.increment_stat("kills")
     progression.award_xp(x)
@@ -729,6 +792,7 @@ func _enemy_down(e:Node3D,x:int)->void:
             _clear_combat()
 
 func _boss_down(b:Node3D,x:int)->void:
+    _gain_supreme_charge(18.0)
     state.increment_stat("bosses")
     progression.award_xp(roundi(float(x)*events.multiplier()))
     quests.add_boss(str(b.boss_id))
@@ -848,6 +912,7 @@ func _core(kind:String)->float:
 
 func _process(delta:float)->void:
     if cutscene and cutscene.is_active():return
+    _tick_supreme(delta)
     if activity_remaining>0.0:
         activity_remaining=maxf(0.0,activity_remaining-delta)
         if activity_remaining<=0.0:

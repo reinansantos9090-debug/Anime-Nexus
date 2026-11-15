@@ -31,6 +31,7 @@ public:
             double rare_bonus_roll, int item_index_a, int item_index_b) const;
     Dictionary apply_craft(const Dictionary &inventory, const Dictionary &cost,
             const Dictionary &results) const;
+    Dictionary resolve_supreme_meter(double current_charge, double gain, bool activate) const;
 };
 
 } // namespace godot

@@ -2,6 +2,7 @@ extends CanvasLayer
 const JoystickScript=preload("res://scripts/ui/virtual_joystick.gd")
 signal attack_pressed
 signal ability_pressed(index: int)
+signal supreme_pressed
 signal portal_pressed
 signal interact_pressed
 signal inventory_pressed
@@ -24,6 +25,10 @@ var boss_name: Label
 var boss_bar: ProgressBar
 var low_hp_overlay: ColorRect
 var interact_button:Button
+var supreme_button:Button
+var supreme_active:=false
+var supreme_remaining:=0.0
+var supreme_display_tenths:=-1
 
 func setup(game_state: Node, quest_service: Node = null) -> void:
     state = game_state
@@ -63,6 +68,9 @@ func _build() -> void:
     _btn(root,"PASSO",Vector2(790,545),Vector2(78,78)).pressed.connect(func(): ability_pressed.emit(0))
     _btn(root,"CORR.",Vector2(875,505),Vector2(78,78)).pressed.connect(func(): ability_pressed.emit(1))
     _btn(root,"CAMPO",Vector2(875,595),Vector2(78,78)).pressed.connect(func(): ability_pressed.emit(2))
+    supreme_button=_btn(root,"SUPREMA • 0%",Vector2(760,437),Vector2(220,62))
+    supreme_button.disabled=true
+    supreme_button.pressed.connect(func():supreme_pressed.emit())
     move_stick=JoystickScript.new()
     move_stick.name="MoveJoystick"
     move_stick.position=Vector2(28,508)
@@ -117,9 +125,26 @@ func _refresh() -> void:
     title_label.text = "ANIME NEXUS • KAIEN ARASHI"
     stats_label.text = "HP %d/%d  |  LV %d  |  XP %d/%d  |  EN %d/%d" % [int(h["hp"]),int(h["max_hp"]),int(h["level"]),int(h["xp"]),int(h["xp_to_next"]),int(h["energy"]),int(h["max_energy"])]
     quest_label.text = "Missão: nenhum" if quests == null else "Missão: "+quests.active_summary()
+    set_supreme_charge(float(h.get("chaos_energy",0.0)),supreme_active,supreme_remaining)
     if low_hp_overlay:
         var ratio:=float(h["hp"])/maxf(1.0,float(h["max_hp"]))
         low_hp_overlay.color.a=clampf((0.32-ratio)*1.6,0.0,0.34)
+
+func set_supreme_charge(value:float,active:=false,seconds_remaining:=0.0)->void:
+    if supreme_button==null:return
+    supreme_active=active
+    supreme_remaining=maxf(0.0,seconds_remaining)
+    if active:
+        var tenths:=roundi(supreme_remaining*10.0)
+        if tenths==supreme_display_tenths:return
+        supreme_display_tenths=tenths
+        supreme_button.text="SAFIRA • %.1fs"%supreme_remaining
+        supreme_button.disabled=true
+        return
+    supreme_display_tenths=-1
+    var charge:=clampf(value,0.0,100.0)
+    supreme_button.disabled=charge<100.0
+    supreme_button.text="TEMPESTADE\nPRONTA" if charge>=100.0 else "SUPREMA • %d%%"%roundi(charge)
 
 func set_boss(name_value:String,ratio:float,phase:int)->void:
     if boss_panel==null:return
