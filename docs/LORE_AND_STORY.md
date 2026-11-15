@@ -16,6 +16,8 @@ Em ruínas próximas à casa, Kaien toca um fragmento; faíscas desenham um mapa
 
 Liora mostra que a floresta guarda lembranças como anéis de crescimento. O grupo encontra o Cérvido de Cristal ferido por uma raiz metálica de laboratório. A primeira Âncora reativa uma rota e deixa a praça do Observatório coberta por brotos luminescentes. Kaien assume liderança sem monopolizar decisões.
 
+Na slice em desenvolvimento, Kaien encontra Musgos Saltadores carregando um brasão que sua mãe desenhava nos mapas. Ao devolvê-lo, descobre que os Arashi protegiam uma rota dos antigos guardiões do Nexo. A missão secundária já está ligada ao menu local, ao combate e ao save; essa pista inicial ainda aguarda continuação nos capítulos seguintes.
+
 ### Capítulo 2 — O Relógio Esquecido (Aurélio)
 
 Talen conduz a equipe a uma ampulheta que registra versões do passado, não uma linha temporal perfeita. Seraphine tenta reverter a perda de sua dimensão, mas descobre que o relógio só repete imagens. A segunda Âncora mostra que a ruptura foi deliberada como tentativa de proteção.
