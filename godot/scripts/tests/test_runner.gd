@@ -822,16 +822,30 @@ func _test_akari_ember_flower_quest()->void:
     story_state.reset()
     var quest_service=QuestScript.new()
     quest_service.setup(story_state,content)
+    var save_service=SaveScript.new()
+    save_service.setup(story_state)
+    save_service.configure_paths("user://anime_nexus_akari_story.json","user://anime_nexus_akari_story.bak.json")
     quest_service.start("nimbara_side_04")
     quest_service.add_interaction("akari_flame_bloom")
     var story_root=GameRootScript.new()
     story_root.state=story_state
     story_root.quests=quest_service
+    story_root.save=save_service
     story_root._quest_completed("nimbara_side_04")
-    _expect(bool(story_state.data["story"]["flags"].get("akari_flame_stabilized",false)),"Akari story: completion did not persist the world-change flag")
+    _expect(bool(story_state.data["story"]["flags"].get("akari_flame_stabilized",false)),"Akari story: completion did not set the world-change flag")
+    story_state.data["story"]["flags"]["akari_flame_stabilized"]=false
+    _expect(save_service.load_now(),"Akari story: could not reload the local world-change flag")
+    var world_service=WorldScript.new()
+    world_service.root=story_root
+    _expect(world_service._story_flag("akari_flame_stabilized"),"Akari story: restored flag was not visible to the world renderer")
+    world_service.free()
     story_root.free()
     quest_service.free()
+    save_service.free()
     story_state.free()
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_akari_story.json"))
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_akari_story.bak.json"))
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_akari_story.json.tmp"))
     var menu_file:=FileAccess.open("res://scripts/ui/activity_menu.gd",FileAccess.READ)
     _expect(menu_file!=null,"Akari story: operations menu source should be readable")
     if menu_file:
