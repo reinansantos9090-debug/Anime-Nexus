@@ -148,6 +148,17 @@ func _test_save()->void:
         _expect(false,"Save: could not create future-schema recovery fixture")
     _expect(save.load_now(),"Save: newer incompatible primary did not fall back to the compatible backup")
     _expect(int(state.data["hunter"]["gold"])==9876,"Save: newer schema data was loaded over the supported backup")
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.json"))
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.bak.json"))
+    var interrupted:=FileAccess.open("user://anime_nexus_test_save.json.tmp",FileAccess.WRITE)
+    if interrupted:
+        interrupted.store_string(JSON.stringify({"schema":8,"hunter":{"gold":333}}))
+        interrupted.close()
+    else:
+        _expect(false,"Save: could not create interrupted-write recovery fixture")
+    _expect(save.load_now(),"Save: completed temporary write was not recovered")
+    _expect(int(state.data["hunter"]["gold"])==333,"Save: temporary recovery loaded the wrong progress")
+    _expect(not FileAccess.file_exists("user://anime_nexus_test_save.json.tmp"),"Save: recovered temporary file was not finalized")
     save.free()
     state.free()
     DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_test_save.json"))

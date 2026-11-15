@@ -74,6 +74,7 @@ func slot_summary(slot:int)->Dictionary:
     if slot<0 or slot>=SLOT_COUNT:return {}
     var data:Dictionary=_read(str(slot_paths[slot]))
     if not _schema_supported(data):data=_read(str(slot_backup_paths[slot]))
+    if not _schema_supported(data):data=_read(str(slot_paths[slot])+".tmp")
     if not _schema_supported(data):return {"slot":slot,"has_save":false}
     var hunter:Dictionary=data.get("hunter",{})
     var story:Dictionary=data.get("story",{})
@@ -134,9 +135,14 @@ func load_now() -> bool:
         return false
     var parsed := _read(storage_path)
     if not _schema_supported(parsed):parsed=_read(backup_storage_path)
+    var recovered_temporary:=false
+    if not _schema_supported(parsed):
+        parsed=_read(storage_path+".tmp")
+        recovered_temporary=_schema_supported(parsed)
     if not _schema_supported(parsed):return false
     if not game_state.apply_loaded(parsed):return false
     dirty = false
+    if recovered_temporary:save_now()
     return true
 
 func _schema_supported(data:Dictionary)->bool:
