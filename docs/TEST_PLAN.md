@@ -7,6 +7,7 @@
 - Cooldowns, energia, esquiva invulnerável e telegraph/recuperação dos chefes.
 - IA: todos estados permitidos, retorno à região inicial, companion que recupera caminho e nunca causa dano a aliado.
 - Objetivos de missão: contagem, conclusão única, pré-requisitos, recompensa e save sem duplicação.
+- Missão pessoal de Kaien: entrada do terminal, disponibilidade dos Musgos Saltadores em Nimbara, três abates, bloqueio de conclusão antecipada, recompensa C++ e ligação da ação da interface ao serviço de missão.
 - Crafting: verificar todos os materiais antes de debitar, débito único e rollback se criação falhar.
 - Progressão: XP em limiar exato/múltiplo, limites, migração e desbloqueios.
 
