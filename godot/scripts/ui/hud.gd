@@ -3,6 +3,7 @@ const JoystickScript=preload("res://scripts/ui/virtual_joystick.gd")
 signal attack_pressed
 signal ability_pressed(index: int)
 signal supreme_pressed
+signal zoom_requested(direction:int)
 signal portal_pressed
 signal interact_pressed
 signal inventory_pressed
@@ -75,6 +76,8 @@ func _build() -> void:
     supreme_button=_btn(root,"SUPREMA • 0%",Vector2(760,437),Vector2(220,62))
     supreme_button.disabled=true
     supreme_button.pressed.connect(func():supreme_pressed.emit())
+    _btn(root,"−",Vector2(226,630),Vector2(50,50)).pressed.connect(func():zoom_requested.emit(-1))
+    _btn(root,"+",Vector2(286,630),Vector2(50,50)).pressed.connect(func():zoom_requested.emit(1))
     move_stick=JoystickScript.new()
     move_stick.name="MoveJoystick"
     move_stick.position=Vector2(28,508)

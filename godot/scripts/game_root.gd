@@ -121,7 +121,7 @@ func _ready()->void:
 
     camera=Camera3D.new()
     camera.projection=Camera3D.PROJECTION_ORTHOGONAL
-    camera.size=24.0
+    camera.size=clampf(float(state.data.get("settings",{}).get("camera_zoom",24.0)),14.0,32.0)
     add_child(camera)
     camera.current=true
 
@@ -129,6 +129,7 @@ func _ready()->void:
     hud.attack_pressed.connect(_attack)
     hud.ability_pressed.connect(_ability)
     hud.supreme_pressed.connect(_activate_supreme)
+    hud.zoom_requested.connect(_adjust_camera_zoom)
     hud.set_supreme_charge(float(state.get_hunter().get("chaos_energy",0.0)))
     hud.portal_pressed.connect(_portal)
     hud.interact_pressed.connect(_interact)
@@ -466,6 +467,15 @@ func _cycle_weapon()->void:
     state.state_changed.emit()
     if player.has_method("equip_weapon"):player.equip_weapon(next)
     hud.set_mode("ARSENAL • %s • %.0f DANO"%[str(weapon["name"]),float(weapon["damage"])])
+
+func _adjust_camera_zoom(direction:int)->void:
+    if camera==null or direction==0:return
+    var settings:Dictionary=state.data.get("settings",{})
+    camera.size=clampf(camera.size-float(direction)*2.0,14.0,32.0)
+    settings["camera_zoom"]=camera.size
+    state.data["settings"]=settings
+    state.state_changed.emit()
+    hud.set_mode("CÂMERA • ZOOM %d%%"%roundi((24.0/camera.size)*100.0))
 
 func _gain_supreme_charge(amount:float)->void:
     if supreme_active or amount<=0.0 or state==null or state.native_core==null:return

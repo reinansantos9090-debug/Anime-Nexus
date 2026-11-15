@@ -72,3 +72,5 @@ Este fluxo requer teste manual no Godot; nenhum job longo/emulador automático s
 - HUD horizontal: tocar Arsenal e percorrer somente instrumentos desbloqueados; usar Gadget sem estoque sem alterar inventário; conferir Bolsa e Visuais. Confirmar separação entre os quatro botões e joystick/ataque em 1280×720 e em aparelho.
 
 - Bolsa: abrir em exploração/hub, conferir nomes e quantidades com o inventário persistido, obter um item e confirmar atualização; fechar e voltar sem alteração de saldo.
+
+- Câmera: usar botões de zoom para dentro/fora, conferir limites 14–32, trocar de mapa/reabrir save e verificar que a escala salva permanece; mover e combater nos extremos do zoom.

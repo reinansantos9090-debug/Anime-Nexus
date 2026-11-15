@@ -17,7 +17,7 @@ func _ready() -> void:
 func reset() -> void:
     data = {
         "schema": SCHEMA,
-        "settings": {"difficulty":"adventure"},
+        "settings": {"difficulty":"adventure","camera_zoom":24.0},
         "hunter": {"name":"Kaien Arashi","level":1,"xp":0,"xp_to_next":120,"hp":140,"max_hp":140,"energy":100.0,"max_energy":100.0,"gold":0,"chaos_energy":0,"rank":0},
         "loadout": {"weapon":"fulgor_gauntlets","ability_1":"lightning_step","ability_2":"sky_chain","ability_3":"static_field","core_slots":["damage","cooldown","dodge"]},
         "party": {"companions":["akari_solen","ren_aozora"],"command":"auto"},
