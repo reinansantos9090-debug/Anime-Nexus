@@ -182,6 +182,15 @@ func _test_save_slots()->void:
     _expect(int(state.data["hunter"]["gold"])==111,"Save slots: slot 1 data was overwritten by slot 2")
     _expect(save.load_slot(1),"Save slots: could not load slot 2")
     _expect(int(state.data["hunter"]["gold"])==222,"Save slots: slot 2 data mismatch")
+    var future_slot:=FileAccess.open(paths[2],FileAccess.WRITE)
+    if future_slot:
+        future_slot.store_string(JSON.stringify({"schema":999,"hunter":{"gold":999}}))
+        future_slot.close()
+    else:
+        _expect(false,"Save slots: could not create future-version slot")
+    _expect(bool(save.slot_summary(2).get("future_schema",false)),"Save slots: future-version slot was not detected")
+    _expect(not save.save_slot(2),"Save slots: overwrite of future-version save was allowed")
+    _expect(int(save._read(paths[2]).get("schema",0))==999,"Save slots: future-version save was overwritten")
     save.free()
     state.free()
     for path in paths:

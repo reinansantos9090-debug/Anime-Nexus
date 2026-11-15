@@ -9,6 +9,7 @@ var game_state:Node
 var root:Control
 var slot_labels:Array[Label]=[]
 var load_buttons:Array[Button]=[]
+var save_buttons:Array[Button]=[]
 var overwrite_dialog:ConfirmationDialog
 var pending_slot:=-1
 
@@ -73,6 +74,7 @@ func _build()->void:
         save_button.size=Vector2(165,48)
         save_button.pressed.connect(_request_save.bind(slot))
         card.add_child(save_button)
+        save_buttons.append(save_button)
     var close_button:=Button.new()
     close_button.text="FECHAR"
     close_button.position=Vector2(620,455)
@@ -89,12 +91,20 @@ func _refresh()->void:
     for slot in range(3):
         var summary:Dictionary=save_service.slot_summary(slot)
         var has_save:=bool(summary.get("has_save",false))
-        if has_save:
+        var compatible:=bool(summary.get("compatible",false))
+        if compatible:
             var selected:=" • ATIVO" if int(save_service.active_slot)==slot else ""
-            slot_labels[slot].text="Nível %d • capítulo %d%s"%[int(summary.get("level",1)),int(summary.get("chapter",1)),selected]
+            var recovery:=" • BACKUP" if str(summary.get("recovery_source",""))=="backup" else ""
+            if bool(summary.get("protected_by_future_save",false)):recovery+=" • versão nova preservada"
+            slot_labels[slot].text="Nível %d • capítulo %d%s%s"%[int(summary.get("level",1)),int(summary.get("chapter",1)),selected,recovery]
+        elif bool(summary.get("future_schema",false)):
+            slot_labels[slot].text="Salvamento de versão mais nova • Atualize o jogo"
+        elif has_save:
+            slot_labels[slot].text="Arquivo inválido • salvar exige confirmação"
         else:
             slot_labels[slot].text="Vazio"
-        load_buttons[slot].disabled=not has_save
+        load_buttons[slot].disabled=not compatible
+        save_buttons[slot].disabled=bool(summary.get("future_schema",false)) or bool(summary.get("protected_by_future_save",false))
 
 func _load_slot(slot:int)->void:
     if save_service==null or not save_service.load_slot(slot):return
