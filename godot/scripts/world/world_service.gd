@@ -106,6 +106,15 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
                 chime_ring.rotation.x=PI*0.5
                 var chime_echo:=Factory.torus(world_root,0.75,0.83,chime_point+Vector3(0,1.45,0),chime_color.darkened(0.12))
                 chime_echo.rotation=Vector3(PI*0.5,0,0.34)
+            if interaction_points.has("mira_memory_prism"):
+                var mira_point:Vector3=interaction_points["mira_memory_prism"]
+                var mira_color:=Color("#ffe1a4") if _story_flag("mira_accepted_silence") else Color("#adbdf4")
+                var mirror_crystal:=Factory.make_crystal(world_root,mira_point+Vector3(0,0.95,0),mira_color)
+                mirror_crystal.scale=Vector3(0.62,1.15,0.42)
+                var mirror_frame:=Factory.torus(world_root,0.92,1.04,mira_point+Vector3(0,0.08,0),mira_color.lightened(0.1))
+                mirror_frame.rotation.x=PI*0.5
+                var mirror_echo:=Factory.torus(world_root,0.54,0.62,mira_point+Vector3(0,1.0,0),mira_color.darkened(0.08))
+                mirror_echo.rotation=Vector3(PI*0.5,0,0.55)
             for p in b.get("memory_echoes",[]):
                 _memory_echo(p)
         "verdant_frontier":

@@ -198,6 +198,12 @@ GLB é formato de intercâmbio; preservar fonte editável em arquivo de criaçã
 
 
 
+## Prisma de Memória de Mira
+
+| Asset | Finalidade | Região/personagem | Descrição visual / paleta | Especificações | Materiais | Animações | Estado | Origem/licença |
+|---|---|---|---|---|---|---|---|---|
+| Prisma de Memória | Marco explorável da introdução pessoal adicional de Mira | Clareira de Nimbara | Prisma alto azul-pérola dentro de dois anéis finos; fica dourado após Mira aceitar a lembrança sem resolvê-la | Malha procedural leve no ponto `mira_memory_prism`, legível na câmera isométrica | Materiais sólidos originais, sem textura externa | Sem animação até o polish | Blockout integrado; reflexão, animação, material e modelo final pendentes | Geometria procedural original do projeto |
+
 ## Sino do Vento de Ren
 
 | Asset | Finalidade | Região/personagem | Descrição visual / paleta | Especificações | Materiais | Animações | Estado | Origem/licença |

@@ -584,6 +584,7 @@ func _run_operation(action_id:String)->void:
         "kaien_story":_start_optional_quest("nimbara_side_03")
         "akari_story":_start_optional_quest("nimbara_side_04")
         "ren_story":_start_optional_quest("nimbara_side_05")
+        "mira_story":_start_optional_quest("nimbara_side_06")
         "companion_order":_cycle_companion_order()
 
 func _open_inventory()->void:
@@ -1307,6 +1308,10 @@ func _quest_completed(id:String)->void:
         state.set_story_flag("ren_chose_to_stay",true)
         if hud:
             hud.set_mode("SINO DO VENTO • REN ESCOLHEU VOLTAR À ROTA COM A EQUIPE")
+    if id=="nimbara_side_06":
+        state.set_story_flag("mira_accepted_silence",true)
+        if hud:
+            hud.set_mode("ECO DE MEMÓRIA • MIRA ESCOLHEU ESCUTAR SEM PRECISAR RESOLVER")
     if id=="epilogue_01":
         state.data["story"]["flags"]["nexus_campaign_epilogue_complete"]=true
         state.story_changed.emit()

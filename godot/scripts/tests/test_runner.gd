@@ -40,6 +40,7 @@ func _init()->void:
     _test_kaien_personal_side_quest()
     _test_akari_ember_flower_quest()
     _test_ren_wind_chime_quest()
+    _test_mira_memory_prism_quest()
     _test_aurelio_campaign_chain()
     _test_story_dialogue_completion()
     _test_vesper_region_data()
@@ -924,6 +925,71 @@ func _test_ren_wind_chime_quest()->void:
     _expect(root_file!=null,"Ren story: game root action is not readable")
     if root_file:
         _expect(root_file.get_as_text().contains('"ren_story":_start_optional_quest("nimbara_side_05")'),"Ren story: operations action is not routed")
+        root_file.close()
+    maps.free()
+
+func _test_mira_memory_prism_quest()->void:
+    var content=ContentScript.new()
+    var maps=MapScript.new()
+    maps._ready()
+    var quest:Dictionary={}
+    for row in content.QUESTS:
+        if str(row.get("id",""))=="nimbara_side_06":
+            quest=row
+            break
+    _expect(not quest.is_empty(),"Mira story: memory-prism quest record missing")
+    _expect(str(quest.get("type",""))=="interact" and int(quest.get("target",0))==1,"Mira story: objective should be one local interaction")
+    _expect(str(quest.get("map",""))=="nimbara" and bool(quest.get("optional",false)),"Mira story: optional Nimbara routing missing")
+    var points:Dictionary=maps.maps["nimbara"].get("interaction_points",{})
+    _expect(points.has("mira_memory_prism") and str(quest.get("object",""))=="mira_memory_prism","Mira story: local interaction point mismatch")
+    _expect(str(quest.get("start_dialogue","")).contains("categorias"),"Mira story: conflict about classifying feelings is missing")
+    _expect(str(quest.get("completion_dialogue","")).contains("sem transformá-la"),"Mira story: emotional resolution is missing")
+    for reward_id in quest.get("rewards",{}).keys():
+        _expect(content.ITEMS.has(str(reward_id)),"Mira story: reward is not catalogued: "+str(reward_id))
+    var core:=AnimeNexusQuestCore.new()
+    var quest_state:Dictionary={"active":[],"completed":[],"progress":{}}
+    var started:Dictionary=core.start_quest(quest_state,content.QUESTS,"nimbara_side_06")
+    var result:Dictionary=core.apply_event(started.get("quests",{}),content.QUESTS,"interact","mira_memory_prism",1)
+    _expect("nimbara_side_06" in result.get("quests",{}).get("completed",[]),"Mira story: interacting with the prism did not complete the objective")
+    _expect(int(result.get("items_reward",{}).get("mira_silent_memory",0))==1,"Mira story: unique keepsake reward missing")
+
+    var state=StateScript.new()
+    state.reset()
+    var quest_service=QuestScript.new()
+    quest_service.setup(state,content)
+    var save_service=SaveScript.new()
+    save_service.setup(state)
+    save_service.configure_paths("user://anime_nexus_mira_story.json","user://anime_nexus_mira_story.bak.json")
+    quest_service.start("nimbara_side_06")
+    quest_service.add_interaction("mira_memory_prism")
+    var story_root=GameRootScript.new()
+    story_root.state=state
+    story_root.quests=quest_service
+    story_root.save=save_service
+    story_root._quest_completed("nimbara_side_06")
+    _expect(bool(state.data["story"]["flags"].get("mira_accepted_silence",false)),"Mira story: completion did not set the world-change flag")
+    state.data["story"]["flags"]["mira_accepted_silence"]=false
+    _expect(save_service.load_now(),"Mira story: could not reload the local world-change flag")
+    var world_service=WorldScript.new()
+    world_service.root=story_root
+    _expect(world_service._story_flag("mira_accepted_silence"),"Mira story: restored flag was not visible to the world renderer")
+    world_service.free()
+    story_root.free()
+    quest_service.free()
+    save_service.free()
+    state.free()
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_mira_story.json"))
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_mira_story.bak.json"))
+    DirAccess.remove_absolute(ProjectSettings.globalize_path("user://anime_nexus_mira_story.json.tmp"))
+    var menu_file:=FileAccess.open("res://scripts/ui/activity_menu.gd",FileAccess.READ)
+    _expect(menu_file!=null,"Mira story: operations menu source should be readable")
+    if menu_file:
+        _expect(menu_file.get_as_text().contains('["mira_story"'),"Mira story: menu entry missing")
+        menu_file.close()
+    var root_file:=FileAccess.open("res://scripts/game_root.gd",FileAccess.READ)
+    _expect(root_file!=null,"Mira story: game root action is not readable")
+    if root_file:
+        _expect(root_file.get_as_text().contains('"mira_story":_start_optional_quest("nimbara_side_06")'),"Mira story: menu action is not routed")
         root_file.close()
     maps.free()
 
