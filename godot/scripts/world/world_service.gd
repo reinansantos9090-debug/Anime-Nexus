@@ -74,6 +74,7 @@ func _make_biome_decor(id:String,b:Dictionary)->void:
                 Factory.make_crystal(world_root,Vector3(x,0.05,-16.0 if i%2==0 else 16.0),accent.lerp(Color("#c084fc"),float(i%3)*0.22))
             for p in [Vector3(-8,0,13),Vector3(-5,0,14),Vector3(-2,0,13),Vector3(7,0,-15)]:
                 _memory_bloom(p,accent)
+            _memory_bloom(Vector3(-15,0,0),Color("#ff8b59"))
             for p in b.get("memory_echoes",[]):
                 _memory_echo(p)
         "verdant_frontier":
