@@ -630,6 +630,15 @@ func _test_prologue_and_epilogue_routes()->void:
         if index<expected.size()-1 and not found.is_empty():
             _expect(str(found.get("next",""))==expected[index+1],"Prologue: broken next link from %s"%expected[index])
     _expect(str(content.QUESTS[0].get("id",""))=="prologue_01","Prologue: initial new-game objective must begin with story")
+    var fresh_state=StateScript.new()
+    fresh_state.reset()
+    var initial_active:Array=fresh_state.data["quests"].get("active",[])
+    _expect("prologue_01" in initial_active and "nimbara_01" not in initial_active,"Prologue: fresh save must not start a parallel chapter quest")
+    var game_root_source:=FileAccess.open("res://scripts/game_root.gd",FileAccess.READ)
+    _expect(game_root_source!=null,"Prologue: root runtime source should be readable")
+    if game_root_source:
+        _expect(not game_root_source.get_as_text().contains('quests.start("nimbara_01")'),"Prologue: startup must not force the Nimbara chapter beside the prologue")
+        game_root_source.close()
     _expect(str(content.BOSSES.get("prism_primordial",{}).get("name",""))=="Prisma Primordial","Epilogue: secret boss is not cataloged")
     _expect(maps.maps.get("nimbara",{}).get("interaction_points",{}).has("prologue_resonator"),"Prologue: Nimbara resonator interaction point missing")
     _expect(maps.maps.get("nexus_core",{}).get("interaction_points",{}).has("observatory_return"),"Epilogue: return beacon interaction point missing")
