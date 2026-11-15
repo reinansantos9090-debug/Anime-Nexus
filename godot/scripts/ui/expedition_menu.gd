@@ -4,6 +4,8 @@ extends CanvasLayer
 signal expedition_selected(map_id:String)
 signal closed
 
+const CAMPAIGN_EXPEDITIONS:=["nimbara","aurelio","vesper","ferrumia","ivern","umbral","nexus_core"]
+
 var map_service:Node
 var root:Control
 var rows:VBoxContainer
@@ -59,10 +61,11 @@ func _populate()->void:
     if rows==null or map_service==null:return
     for child in rows.get_children():
         child.queue_free()
-    var ids:Array=map_service.maps.keys()
+    var ids:Array=CAMPAIGN_EXPEDITIONS.duplicate()
     ids.sort()
     for value in ids:
         var map_id:=str(value)
+        if not map_service.maps.has(map_id):continue
         var data:Dictionary=map_service.get_map(map_id)
         var row:=PanelContainer.new()
         row.custom_minimum_size=Vector2(900,66)
@@ -87,8 +90,10 @@ func _populate()->void:
         detail.add_theme_font_size_override("font_size",13)
         info.add_child(detail)
         var enter:=Button.new()
-        enter.text="EXPLORAR"
-        enter.custom_minimum_size=Vector2(150,46)
+        var final_region_locked:=map_id=="nexus_core"
+        enter.text="CAMPANHA PENDENTE" if final_region_locked else "EXPLORAR"
+        enter.disabled=final_region_locked
+        enter.custom_minimum_size=Vector2(180,46)
         enter.pressed.connect(_select_map.bind(map_id))
         layout.add_child(enter)
 

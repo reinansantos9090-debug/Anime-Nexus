@@ -170,5 +170,5 @@ Runner Godot permanece manual; nenhum teste longo/emulador foi iniciado.
 ### Seletor de expedições (manual, curto)
 
 - Concluir a Âncora de Nimbara, tocar o Portal no Observatório e conferir a lista rolável de mapas, risco, perigo local, objetivo e duração.
-- Selecionar uma região e confirmar a troca de terreno, pool de criaturas e `world.map_id`; repetir com um objetivo de missão ativo para confirmar que ele mantém sua região-alvo.
+- Selecionar Nimbara, Aurélio, Vesper, Ferrúmia, Ivern ou Umbral e confirmar troca de terreno, pool de criaturas e `world.map_id`; conferir Núcleo bloqueado e ausência dos mapas legados; repetir com objetivo ativo e confirmar sua região-alvo.
 - Fluxo offline pelo HUD; validação touch manual, sem emulador ou workflow longo.
