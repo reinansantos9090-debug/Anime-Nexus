@@ -1091,6 +1091,8 @@ func _spawn_boss(id:String)->void:
     elif id=="archive_zero":b.attach_visual(_make_archive_zero_visual(b))
     elif id=="steel_coral_colossus":
         b.attach_visual(Factory.make_colossus(b,Color("#68455a"),Color("#ffaf71")))
+    elif id=="blizzard_monarch":
+        b.attach_visual(Factory.make_colossus(b,Color("#50627e"),Color("#bdeaff")))
     else:
         var palette:Dictionary={
             "fire":[Color("#783b38"),Color("#ffad4d")],

@@ -155,7 +155,7 @@ func _ready() -> void:
         },
         "ivern": {
             "name":"Ivern • Montanhas da Aurora",
-            "difficulty":1.34,"duration":185.0,"goal":15,"hazard":"rajadas da aurora",
+            "difficulty":1.34,"duration":185.0,"goal":15,"hazard":"rajadas da aurora","resonance_anchor":Vector3(0,0,-8.5),
             "ground":Color("#7183a0"),"accent":Color("#d5e9ff"),"fog":Color("#bdc9e2"),
             "enemies":["snowflake_wisp","boreal_fox","erratic_crystal","blizzard_spirit","frost_guardian","aurora_sentinel"],
             "obstacles":[

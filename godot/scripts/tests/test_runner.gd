@@ -45,6 +45,7 @@ func _init()->void:
     _test_ferrumia_region_data()
     _test_ferrumia_campaign_chain()
     _test_ivern_region_data()
+    _test_ivern_campaign_chain()
     _test_umbral_region_data()
     _test_nexus_region_data()
     _test_regional_boss_catalog()
@@ -509,6 +510,45 @@ func _test_vesper_campaign_chain()->void:
         "Vesper campaign: wrong regional boss")
     _expect(str(content.CAMPAIGN_NEXT_QUEST.get("aurelio",""))=="vesper_01",
         "Vesper campaign: chapter must unlock after Aurelio")
+    content.free()
+    maps.free()
+
+func _test_ivern_campaign_chain()->void:
+    var content=ContentScript.new()
+    var maps=MapScript.new()
+    maps._ready()
+    var expected:Array=["ivern_01","ivern_02","ivern_03","ivern_04","ivern_05","ivern_06","ivern_07","ivern_08"]
+    for index in range(expected.size()):
+        var quest:Dictionary={}
+        for row in content.QUESTS:
+            if str(row.get("id",""))==expected[index]:
+                quest=row
+                break
+        _expect(not quest.is_empty(),"Ivern campaign: missing %s"%expected[index])
+        if quest.is_empty():continue
+        _expect(str(quest.get("map",""))=="ivern","Ivern campaign: wrong map")
+        var kind:=str(quest.get("type",""))
+        if kind=="kill":
+            var monster_id:=str(quest.get("monster",""))
+            _expect(content.MONSTERS.has(monster_id),"Ivern campaign: missing creature")
+            _expect(monster_id in maps.maps["ivern"].get("enemies",[]),"Ivern campaign: creature absent from map")
+        elif kind=="collect":
+            var item_id:=str(quest.get("item",""))
+            _expect(content.ITEMS.has(item_id),"Ivern campaign: missing material")
+            var dropped:=false
+            for monster_id in maps.maps["ivern"].get("enemies",[]):
+                if item_id in content.MONSTERS.get(str(monster_id),{}).get("loot",[]):
+                    dropped=true
+                    break
+            _expect(dropped,"Ivern campaign: objective material unavailable in region")
+        elif kind=="boss":
+            _expect(content.BOSSES.has(str(quest.get("boss",""))),"Ivern campaign: missing boss")
+        if index<expected.size()-1:
+            _expect(str(quest.get("next",""))==expected[index+1],"Ivern campaign: broken chain")
+    _expect(str(content.REGIONAL_BOSSES.get("ivern",""))=="blizzard_monarch",
+        "Ivern campaign: regional boss mismatch")
+    _expect(str(content.CAMPAIGN_NEXT_QUEST.get("ferrumia",""))=="ivern_01",
+        "Ivern campaign: chapter must unlock after Ferrúmia")
     content.free()
     maps.free()
 
