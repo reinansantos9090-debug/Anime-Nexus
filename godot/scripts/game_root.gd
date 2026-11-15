@@ -1304,7 +1304,6 @@ func _quest_completed(id:String)->void:
     if id=="epilogue_02":
         state.data["story"]["flags"]["prism_primordial_defeated"]=true
         state.story_changed.emit()
-        save.save_now()
         hud.set_mode("ALÉM DO HORIZONTE • PRISMA PRIMORDIAL SUPERADO")
     if str(q.get("object","")).ends_with("_anchor"):
         var region_id:=str(q.get("map",""))
@@ -1313,12 +1312,12 @@ func _quest_completed(id:String)->void:
         if region_id=="umbral":
             state.data["world"]["nexus_core_unlocked"]=true
             state.state_changed.emit()
-        save.save_now()
         hud.set_mode("ÂNCORA ESTABILIZADA • CAPÍTULO CONCLUÍDO")
         var next_quest_id:=str(content.CAMPAIGN_NEXT_QUEST.get(region_id,""))
         if not next_quest_id.is_empty() and not quests.get_quest(next_quest_id).is_empty():
             quests.start(next_quest_id)
-        call_deferred("_enter_hq")    if save:save.save_now()
+        call_deferred("_enter_hq")
+    if save:save.save_now()
 
 func _nearest(radius:float)->Node3D:
     var best:Node3D=null
