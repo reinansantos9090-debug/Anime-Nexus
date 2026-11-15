@@ -36,7 +36,7 @@
 | ENV-UMBRAL | jardim/galeria/palácio | violeta profundo, rosa, prata | módulos duplicáveis com variantes de rota | transição de geometria discreta | Planejado; original |
 | ENV-NUCLEO | ponte/salão/coração | mistura de paletas sem perder legibilidade | kit modular com pontos de âncora e arenas boss | transições de fase e fragmentos | Planejado; original |
 | UI-KIT | HUD/menu/inventário/oficina/mapa | ornamentos próprios de constelação, borda e ícones elementais | SVG/vector ou texturas 9-slice escaláveis; fonte legível licenciada | estados hover/touch/cooldown/quest | Planejado; original/licença documentada |
-| VFX-KIT | habilidades e estados | trilhas distintas para 8 ressonâncias | partículas agrupadas, atlas e materiais mobile | hit, dash, campo, cura, escudo, reação, suprema, boss | Planejado; original |
+| VFX-KIT | habilidades e estados | trilhas distintas para 8 ressonâncias | partículas agrupadas, atlas e materiais mobile | hit, dash, campo, cura, escudo, reação, suprema, boss | Em desenvolvimento: impacto, anel e névoa procedurais para reações da slice; efeitos finais das oito ressonâncias planejados; original |
 | AUDIO-MUSIC-01…20 | 20 temas curtos adaptativos | orquestra leve + eletrônica, instrumentos regionais | OGG local, stem/loops sem corte audível; direitos documentados | menu, hub, 8 regiões, exploração, combate, bosses, transformação, final, epílogo | Planejado; composição original |
 | AUDIO-SFX | UI, passos, portal, criaturas, armas, poderes e reações | identidade sonora por ressonância | WAV fonte + OGG/Opus importado, mono/stereo por uso | variações aleatórias sem repetir rápido | Planejado; gravação/síntese original |
 

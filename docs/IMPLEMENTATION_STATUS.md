@@ -15,7 +15,7 @@ Data da auditoria: 15 nov. 2026, branch `dev/anime-nexus-vertical-slice`.
 | Sete aliados | Planejado | nenhum personagem Anime Nexus produzido no runtime |
 | Nimbara | Em desenvolvimento | mapa 3D blockout com trilha, árvores, raízes, cristais e âncora; sem subáreas e arte final |
 | Habilidades, inimigos e chefe Anime Nexus | Em desenvolvimento | três efeitos de Kaien, inimigos de Nimbara e Cérvido de Cristal integrados ao protótipo; telegraph circular para ataques em área com resolução atrasada testado, mas legibilidade em aparelho, outros padrões, arena e animações finais pendentes |
-| Combate e inimigos locais offline | Implementado (protótipo) | serviços Godot/Kotlin integrados no runtime Aetheria; necessita validação de equilíbrio e APK |
+| Combate e inimigos locais offline | Em desenvolvimento | combate da slice Godot tem ataques, habilidades, afinidades e reações locais; integração C++/Godot aguarda validação manual e APK Godot atual |
 | Joystick virtual analógico | Implementado (protótipo) | Godot HUD recebe toque/arraste, produz direção com deadzone e intensidade gradual; regra testada headless, toque em celular pendente |
 | Missão da slice | Em desenvolvimento | cadeia de missão, chefe e interação por proximidade da Âncora; regras de avanço testadas, fluxo de toque em aparelho pendente |
 | Companions com máquina de estados | Planejado | nenhum squad follow/combat completo observado no runtime Godot |
