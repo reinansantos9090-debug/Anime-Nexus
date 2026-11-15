@@ -188,3 +188,10 @@ GLB é formato de intercâmbio; preservar fonte editável em arquivo de criaçã
 | EN-UMB-4 | Sombra Fragmentada; corpo lupino escuro com prisma violeta | Umbral | Silhueta procedural blockout no runtime; rig/animações de produção pendentes; original |
 | EN-UMB-5 | Ilusão Errante; forma alongada acompanhada por eco menor | Umbral | Silhueta procedural blockout no runtime; rig/animações de produção pendentes; original |
 | EN-UMB-6 | Vigia do Silêncio; figura prismática com aro rosa-prata | Umbral | Silhueta procedural blockout no runtime; rig/animações de produção pendentes; original |
+
+
+## Marcos reativos do Observatório
+
+| Asset | Finalidade | Região/personagem | Descrição visual / paleta | Especificações | Materiais | Animações | Estado | Origem/licença |
+|---|---|---|---|---|---|---|---|---|
+| Seis cristais das Âncoras | Tornar visível no hub o progresso persistido da campanha | Praça das Constelações; Nimbara, Aurélio, Vesper, Ferrúmia, Ivern e Umbral | Seis prismas ao redor do portal, com cores de cada mundo; ficam menores e escurecidos até a respectiva Âncora ser restaurada | Instâncias leves de cristal procedural e halo; estado reconstruído das flags locais `<região>_slice_complete` ao montar o Observatório | Materiais estilizados já usados pelo projeto; nenhum arquivo externo | Sem animação contínua; brilho e escala refletem estado salvo | Blockout funcional integrado; materiais e animação finais pendentes | Geometria procedural original do projeto |
