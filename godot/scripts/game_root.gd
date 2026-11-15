@@ -10,6 +10,7 @@ const WorldScript=preload("res://scripts/world/world_service.gd")
 const EnemyScript=preload("res://scripts/gameplay/enemy_agent.gd")
 const CompanionScript=preload("res://scripts/gameplay/companion_agent.gd")
 const CompanionRosterMenuScript=preload("res://scripts/ui/companion_roster_menu.gd")
+const ExpeditionMenuScript=preload("res://scripts/ui/expedition_menu.gd")
 const BossScript=preload("res://scripts/gameplay/boss_agent.gd")
 const QuestScript=preload("res://scripts/gameplay/quest_service.gd")
 const StoryScript=preload("res://scripts/gameplay/story_service.gd")
@@ -61,6 +62,8 @@ var save_slots_menu:CanvasLayer
 var workshop_menu:CanvasLayer
 var inventory_menu:CanvasLayer
 var companion_roster_menu:CanvasLayer
+var expedition_menu:CanvasLayer
+var selected_expedition_map:=""
 var player:Node3D
 var camera:Camera3D
 var enemies:Array[Node3D]=[]
@@ -156,6 +159,10 @@ func _ready()->void:
     add_child(companion_roster_menu)
     companion_roster_menu.setup(state,content)
     companion_roster_menu.selection_changed.connect(_refresh_companions)
+    expedition_menu=ExpeditionMenuScript.new()
+    add_child(expedition_menu)
+    expedition_menu.setup(maps)
+    expedition_menu.expedition_selected.connect(_select_expedition)
     workshop_menu=WorkshopMenuScript.new()
     add_child(workshop_menu)
     workshop_menu.setup(content,inventory)
@@ -222,11 +229,34 @@ func _portal()->void:
     if cutscene and cutscene.is_active():return
     audio.click()
     match mode:
-        "HQ":_enter_expedition()
+        "HQ":_open_expedition_selection()
         "EXPEDITION":_enter_rift()
         "RIFT":_enter_expedition() if "nimbara_08" in state.data["quests"]["active"] else _enter_versus()
         "VERSUS":_enter_hq()
         _: _enter_hq()
+
+func _open_expedition_selection()->void:
+    var story_complete:=bool(state.data["story"]["flags"].get("nimbara_slice_complete",false))
+    if not story_complete:
+        _enter_expedition()
+        return
+    for active_id in state.data["quests"].get("active",[]):
+        var id:=str(active_id)
+        var quest:Dictionary=quests.get_quest(id)
+        if id.begins_with("nimbara_side_"):
+            selected_expedition_map="nimbara"
+            _enter_expedition()
+            return
+        if not str(quest.get("map","")).is_empty():
+            _enter_expedition()
+            return
+    expedition_menu.show_menu()
+
+func _select_expedition(map_id:String)->void:
+    if not maps.maps.has(map_id):return
+    selected_expedition_map=map_id
+    expedition_menu.hide_menu()
+    _enter_expedition()
 
 func _enter_hq()->void:
     mode="HQ"
@@ -246,10 +276,13 @@ func _enter_hq()->void:
 
 func _enter_expedition()->void:
     mode="EXPEDITION"
-    portal_step=(portal_step+1)%maps.maps.size()
     var ids:Array=maps.maps.keys()
     ids.sort()
-    var map_id:=str(ids[portal_step%ids.size()])
+    var map_id:=selected_expedition_map
+    selected_expedition_map=""
+    if map_id.is_empty():
+        portal_step=(portal_step+1)%ids.size()
+        map_id=str(ids[portal_step%ids.size()])
     var required_map:=""
     for active_id in state.data["quests"].get("active",[]):
         var active_quest:Dictionary=quests.get_quest(str(active_id))
@@ -257,7 +290,8 @@ func _enter_expedition()->void:
             required_map=str(active_quest["map"])
             break
     if not required_map.is_empty():map_id=required_map
-    if int(state.data["world"].get("completed_expeditions",0))==0 or "nimbara_08" in state.data["quests"]["active"] or "nimbara_side_01" in state.data["quests"]["active"] or "nimbara_side_02" in state.data["quests"]["active"]:
+    var nimbara_story_complete:=bool(state.data["story"]["flags"].get("nimbara_slice_complete",false))
+    if not nimbara_story_complete and (int(state.data["world"].get("completed_expeditions",0))==0 or "nimbara_08" in state.data["quests"]["active"] or "nimbara_side_01" in state.data["quests"]["active"] or "nimbara_side_02" in state.data["quests"]["active"]):
         map_id="nimbara"
     portal_service.enter_expedition(map_id)
     state.data["world"]["map_id"]=map_id

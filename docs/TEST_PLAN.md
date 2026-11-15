@@ -165,3 +165,10 @@ Runner Godot permanece manual; nenhum teste longo/emulador foi iniciado.
 
 - Na câmera de gameplay, conferir se lenço/chamas da Akari, aro/vane do Ren, prismas da Mira, aro/cristais orbitais da Yuna, manto do Shin, folhas do Haru e anéis da Eiko oscilam/giram com leveza e mantêm silhuetas legíveis sem se sobrepor ao HUD.
 - São adereços procedurais simples de blockout com movimento de idle; a revisão confirma legibilidade, não substitui rig, animação nem arte final.
+
+
+### Seletor de expedições (manual, curto)
+
+- Concluir a Âncora de Nimbara, tocar o Portal no Observatório e conferir a lista rolável de mapas, risco, perigo local, objetivo e duração.
+- Selecionar uma região e confirmar a troca de terreno, pool de criaturas e `world.map_id`; repetir com um objetivo de missão ativo para confirmar que ele mantém sua região-alvo.
+- Fluxo offline pelo HUD; validação touch manual, sem emulador ou workflow longo.
