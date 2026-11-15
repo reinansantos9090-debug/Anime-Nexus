@@ -818,6 +818,20 @@ func _test_akari_ember_flower_quest()->void:
     var interaction:Dictionary=core.apply_event(start.get("quests",{}),content.QUESTS,"interact","akari_flame_bloom",1)
     _expect("nimbara_side_04" in interaction.get("quests",{}).get("completed",[]),"Akari story: interacting with the flower did not finish the objective")
     _expect(int(interaction.get("items_reward",{}).get("ember_scale",0))==2,"Akari story: local reward mismatch")
+    var story_state=StateScript.new()
+    story_state.reset()
+    var quest_service=QuestScript.new()
+    quest_service.setup(story_state,content)
+    quest_service.start("nimbara_side_04")
+    quest_service.add_interaction("akari_flame_bloom")
+    var story_root=GameRootScript.new()
+    story_root.state=story_state
+    story_root.quests=quest_service
+    story_root._quest_completed("nimbara_side_04")
+    _expect(bool(story_state.data["story"]["flags"].get("akari_flame_stabilized",false)),"Akari story: completion did not persist the world-change flag")
+    story_root.free()
+    quest_service.free()
+    story_state.free()
     var menu_file:=FileAccess.open("res://scripts/ui/activity_menu.gd",FileAccess.READ)
     _expect(menu_file!=null,"Akari story: operations menu source should be readable")
     if menu_file:
