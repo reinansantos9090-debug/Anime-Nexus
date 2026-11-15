@@ -74,11 +74,24 @@ func _ensure_section(save_data:Dictionary,id:String)->void:
 
 func _merge_recursive(target: Dictionary, source: Dictionary) -> void:
     for key in source.keys():
-        if target.get(key) is Dictionary:
-            if source[key] is Dictionary:
-                _merge_recursive(target[key],source[key])
+        if not target.has(key):
+            target[key]=source[key]
             continue
-        target[key]=source[key]
+        var expected:Variant=target[key]
+        var incoming:Variant=source[key]
+        if expected is Dictionary:
+            if incoming is Dictionary:
+                _merge_recursive(expected,incoming)
+            continue
+        if expected is Array:
+            if incoming is Array:
+                target[key]=incoming
+            continue
+        var expected_type:=typeof(expected)
+        var incoming_type:=typeof(incoming)
+        var numeric_pair:bool=expected_type in [TYPE_INT,TYPE_FLOAT] and incoming_type in [TYPE_INT,TYPE_FLOAT]
+        if expected_type==incoming_type or numeric_pair:
+            target[key]=incoming
 
 func get_hunter() -> Dictionary:
     return data["hunter"]
