@@ -17,8 +17,8 @@ func _ready()->void:
 func setup(content:Node,state:Node)->void:
     content_database=content
     game_state=state
-    if game_state and not game_state.state_changed.is_connected(_refresh):
-        game_state.state_changed.connect(_refresh)
+    if game_state and not game_state.inventory_changed.is_connected(_refresh):
+        game_state.inventory_changed.connect(_refresh)
     _refresh()
 
 func _build()->void:
