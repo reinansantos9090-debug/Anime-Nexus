@@ -352,8 +352,10 @@ func _show_local_quest_dialogue(title:String,speaker:String,line:String)->void:
     if not cutscene.is_active() and not side_dialogue_active:
         _present_next_local_dialogue()
 
-func _present_next_local_dialogue()->void:
+func _present_next_local_dialogue(advance_current:=false)->void:
     if local_dialogue_queue.is_empty() or cutscene==null or not is_instance_valid(cutscene):return
+    if side_dialogue_active and not advance_current:return
+    if cutscene.is_active() and not (side_dialogue_active and advance_current):return
     var entry:Dictionary=local_dialogue_queue.pop_front()
     side_dialogue_active=true
     cutscene.show_line("MISSÃO • "+str(entry["title"]),str(entry["speaker"]),str(entry["line"]))
@@ -1194,7 +1196,7 @@ func _clear_combat()->void:
 func _story()->void:
     if side_dialogue_active:
         if not local_dialogue_queue.is_empty():
-            _present_next_local_dialogue()
+            _present_next_local_dialogue(true)
         elif cutscene and cutscene.is_active():
             cutscene.hide_cutscene()
         return
