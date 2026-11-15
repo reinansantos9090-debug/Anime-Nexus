@@ -52,15 +52,6 @@ func _build()->void:
     rows.size_flags_horizontal=Control.SIZE_EXPAND_FILL
     rows.add_theme_constant_override("separation",5)
     list.add_child(rows)
-    var list:=ScrollContainer.new()
-    list.position=Vector2(24,105)
-    list.size=Vector2(780,320)
-    list.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
-    panel.add_child(list)
-    var rows:=VBoxContainer.new()
-    rows.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-    rows.add_theme_constant_override("separation",5)
-    list.add_child(rows)
     var ids:Array=[]
     if content_database:
         ids=content_database.COMPANIONS.keys()
