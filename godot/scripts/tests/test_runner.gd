@@ -489,8 +489,15 @@ func _test_aurelio_campaign_chain()->void:
             _expect(content.MONSTERS.has(str(found.get("monster",""))),
                 "Aurélio campaign: target creature missing in %s"%expected[index])
         elif str(found.get("type",""))=="collect":
-            _expect(content.ITEMS.has(str(found.get("item",""))),
-                "Aurélio campaign: reward material missing in %s"%expected[index])
+            var item_id:=str(found.get("item",""))
+            _expect(content.ITEMS.has(item_id),
+                "Aurélio campaign: objective material missing in %s"%expected[index])
+            var drop_available:=false
+            for monster_id in maps.maps["aurelio"].get("enemies",[]):
+                if item_id in content.MONSTERS.get(str(monster_id),{}).get("loot",[]):
+                    drop_available=true
+                    break
+            _expect(drop_available,"Aurélio campaign: objective material is not dropped in its region for %s"%expected[index])
         elif str(found.get("type",""))=="boss":
             _expect(content.BOSSES.has(str(found.get("boss",""))),
                 "Aurélio campaign: boss missing in %s"%expected[index])
@@ -500,10 +507,15 @@ func _test_aurelio_campaign_chain()->void:
         _expect(int(found.get("target",0))>0,"Aurélio campaign: missing objective count in %s"%expected[index])
         _expect(not str(found.get("start_dialogue","")).is_empty(),"Aurélio campaign: missing opening line in %s"%expected[index])
         _expect(not str(found.get("completion_dialogue","")).is_empty(),"Aurélio campaign: missing completion line in %s"%expected[index])
+        for reward_id in found.get("rewards",{}).keys():
+            _expect(content.ITEMS.has(str(reward_id)),
+                "Aurélio campaign: reward item missing in %s"%expected[index])
         if index<expected.size()-1:
             _expect(str(found.get("next",""))==expected[index+1],"Aurélio campaign: broken next link in %s"%expected[index])
     _expect(str(content.REGIONAL_BOSSES.get("aurelio",""))=="chrono_colossus",
         "Aurélio campaign: final boss must match regional route")
+    _expect(str(content.CAMPAIGN_NEXT_QUEST.get("nimbara",""))=="aurelio_01",
+        "Aurélio campaign: chapter must unlock after Nimbara")
     content.free()
     maps.free()
 

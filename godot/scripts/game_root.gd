@@ -232,7 +232,7 @@ func _portal()->void:
         "HQ":_open_expedition_selection()
         "EXPEDITION":_enter_rift()
         "RIFT":
-            if "nimbara_08" in state.data["quests"]["active"] or "aurelio_08" in state.data["quests"]["active"]:
+            if not _active_anchor_quest().is_empty():
                 _enter_expedition()
             elif boss==null or not is_instance_valid(boss):
                 _enter_hq()
@@ -309,7 +309,7 @@ func _enter_expedition()->void:
     state.state_changed.emit()
     director.start_expedition(map_id)
     world.build_biome(map_id)
-    var anchor_return:bool=((map_id=="nimbara" and "nimbara_08" in state.data["quests"]["active"]) or (map_id=="aurelio" and "aurelio_08" in state.data["quests"]["active"]))
+    var anchor_return:bool=not _active_anchor_quest(map_id).is_empty()
     activity_remaining=0.0 if anchor_return else maps.duration(map_id)
     activity_goal=0 if anchor_return else maps.activity_goal(map_id)
     activity_progress=0
@@ -320,24 +320,30 @@ func _enter_expedition()->void:
     quests.add_map(map_id)
     _spawn_wave(0 if anchor_return else mini(16,perf.max_enemies()))
     var has_nimbara_interaction:= "nimbara_06" in state.data["quests"]["active"] or "nimbara_08" in state.data["quests"]["active"] or "nimbara_side_02" in state.data["quests"]["active"]
-    var has_regional_anchor:bool=("nimbara_08" in state.data["quests"]["active"] or "aurelio_08" in state.data["quests"]["active"])
-    hud.set_interaction_visible((map_id=="nimbara" and has_nimbara_interaction) or (map_id=="aurelio" and has_regional_anchor))
+    var has_regional_anchor:bool=anchor_return
+    hud.set_interaction_visible((map_id=="nimbara" and has_nimbara_interaction) or has_regional_anchor)
     hud.set_mode("ÂNCORA • APROXIME-SE PARA ESTABILIZAR" if anchor_return else "EXPEDIÇÃO • %s • 0/%d"%[maps.get_map(map_id)["name"],activity_goal])
+
+func _active_anchor_quest(region_filter:="")->String:
+    for active_id in state.data.get("quests",{}).get("active",[]):
+        var quest:Dictionary=quests.get_quest(str(active_id))
+        if quest.is_empty() or not str(quest.get("object","")).ends_with("_anchor"):continue
+        if not region_filter.is_empty() and str(quest.get("map",""))!=region_filter:continue
+        return str(active_id)
+    return ""
 
 func _interact()->void:
     if mode!="EXPEDITION":return
     var active:Array=state.data["quests"].get("active",[])
-    var active_anchor_quest:=""
-    if "nimbara_08" in active:active_anchor_quest="nimbara_08"
-    elif "aurelio_08" in active:active_anchor_quest="aurelio_08"
+    var active_anchor_quest:=_active_anchor_quest()
     if not active_anchor_quest.is_empty():
-        var region_id:=str(quests.get_quest(active_anchor_quest).get("map","nimbara"))
+        var anchor_quest:Dictionary=quests.get_quest(active_anchor_quest)
+        var region_id:=str(anchor_quest.get("map","nimbara"))
         var anchor_position:Vector3=maps.get_map(region_id).get("resonance_anchor",Vector3(0,0,-8.5))
         if player.position.distance_to(anchor_position)>3.2:
             hud.set_mode("ÂNCORA • APROXIME-SE DO CRISTAL NA REGIÃO")
             return
-        var object_id:="resonance_anchor" if region_id=="nimbara" else "aurelio_anchor"
-        quests.add_interaction(object_id)
+        quests.add_interaction(str(anchor_quest.get("object","resonance_anchor")))
         hud.set_interaction_visible(false)
         audio.level_up()
         return
@@ -363,14 +369,15 @@ func _interact()->void:
 
 func _enter_rift()->void:
     var active_quests:Array=state.data["quests"].get("active",[])
-    for mission_id in ["nimbara_01","nimbara_02","nimbara_03","nimbara_04","nimbara_05","nimbara_06","aurelio_01","aurelio_02","aurelio_03","aurelio_04","aurelio_05","aurelio_06"]:
-        if mission_id in active_quests:
-            hud.set_mode("MISSÃO • CONCLUA O OBJETIVO REGIONAL ATUAL")
-            return
-    if "nimbara_08" in active_quests or "aurelio_08" in active_quests:
-        hud.set_mode("MISSÃO • INTERAJA COM A ÂNCORA DE RESSONÂNCIA")
-        return
     var region_id:=str(state.data.get("world",{}).get("map_id","nimbara"))
+    for active_id in active_quests:
+        var active_quest:Dictionary=quests.get_quest(str(active_id))
+        if str(active_id).begins_with(region_id+"_") and not active_quest.is_empty() and str(active_quest.get("type",""))!="boss":
+            if str(active_quest.get("object","")).ends_with("_anchor"):
+                hud.set_mode("MISSÃO • INTERAJA COM A ÂNCORA DE RESSONÂNCIA")
+            else:
+                hud.set_mode("MISSÃO • CONCLUA O OBJETIVO REGIONAL ATUAL")
+            return
     if not maps.maps.has(region_id):
         region_id="nimbara"
     if region_id=="nexus_core" and not bool(state.data["world"].get("nexus_core_unlocked",false)):
@@ -1185,8 +1192,10 @@ func _boss_down(b:Node3D,x:int)->void:
     audio.level_up()
 
 func _quest_started(id:String)->void:
-    if not id.begins_with("nimbara_0") and not id.begins_with("aurelio_0"):return
     var q:Dictionary=quests.get_quest(id)
+    if q.is_empty():return
+    var map_id:=str(q.get("map",""))
+    if map_id.is_empty() or not id.begins_with(map_id+"_") or id.begins_with(map_id+"_side_"):return
     var line:=str(q.get("start_dialogue",""))
     if line.is_empty():return
     call_deferred("_show_local_quest_dialogue",str(q.get("title",id)),str(q.get("speaker","Kaien Arashi")),line)
@@ -1202,16 +1211,21 @@ func _quest_completed(id:String)->void:
             hud.set_mode("OBJETIVO CONCLUÍDO • "+str(q.get("title",id)))
     if id.begins_with("chapter_") or id.begins_with("boss_"):
         _story()
-    if id=="nimbara_08":
-        state.data["story"]["flags"]["nimbara_slice_complete"]=true
+    if str(q.get("object","")).ends_with("_anchor"):
+        var region_id:=str(q.get("map",""))
+        if region_id.is_empty():return
+        state.data["story"]["flags"][region_id+"_slice_complete"]=true
         save.save_now()
-        hud.set_mode("ÂNCORA ESTABILIZADA • CAPÍTULO NIMBARA CONCLUÍDO")
-        quests.start("aurelio_01")
-        call_deferred("_enter_hq")
-    elif id=="aurelio_08":
-        state.data["story"]["flags"]["aurelio_slice_complete"]=true
-        save.save_now()
-        hud.set_mode("SEGUNDA ÂNCORA ESTABILIZADA • CAPÍTULO AURÉLIO CONCLUÍDO")
+        hud.set_mode("ÂNCORA ESTABILIZADA • CAPÍTULO CONCLUÍDO")
+        var next_quest_id:=str(content.CAMPAIGN_NEXT_QUEST.get(region_id,""))
+        if not next_quest_id.is_empty() and not quests.get_quest(next_quest_id).is_empty():
+            var side_quests:Array=["nimbara_side_01","nimbara_side_02"]
+            var side_active:=false
+            for side_id in side_quests:
+                if side_id in state.data["quests"].get("active",[]):
+                    side_active=true
+                    break
+            if not side_active:quests.start(next_quest_id)
         call_deferred("_enter_hq")
 
 func _nearest(radius:float)->Node3D:

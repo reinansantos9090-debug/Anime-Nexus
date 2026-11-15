@@ -163,6 +163,10 @@ const REGIONAL_BOSSES := {
     "sky_ruins":"skybreaker"
 }
 
+const CAMPAIGN_NEXT_QUEST := {
+    "nimbara":"aurelio_01"
+}
+
 const BIOMES := {
     "nimbara":{"name":"Nimbara • Floresta das Memórias","ground":Color("#477b68"),"accent":Color("#71f0d1"),"fog":Color("#577f83")},
     "verdant_frontier":{"name":"Fronteira Esmeralda","ground":Color("#4ea66f"),"accent":Color("#8bd8ff"),"fog":Color("#9fe4c3")},
