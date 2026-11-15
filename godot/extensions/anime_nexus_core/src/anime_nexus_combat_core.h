@@ -1,6 +1,7 @@
 #pragma once
 
 #include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/string.hpp>
 
@@ -25,6 +26,9 @@ public:
     double companion_avoidance_turn(bool forward_blocked, bool left_blocked, bool right_blocked,
             bool prefer_left) const;
     Dictionary difficulty_profile(const String &difficulty_id) const;
+    Dictionary resolve_loot(const Array &loot_table, int monster_tier, const String &monster_id,
+            const String &map_id, int character_level, double event_multiplier, double rarity_roll,
+            double rare_bonus_roll, int item_index_a, int item_index_b) const;
 };
 
 } // namespace godot

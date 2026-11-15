@@ -2,6 +2,7 @@
 
 #include <godot_cpp/core/class_db.hpp>
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <limits>
 
@@ -23,6 +24,9 @@ void AnimeNexusCombatCore::_bind_methods() {
             "right_blocked", "prefer_left"), &AnimeNexusCombatCore::companion_avoidance_turn);
     ClassDB::bind_method(D_METHOD("difficulty_profile", "difficulty_id"),
             &AnimeNexusCombatCore::difficulty_profile);
+    ClassDB::bind_method(D_METHOD("resolve_loot", "loot_table", "monster_tier", "monster_id", "map_id",
+            "character_level", "event_multiplier", "rarity_roll", "rare_bonus_roll", "item_index_a", "item_index_b"),
+            &AnimeNexusCombatCore::resolve_loot);
 }
 
 Dictionary AnimeNexusCombatCore::calculate_damage(double weapon_damage, int character_level,
@@ -164,6 +168,74 @@ Dictionary AnimeNexusCombatCore::difficulty_profile(const String &difficulty_id)
         result["enemy_damage_multiplier"] = 1.0;
         result["reward_multiplier"] = 1.0;
     }
+    return result;
+}
+
+Dictionary AnimeNexusCombatCore::resolve_loot(const Array &loot_table, int monster_tier,
+        const String &monster_id, const String &map_id, int character_level, double event_multiplier,
+        double rarity_roll, double rare_bonus_roll, int item_index_a, int item_index_b) const {
+    const double roll = std::clamp(rarity_roll, 0.0, 0.999999);
+    String rarity_id = "common";
+    String rarity_name = "Comum";
+    double rarity_multiplier = 1.0;
+    if (roll > 0.995) {
+        rarity_id = "legendary";
+        rarity_name = "Lendário";
+        rarity_multiplier = 3.20;
+    } else if (roll > 0.96) {
+        rarity_id = "epic";
+        rarity_name = "Épico";
+        rarity_multiplier = 2.20;
+    } else if (roll > 0.85) {
+        rarity_id = "rare";
+        rarity_name = "Raro";
+        rarity_multiplier = 1.60;
+    } else if (roll > 0.58) {
+        rarity_id = "uncommon";
+        rarity_name = "Incomum";
+        rarity_multiplier = 1.25;
+    }
+
+    const int safe_level = std::max(1, character_level);
+    const int safe_tier = std::max(1, monster_tier);
+    const double safe_event_multiplier = std::max(0.0, event_multiplier);
+    const double level_multiplier = 1.0 + static_cast<double>(safe_level - 1) * 0.015;
+    const double total_multiplier = rarity_multiplier * safe_event_multiplier * level_multiplier;
+    const int64_t gold = std::max<int64_t>(1, static_cast<int64_t>(
+            std::llround((8.0 + static_cast<double>(safe_tier) * 6.0) * total_multiplier)));
+
+    Array safe_table = loot_table;
+    if (safe_table.is_empty()) {
+        safe_table.append("aether_core");
+    }
+    const int64_t table_size = safe_table.size();
+    auto safe_index = [table_size](int value) -> int64_t {
+        const int64_t index = static_cast<int64_t>(value) % table_size;
+        return (index + table_size) % table_size;
+    };
+    const int drop_count = (rarity_id == "epic" || rarity_id == "legendary") ? 2 : 1;
+    Dictionary items;
+    for (int i = 0; i < drop_count; ++i) {
+        const int64_t item_index = safe_index(i == 0 ? item_index_a : item_index_b);
+        const String item_id = String(safe_table[item_index]);
+        int amount = 1;
+        if (rarity_id == "rare" && rare_bonus_roll < 0.35) {
+            amount = 2;
+        } else if (rarity_id == "epic") {
+            amount = 2;
+        } else if (rarity_id == "legendary") {
+            amount = 3;
+        }
+        items[item_id] = static_cast<int64_t>(items.get(item_id, 0)) + amount;
+    }
+
+    Dictionary result;
+    result["rarity"] = rarity_id;
+    result["rarity_name"] = rarity_name;
+    result["gold"] = gold;
+    result["items"] = items;
+    result["monster"] = monster_id;
+    result["map"] = map_id;
     return result;
 }
 
