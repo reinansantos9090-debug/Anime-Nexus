@@ -8,7 +8,7 @@ Data da auditoria: 15 nov. 2026, branch `dev/anime-nexus-vertical-slice`.
 | GDScript | Implementado (camada de integração) | Atualmente conecta cenas, UI, nós, sinais e chamadas do núcleo nativo. Parte da lógica de jogo ainda reside nos serviços GDScript e deve migrar antes de declarar C++ como fonte autoritativa de todos os subsistemas. |
 | App Android nativo | Implementado (host do protótipo) | Activity Kotlin e manifest; nome/pacote/orientação atuais não são finais |
 | OpenGL ES e loop de combate Kotlin | Implementado (protótipo Aetheria) | engine/render/AI/combat/session/HUD em `app/src/main/java/.../game3d`; geometria procedural |
-| Godot Android export | Testado em revisão anterior | workflow Godot 4.7.2 exportou APK da slice em run `43409376899`; o job atual compila a extensão Android arm64 e exporta APK automaticamente, sem teste Linux/emulador |
+| Godot Android export | Testado em revisão anterior | workflow Godot 4.7.2 exportou APK da slice em run `43409376899`; o job Godot é manual; quando disparado, compila a extensão Android arm64 e exporta APK, sem teste Linux/emulador |
 | Godot + GDExtension C++ | Em desenvolvimento | Godot mantém renderer/cenas/física; C++17 é o domínio autoritativo em migração. A arquitetura e funções iniciais estão em `CPP_GAMEPLAY_ARCHITECTURE.md`; falta CI Android/arm64 e migração dos demais domínios. |
 | Shader de terreno por bioma | Em desenvolvimento | Shader spatial local com ruído de duas escalas e diffuse toon aplicado ao piso dos biomas, com paleta derivada dos dados locais; performance e leitura visual ainda aguardam exportação/teste manual em Android. |
 | Câmera isométrica | Em desenvolvimento | câmera ortográfica diagonal com acompanhamento suave; HUD ganha botões de zoom local, escala limitada de 14–32 e valor salvo no espaço ativo; ocultação de obstáculos e teste visual/touch em aparelho pendentes |
@@ -63,11 +63,11 @@ Só mover uma linha para **Testado** depois de evidência de build correspondent
 
 ## Evidência histórica e validação desta revisão
 
-A run `43410319631` é evidência histórica: passou o host Kotlin e o export Godot, sem instalação em aparelho. Na revisão atual, `android-host` e `godot-android` executam automaticamente. O job Godot compila somente Android arm64 e exporta APK; não roda runner Linux, emulador ou teste de aparelho. Exportação não valida instalação nem jogabilidade em dispositivo.
+A run `43410319631` é evidência histórica: passou o host Kotlin e o export Godot, sem instalação em aparelho. Na revisão atual, `android-host` executa automaticamente e `godot-android` é manual. Quando disparado, o job Godot compila somente Android arm64 e exporta APK; não roda runner Linux, emulador ou teste de aparelho. Exportação não valida instalação nem jogabilidade em dispositivo.
 
 ## Núcleo C++ em andamento
 
-`AnimeNexusCombatCore` e `AnimeNexusQuestCore` foram compilados localmente como biblioteca Linux com Godot C++ bindings `10.0.0-stable` e API 4.7. Ataque básico, ganho de XP, progresso/condições de missões, conclusão, desbloqueio seguinte e cálculo de recompensas usam o núcleo. Testes Godot 4.7.2 locais passaram para dano normal/crítico, pares elementais, XP com carry-over, contagem da missão, não duplicação e recompensas. A compilação Android arm64 e exportação do APK agora são verificadas pelo workflow automático; instalação e execução em aparelho seguem pendentes.
+`AnimeNexusCombatCore` e `AnimeNexusQuestCore` foram compilados localmente como biblioteca Linux com Godot C++ bindings `10.0.0-stable` e API 4.7. Ataque básico, ganho de XP, progresso/condições de missões, conclusão, desbloqueio seguinte e cálculo de recompensas usam o núcleo. Testes Godot 4.7.2 locais passaram para dano normal/crítico, pares elementais, XP com carry-over, contagem da missão, não duplicação e recompensas. A compilação Android arm64 e exportação do APK são verificadas quando o workflow manual é disparado; instalação e execução em aparelho seguem pendentes.
 
 ## Slice em construção (13 nov. 2026)
 

@@ -14,8 +14,8 @@ Branch de desenvolvimento atual: `dev/anime-nexus-vertical-slice`.
 - As seis cadeias regionais, as quatro missões jogáveis do prólogo e as duas do epílogo estão ligadas à campanha local (60 missões); depois do retorno ao Observatório, o RIFT do Prisma Primordial fica disponível sem bloquear a exploração livre. A base recebeu marcos blockout para praça, oficina, mercado, biblioteca e treino. Seis cristais da Praça das Constelações agora acendem e crescem conforme as seis flags locais de Âncora são salvas; reconstruir o Observatório reflete o progresso persistido. Mapas, chefes e interações usam blockouts; cinemáticas, puzzles, arte final, áudio e validação manual continuam pendentes.
 - Ataques em área do chefe agora exibem um círculo de aviso no chão antes do dano; a janela de aviso e a ausência de dano imediato estão cobertas por teste headless.
 - Núcleo C++ `AnimeNexusCombatCore` integrado ao ataque básico e à evolução por XP; cálculo de dano/crítico, reações de elementos e subida de nível passaram no Godot 4.7.2 local.
-- O workflow automático inclui o host Kotlin e o job Godot: compila GDExtension C++ apenas para Android arm64 e exporta APK. Runner de gameplay Linux, emuladores e testes de aparelho não são executados automaticamente.
-- Próximas etapas: observar o resultado da exportação Android no Actions e validar manualmente o fluxo de prólogo/epílogo e o APK em aparelho; produzir assets finais de personagens, chefes e mapas e substituir blockouts sem rotular protótipos como arte final.
+- O host Kotlin é automático. O workflow Godot/GDExtension C++ e exportação APK voltaram a ser manuais; quando disparado, o job compila apenas Android arm64. Runner Linux, emuladores e testes de aparelho não são executados.
+- Próximas etapas: disparar manualmente o workflow Godot quando necessário e validar o fluxo de prólogo/epílogo e o APK em aparelho; produzir assets finais de personagens, chefes e mapas e substituir blockouts sem rotular protótipos como arte final.
 
 ## Validação executada
 
@@ -32,4 +32,4 @@ Branch de desenvolvimento atual: `dev/anime-nexus-vertical-slice`.
 
 ## Estado
 
-Anime Nexus ainda não foi instalado/testado em aparelho e não tem campanha completa nem arte final. O CI produz APKs de protótipo (host legado Aetheria/Kotlin e slice Godot em blockout); o resultado da revisão atual precisa ser observado após o build automático. Ver detalhes em `docs/IMPLEMENTATION_STATUS.md`.
+Anime Nexus ainda não foi instalado/testado em aparelho e não tem campanha completa nem arte final. O CI produz APKs de protótipo (host legado Aetheria/Kotlin e slice Godot em blockout); o APK Godot desta revisão depende de disparo manual do workflow. Ver detalhes em `docs/IMPLEMENTATION_STATUS.md`.

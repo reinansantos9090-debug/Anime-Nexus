@@ -3,8 +3,8 @@
 ## Automated validation
 
 - Keep automatically triggered checks focused and deterministic.
-- The `godot-android` job runs automatically for pushes and pull requests. It builds only the Android arm64 C++ GDExtension and exports the Godot Android APK.
-- Do not add Linux-native extension builds or Linux gameplay-runner execution to the automatic workflow. The game target is Android.
+- The `godot-android` job is manual-only (`workflow_dispatch`). When dispatched, it builds only the Android arm64 C++ GDExtension and exports the Godot Android APK.
+- Do not add Linux-native extension builds or Linux gameplay-runner execution to the workflow. The game target is Android.
 - Do not add emulator, device, instrumentation, long-running gameplay, performance, or benchmark tests to automatically triggered workflows.
 - Do not add long or redundant tests. Keep rule checks focused; gameplay runner execution remains a separate manual validation.
 - APK export success confirms a build artifact only; do not claim device installation, gameplay, or performance validation without observing it.
